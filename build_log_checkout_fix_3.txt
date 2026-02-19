@@ -1,0 +1,46 @@
+
+> aez@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 108s
+  Running TypeScript ...
+  Collecting page data using 1 worker ...
+❌ ADMIN_SDK_ERROR: Error: Service account object must contain a string "project_id" property.
+    at instantiateModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:740:9)
+    at instantiateRuntimeModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:768:12)
+    at getOrInstantiateRuntimeModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:781:12)
+    at Object.m (C:\aez\.next\server\chunks\[turbopack]_runtime.js:790:18)
+    at Object.<anonymous> (C:\aez\.next\server\app\api\dev-verify\security-test\route.js:8:3) {
+  errorInfo: [Object],
+  codePrefix: 'app'
+}
+Error: Cannot find module '@opentelemetry/api'
+Require stack:
+- C:\aez\node_modules\@google-cloud\firestore\build\src\telemetry\enabled-trace-util.js
+- C:\aez\node_modules\@google-cloud\firestore\build\src\index.js
+- C:\aez\node_modules\firebase-admin\lib\app\firebase-namespace.js
+- C:\aez\node_modules\firebase-admin\lib\default-namespace.js
+- C:\aez\node_modules\firebase-admin\lib\index.js
+- C:\aez\.next\server\chunks\[root-of-the-server]__3fdfded2._.js
+- C:\aez\.next\server\chunks\[turbopack]_runtime.js
+- C:\aez\.next\server\app\api\ai-generate\route.js
+- C:\aez\node_modules\next\dist\server\require.js
+- C:\aez\node_modules\next\dist\server\load-components.js
+- C:\aez\node_modules\next\dist\build\utils.js
+- C:\aez\node_modules\next\dist\build\worker.js
+- C:\aez\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+
+> Build error occurred
+Error: Failed to collect page data for /api/dev-verify/security-test
+    at ignore-listed frames {
+  type: 'Error'
+}

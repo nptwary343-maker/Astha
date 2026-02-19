@@ -1,0 +1,356 @@
+{
+  "store": "AstharHat",
+  "lastUpdate": "2026-02-11T17:13:32.782Z",
+  "dataset": [
+    {
+      "name": "Ispahani Mirzapore Tea Bag",
+      "category": "Beverage",
+      "price": "৳165",
+      "description": "Ispahani Mirzapore Tea Bag from Ispahani. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Chaka Super White Soap",
+      "category": "Cleaning",
+      "price": "৳25",
+      "description": "Chaka Super White Soap from Chaka. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Teer Soyabean Oil 2L",
+      "category": "Grocery",
+      "price": "৳320",
+      "description": "Teer Soyabean Oil 2L from Teer. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Fresh Refined Sugar 1kg",
+      "category": "Grocery",
+      "price": "৳140",
+      "description": "Fresh Refined Sugar 1kg from Fresh. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Molla Salt 1kg",
+      "category": "Grocery",
+      "price": "৳40",
+      "description": "Molla Salt 1kg from Molla. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Sunsilk Black Shine Shampoo 180ml",
+      "category": "Beauty",
+      "price": "৳220",
+      "description": "Sunsilk Black Shine Shampoo 180ml from Sunsilk. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Lux Soft Touch Soap",
+      "category": "Beauty",
+      "price": "৳55",
+      "description": "Lux Soft Touch Soap from Lux. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Super Star LED Bulb 12W",
+      "category": "Electronics",
+      "price": "৳250",
+      "description": "Super Star LED Bulb 12W from Super Star. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "BSRM Rod (Per KG)",
+      "category": "Construction",
+      "price": "৳95",
+      "description": "BSRM Rod (Per KG) from BSRM. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Energypac Ceiling Fan",
+      "category": "Electronics",
+      "price": "৳3500",
+      "description": "Energypac Ceiling Fan from Energypac. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Walton Primo Smartphone",
+      "category": "Electronics",
+      "price": "৳12500",
+      "description": "Walton Primo Smartphone from Walton. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Pran Frooto Mango Fruit Drink",
+      "category": "Beverage",
+      "price": "৳30",
+      "description": "Pran Frooto Mango Fruit Drink from Pran. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Bata Men Leather Shoes",
+      "category": "Fashion",
+      "price": "৳2499",
+      "description": "Bata Men Leather Shoes from Bata. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Apex Men Sandal",
+      "category": "Fashion",
+      "price": "৳890",
+      "description": "Apex Men Sandal from Apex. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Sajeeb Orange Juice",
+      "category": "Beverage",
+      "price": "৳25",
+      "description": "Sajeeb Orange Juice from Sajeeb. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Matador Hi-Teen Ball Pen",
+      "category": "Stationery",
+      "price": "৳5",
+      "description": "Matador Hi-Teen Ball Pen from Matador. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Fresh Milk Powder 400g",
+      "category": "Dairy",
+      "price": "৳380",
+      "description": "Fresh Milk Powder 400g from Fresh. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Dano Daily Pushti Milk Powder",
+      "category": "Dairy",
+      "price": "৳350",
+      "description": "Dano Daily Pushti Milk Powder from Dano. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Pusty Soyabean Oil 5L",
+      "category": "Grocery",
+      "price": "৳800",
+      "description": "Pusty Soyabean Oil 5L from Pusty. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Keya Lemon Soap",
+      "category": "Beauty",
+      "price": "৳45",
+      "description": "Keya Lemon Soap from Keya. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Savlon Antiseptic Liquid",
+      "category": "Health",
+      "price": "৳110",
+      "description": "Savlon Antiseptic Liquid from ACI. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Square Sepnil Hand Sanitizer",
+      "category": "Health",
+      "price": "৳65",
+      "description": "Square Sepnil Hand Sanitizer from Square. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Radhuni Ready Mix Chicken Curry Roast",
+      "category": "Grocery",
+      "price": "৳45",
+      "description": "Radhuni Ready Mix Chicken Curry Roast from Radhuni. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Kishwan Ghee 400g",
+      "category": "Dairy",
+      "price": "৳650",
+      "description": "Kishwan Ghee 400g from Kishwan. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Laziz Sunflower Oil",
+      "category": "Grocery",
+      "price": "৳450",
+      "description": "Laziz Sunflower Oil from Laziz. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Mezban Meat Masala",
+      "category": "Grocery",
+      "price": "৳55",
+      "description": "Mezban Meat Masala from Radhuni. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Ahmed Mixed Fruit Jam",
+      "category": "Food",
+      "price": "৳180",
+      "description": "Ahmed Mixed Fruit Jam from Ahmed. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Foster Clark Custard Powder",
+      "category": "Food",
+      "price": "৳220",
+      "description": "Foster Clark Custard Powder from Foster Clark. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Dettol Cool Soap",
+      "category": "Beauty",
+      "price": "৳60",
+      "description": "Dettol Cool Soap from Dettol. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Pepsodent Germi Check 200g",
+      "category": "Beauty",
+      "price": "৳145",
+      "description": "Pepsodent Germi Check 200g from Pepsodent. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "CloseUp Ever Fresh",
+      "category": "Beauty",
+      "price": "৳155",
+      "description": "CloseUp Ever Fresh from CloseUp. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Horlicks Standard 500g",
+      "category": "Health",
+      "price": "৳480",
+      "description": "Horlicks Standard 500g from Horlicks. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Complan Chocolate 500g",
+      "category": "Health",
+      "price": "৳550",
+      "description": "Complan Chocolate 500g from Complan. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Aarong Liquid Milk 1L",
+      "category": "Dairy",
+      "price": "৳90",
+      "description": "Aarong Liquid Milk 1L from Aarong. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Milo Chocolate Drink 400g",
+      "category": "Beverage",
+      "price": "৳420",
+      "description": "Milo Chocolate Drink 400g from Milo. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Nescafe Classic 100g",
+      "category": "Beverage",
+      "price": "৳380",
+      "description": "Nescafe Classic 100g from Nescafe. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Tang Orange 500g",
+      "category": "Beverage",
+      "price": "৳450",
+      "description": "Tang Orange 500g from Tang. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Malova Malt Drink",
+      "category": "Beverage",
+      "price": "৳320",
+      "description": "Malova Malt Drink from Malova. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Lifebuoy Total Soap",
+      "category": "Beauty",
+      "price": "৳50",
+      "description": "Lifebuoy Total Soap from Lifebuoy. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Wheel Laundry Soap",
+      "category": "Cleaning",
+      "price": "৳22",
+      "description": "Wheel Laundry Soap from Wheel. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Surf Excel Quick Wash 1kg",
+      "category": "Cleaning",
+      "price": "৳210",
+      "description": "Surf Excel Quick Wash 1kg from Surf Excel. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Rin Power Bright 1kg",
+      "category": "Cleaning",
+      "price": "৳190",
+      "description": "Rin Power Bright 1kg from Rin. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Harpic Toilet Cleaner 750ml",
+      "category": "Cleaning",
+      "price": "৳165",
+      "description": "Harpic Toilet Cleaner 750ml from Harpic. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Lizol Floor Cleaner 500ml",
+      "category": "Cleaning",
+      "price": "৳145",
+      "description": "Lizol Floor Cleaner 500ml from Lizol. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Olympic Lexus Vegetable Biscuit",
+      "category": "Snacks",
+      "price": "৳25",
+      "description": "Olympic Lexus Vegetable Biscuit from Olympic. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Vim Dishwash Liquid 500ml",
+      "category": "Cleaning",
+      "price": "৳125",
+      "description": "Vim Dishwash Liquid 500ml from Vim. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Magsi 2-Minute Noodles",
+      "category": "Food",
+      "price": "৳20",
+      "description": "Magsi 2-Minute Noodles from Maggi. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Ruchi Chanachur Hot",
+      "category": "Snacks",
+      "price": "৳35",
+      "description": "Ruchi Chanachur Hot from Ruchi. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Bombay Sweets Potato Crackers",
+      "category": "Snacks",
+      "price": "৳10",
+      "description": "Bombay Sweets Potato Crackers from Bombay Sweets. A trusted product in Bangladesh....",
+      "stock": "Available"
+    },
+    {
+      "name": "Bashundhara Toilet Tissue 4 Units",
+      "category": "Hygiene",
+      "price": "৳80",
+      "description": "Bashundhara Toilet Tissue 4 Units from Bashundhara. A trusted product in Bangladesh....",
+      "stock": "Available"
+    }
+  ]
+}

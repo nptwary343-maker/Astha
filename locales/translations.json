@@ -1,0 +1,42 @@
+{
+    "en": {
+        "footer": {
+            "shop": "Shop",
+            "service": "Service",
+            "support": "Support",
+            "allProducts": "All Products",
+            "bestSellers": "Best Sellers",
+            "newArrivals": "New Arrivals",
+            "discountTickets": "Discount Tickets",
+            "trackOrder": "Track My Order",
+            "refundPolicy": "Refund Policy",
+            "aboutUs": "About Us",
+            "privacy": "PRIVACY",
+            "terms": "TERMS",
+            "copyright": "© {year} ASTHAR HAT",
+            "associates": "Our Partners",
+            "description": "Building trust through quality and authenticity. Your reliable partner for premium products.",
+            "established": "EST. 2024"
+        }
+    },
+    "bn": {
+        "footer": {
+            "shop": "দোকান",
+            "service": "সেবা",
+            "support": "সাপোর্ট",
+            "allProducts": "সকল পণ্য",
+            "bestSellers": "জনপ্রিয় পণ্য",
+            "newArrivals": "নতুন পণ্য",
+            "discountTickets": "ছাড়ের টিকেট",
+            "trackOrder": "অর্ডার ট্র্যাক করুন",
+            "refundPolicy": "ফেরত নীতি",
+            "aboutUs": "আমাদের সম্পর্কে",
+            "privacy": "গোপনীয়তা",
+            "terms": "শর্তাবলী",
+            "copyright": "© {year} আস্থার হাট",
+            "associates": "আমাদের অংশীদার",
+            "description": "গুণমান এবং সত্যতার মাধ্যমে বিশ্বাস তৈরি করা। প্রিমিয়াম পণ্যের জন্য আপনার নির্ভরযোগ্য অংশীদার।",
+            "established": "প্রতিষ্ঠিত ২০২৪"
+        }
+    }
+}

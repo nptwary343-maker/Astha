@@ -1,0 +1,1042 @@
+[
+    {
+        "id": "bd-1",
+        "name": "Pran Chinigura Rice 1kg",
+        "category": "Grocery",
+        "brand": "Pran",
+        "price": 140,
+        "stock": 500,
+        "images": [
+            "https://chaldal.com/_mpimage/pran-chinigura-rice-1-kg?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127161&width=400&height=400&mode=scale"
+        ],
+        "description": "Authentic aroma and taste from the fields of Dinajpur.",
+        "slug": "pran-chinigura-rice-1kg"
+    },
+    {
+        "id": "bd-2",
+        "name": "Radhuni Turmeric Powder 200g",
+        "category": "Grocery",
+        "brand": "Radhuni",
+        "price": 95,
+        "stock": 400,
+        "images": [
+            "https://chaldal.com/_mpimage/radhuni-turmeric-powder-200-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D30713&width=400&height=400&mode=scale"
+        ],
+        "description": "High quality turmeric powder for vibrant color and flavor.",
+        "slug": "radhuni-turmeric-200g"
+    },
+    {
+        "id": "bd-3",
+        "name": "Aarong Dairy Pure Ghee 400g",
+        "category": "Grocery",
+        "brand": "Aarong",
+        "price": 580,
+        "stock": 100,
+        "images": [
+            "https://chaldal.com/_mpimage/aarong-dairy-pure-ghee-400-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D45678&width=400&height=400&mode=scale"
+        ],
+        "description": "Homemade style pure ghee from Aarong Dairy.",
+        "slug": "aarong-pure-ghee-400g"
+    },
+    {
+        "id": "bd-4",
+        "name": "Ispahani Mirzapore Tea Bag 50pcs",
+        "category": "Beverages",
+        "brand": "Ispahani",
+        "price": 165,
+        "stock": 300,
+        "images": [
+            "https://chaldal.com/_mpimage/ispahani-mirzapore-tea-bags-50-pcs?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127231&width=400&height=400&mode=scale"
+        ],
+        "description": "The pride of Bangladeshi tea gardens.",
+        "slug": "ispahani-tea-50"
+    },
+    {
+        "id": "bd-5",
+        "name": "Teer Soybean Oil 2L",
+        "category": "Grocery",
+        "brand": "Teer",
+        "price": 360,
+        "stock": 250,
+        "images": [
+            "https://chaldal.com/_mpimage/teer-soyabean-oil-2-ltr?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D118558&width=400&height=400&mode=scale"
+        ],
+        "description": "Pure and healthy cooking oil.",
+        "slug": "teer-oil-2l"
+    },
+    {
+        "id": "bd-6",
+        "name": "Walton Primo GH11 4/64GB",
+        "category": "Electronics",
+        "brand": "Walton",
+        "price": 9999,
+        "stock": 40,
+        "images": [
+            "https://waltonbd.com/image/cache/catalog/mobile/primo-gh11/gh11-green-600x600.jpg"
+        ],
+        "description": "Best value smartphone with crystal clear display.",
+        "slug": "walton-gh11-green"
+    },
+    {
+        "id": "bd-7",
+        "name": "Premium Jamdani Saree (Narayanganj)",
+        "category": "Fashion",
+        "brand": "Traditional",
+        "price": 12500,
+        "stock": 15,
+        "images": [
+            "https://static-01.daraz.com.bd/p/d234567-jamdani.jpg"
+        ],
+        "description": "Exquisite hand-woven Jamdani saree with gold Zari work.",
+        "slug": "premium-jamdani-gold"
+    },
+    {
+        "id": "bd-8",
+        "name": "Artisan Slim Fit Panjabi - Blue",
+        "category": "Fashion",
+        "brand": "Artisan",
+        "price": 2850,
+        "stock": 55,
+        "images": [
+            "https://www.artisanoutfitters.com.bd/images/thumbs/001/panjabi-slim.jpeg"
+        ],
+        "description": "Modern slim fit Panjabi with intricate chest embroidery.",
+        "slug": "artisan-panjabi-blue"
+    },
+    {
+        "id": "bd-9",
+        "name": "Fresh Mustard Oil (Ghani) 1L",
+        "category": "Grocery",
+        "brand": "Fresh",
+        "price": 280,
+        "stock": 180,
+        "images": [
+            "https://chaldal.com/_mpimage/fresh-mustard-oil-1-ltr?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D118560&width=400&height=400&mode=scale"
+        ],
+        "description": "Pungent and pure cold-pressed mustard oil.",
+        "slug": "fresh-mustard-oil-1l"
+    },
+    {
+        "id": "bd-10",
+        "name": "Bashundhara Facial Tissue 200pcs",
+        "category": "Personal Care",
+        "brand": "Bashundhara",
+        "price": 85,
+        "stock": 600,
+        "images": [
+            "https://chaldal.com/_mpimage/bashundhara-facial-tissue-200-pcs?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D120158&width=400&height=400&mode=scale"
+        ],
+        "description": "Soft and absorbent tissues for daily use.",
+        "slug": "bashundhara-tissue-200"
+    },
+    {
+        "id": "bd-11",
+        "name": "ACI Pure Iodized Salt 1kg",
+        "category": "Grocery",
+        "brand": "ACI",
+        "price": 42,
+        "stock": 1000,
+        "images": [
+            "https://chaldal.com/_mpimage/aci-pure-salt-1-kg?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D11556&width=400&height=400&mode=scale"
+        ],
+        "description": "Essential iodized salt for a healthy life.",
+        "slug": "aci-salt-1kg"
+    },
+    {
+        "id": "bd-12",
+        "name": "Radhuni Chili Powder 100g",
+        "category": "Grocery",
+        "brand": "Radhuni",
+        "price": 65,
+        "stock": 450,
+        "images": [
+            "https://chaldal.com/_mpimage/radhuni-chili-powder-100-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D30714&width=400&height=400&mode=scale"
+        ],
+        "description": "Fiery chili powder for spicy Bangladeshi curries.",
+        "slug": "radhuni-chili-100g"
+    },
+    {
+        "id": "bd-13",
+        "name": "Pran Dry Cake 350g",
+        "category": "Snacks",
+        "brand": "Pran",
+        "price": 120,
+        "stock": 200,
+        "images": [
+            "https://chaldal.com/_mpimage/pran-dry-cake-350-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127165&width=400&height=400&mode=scale"
+        ],
+        "description": "Traditional dry cake biscuit, perfect with evening tea.",
+        "slug": "pran-dry-cake"
+    },
+    {
+        "id": "bd-14",
+        "name": "Moushum Mustard Seeds for Agri",
+        "category": "Agriculture",
+        "brand": "Moushum",
+        "price": 150,
+        "stock": 100,
+        "images": [
+            "https://placehold.co/600x600?text=Mustard+Seeds+BD"
+        ],
+        "description": "High yield mustard seeds for winter cultivation.",
+        "slug": "mustard-seeds-agri"
+    },
+    {
+        "id": "bd-15",
+        "name": "Bombay Sweets Chanachur 150g",
+        "category": "Snacks",
+        "brand": "Bombay Sweets",
+        "price": 45,
+        "stock": 500,
+        "images": [
+            "https://chaldal.com/_mpimage/bombay-sweets-chanachur-150-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D56789&width=400&height=400&mode=scale"
+        ],
+        "description": "The classic tangy chanachur of Bangladesh.",
+        "slug": "bombay-chanachur"
+    },
+    {
+        "id": "bd-16",
+        "name": "Walton Oven 20L Smart-Pro",
+        "category": "Electronics",
+        "brand": "Walton",
+        "price": 8500,
+        "stock": 12,
+        "images": [
+            "https://waltonbd.com/image/cache/catalog/home-appliance/micro-wave-oven/600x600.jpg"
+        ],
+        "description": "Efficient and stylish solo microwave for BD homes.",
+        "slug": "walton-oven-20l"
+    },
+    {
+        "id": "bd-17",
+        "name": "Fresh Hilsha Padma 1kg (Pre-order)",
+        "category": "Grocery",
+        "brand": "Fresh",
+        "price": 1850,
+        "stock": 30,
+        "images": [
+            "https://placehold.co/600x600?text=Padma+Ilish"
+        ],
+        "description": "Authentic Padma River Ilish, delivered fresh.",
+        "slug": "padma-ilish-1kg"
+    },
+    {
+        "id": "bd-18",
+        "name": "Yellow Silk Kurta - Maroon",
+        "category": "Fashion",
+        "brand": "Yellow",
+        "price": 4200,
+        "stock": 25,
+        "images": [
+            "https://www.yellowbd.com/images/silk-kurta.jpg"
+        ],
+        "description": "Premium silk kurta for elegant evening wear.",
+        "slug": "yellow-silk-kurta"
+    },
+    {
+        "id": "bd-19",
+        "name": "Kaziranga Organic Honey 250g",
+        "category": "Grocery",
+        "brand": "Sundorbans",
+        "price": 350,
+        "stock": 60,
+        "images": [
+            "https://placehold.co/600x600?text=Sundorban+Honey"
+        ],
+        "description": "Raw, organic honey from the Sundorbans mangrove forest.",
+        "slug": "sundorban-honey"
+    },
+    {
+        "id": "bd-20",
+        "name": "Beximco T-Shirt - Blue Abstract",
+        "category": "Fashion",
+        "brand": "Yellow",
+        "price": 1150,
+        "stock": 100,
+        "images": [
+            "https://www.yellowbd.com/images/tshirt.jpg"
+        ],
+        "description": "High-quality cotton T-shirt with modern print.",
+        "slug": "yellow-abstract-tshirt"
+    },
+    {
+        "id": "bd-21",
+        "name": "Lux Soft Rose Soap 100g x 3",
+        "category": "Personal Care",
+        "brand": "Unilever BD",
+        "price": 175,
+        "stock": 200,
+        "images": [
+            "https://chaldal.com/_mpimage/lux-soft-rose-soap-100-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D4532&width=400&height=400&mode=scale"
+        ],
+        "description": "Classic rose scented soap for glowing skin.",
+        "slug": "lux-soap-pack"
+    },
+    {
+        "id": "bd-22",
+        "name": "Parachute Coconut Oil 300ml",
+        "category": "Personal Care",
+        "brand": "Marico",
+        "price": 190,
+        "stock": 350,
+        "images": [
+            "https://chaldal.com/_mpimage/parachute-coconut-oil-300-ml?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D3245&width=400&height=400&mode=scale"
+        ],
+        "description": "100% pure coconut oil for healthy hair.",
+        "slug": "parachute-300ml"
+    },
+    {
+        "id": "bd-23",
+        "name": "Nakshi Kantha Hand-Made (Large)",
+        "category": "Home Decor",
+        "brand": "Traditional",
+        "price": 5500,
+        "stock": 8,
+        "images": [
+            "https://placehold.co/600x600?text=Nakshi+Kantha"
+        ],
+        "description": "Intricate hand-stitched traditional quilt.",
+        "slug": "nakshi-kantha-large"
+    },
+    {
+        "id": "bd-24",
+        "name": "Traditional Brass Puja Set",
+        "category": "Home Decor",
+        "brand": "Traditional",
+        "price": 2800,
+        "stock": 12,
+        "images": [
+            "https://placehold.co/600x600?text=Brass+Puja+Set"
+        ],
+        "description": "Elegant brass items for traditional home decor.",
+        "slug": "brass-puja-set"
+    },
+    {
+        "id": "bd-25",
+        "name": "Fresh Soy Protein 500g",
+        "category": "Grocery",
+        "brand": "Fresh",
+        "price": 110,
+        "stock": 150,
+        "images": [
+            "https://chaldal.com/_mpimage/fresh-soy-protein-500-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D6789&width=400&height=400&mode=scale"
+        ],
+        "description": "Nutritious soy protein chunks for vegetarian dishes.",
+        "slug": "fresh-soy-protein"
+    },
+    {
+        "id": "bd-26",
+        "name": "Vision Blender 3-in-1",
+        "category": "Electronics",
+        "brand": "Vision",
+        "price": 3200,
+        "stock": 20,
+        "images": [
+            "https://rflbestbuy.com/images/vision-blender.jpg"
+        ],
+        "description": "High power blender with dry and wet grinding jars.",
+        "slug": "vision-blender-3in1"
+    },
+    {
+        "id": "bd-27",
+        "name": "RFL Plastic Chair - Elegant Blue",
+        "category": "Home Decor",
+        "brand": "RFL",
+        "price": 650,
+        "stock": 80,
+        "images": [
+            "https://rflbestbuy.com/images/rfl-chair.jpg"
+        ],
+        "description": "Durable and aesthetic plastic chair for home use.",
+        "slug": "rfl-chair-blue"
+    },
+    {
+        "id": "bd-28",
+        "name": "Symphony Z42 Smart Phone",
+        "category": "Electronics",
+        "brand": "Symphony",
+        "price": 8990,
+        "stock": 30,
+        "images": [
+            "https://symphony-mobile.com/images/z42.jpg"
+        ],
+        "description": "Trendy look with powerful battery performance.",
+        "slug": "symphony-z42"
+    },
+    {
+        "id": "bd-29",
+        "name": "Pepsodent Germi Check 200g",
+        "category": "Personal Care",
+        "brand": "Unilever BD",
+        "price": 145,
+        "stock": 400,
+        "images": [
+            "https://chaldal.com/_mpimage/pepsodent-germi-check-200-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D1122&width=400&height=400&mode=scale"
+        ],
+        "description": "Complete oral care for the whole family.",
+        "slug": "pepsodent-200g"
+    },
+    {
+        "id": "bd-30",
+        "name": "ACI Pure Wheat Atta 1kg",
+        "category": "Grocery",
+        "brand": "ACI",
+        "price": 65,
+        "stock": 500,
+        "images": [
+            "https://chaldal.com/_mpimage/aci-pure-atta-1-kg?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D3344&width=400&height=400&mode=scale"
+        ],
+        "description": "Nutrient rich whole wheat atta.",
+        "slug": "aci-atta-1kg"
+    },
+    {
+        "id": "bd-31",
+        "name": "Savlon Antiseptic Liquid 1000ml",
+        "category": "Health & Beauty",
+        "brand": "ACI",
+        "price": 320,
+        "stock": 100,
+        "images": [
+            "https://chaldal.com/_mpimage/savlon-antiseptic-liquid-1000-ml?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D5566&width=400&height=400&mode=scale"
+        ],
+        "description": "Trusted protection against germs and infections.",
+        "slug": "savlon-1l"
+    },
+    {
+        "id": "bd-32",
+        "name": "Pran UP Soft Drink 2L",
+        "category": "Beverages",
+        "brand": "Pran",
+        "price": 110,
+        "stock": 150,
+        "images": [
+            "https://chaldal.com/_mpimage/pran-up-2-ltr?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127167&width=400&height=400&mode=scale"
+        ],
+        "description": "Refreshingly bubbly lemon drink.",
+        "slug": "pran-up-2l"
+    },
+    {
+        "id": "bd-33",
+        "name": "Akij White Cement 40kg",
+        "category": "Agriculture",
+        "brand": "Akij",
+        "price": 1150,
+        "stock": 20,
+        "images": [
+            "https://placehold.co/600x600?text=White+Cement+BD"
+        ],
+        "description": "Construction grade white cement for finishing.",
+        "slug": "akij-white-cement"
+    },
+    {
+        "id": "bd-34",
+        "name": "Pusti Mustard Oil 500ml",
+        "category": "Grocery",
+        "brand": "Pusti",
+        "price": 145,
+        "stock": 200,
+        "images": [
+            "https://chaldal.com/_mpimage/pusti-mustard-oil-500-ml?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D9988&width=400&height=400&mode=scale"
+        ],
+        "description": "Balanced flavor mustard oil for frying.",
+        "slug": "pusti-oil-500ml"
+    },
+    {
+        "id": "bd-35",
+        "name": "Artisan Polo Shirt - Classic Grey",
+        "category": "Fashion",
+        "brand": "Artisan",
+        "price": 950,
+        "stock": 120,
+        "images": [
+            "https://www.artisanoutfitters.com.bd/images/polo.jpg"
+        ],
+        "description": "Comfortable cotton polo shirt for casual wear.",
+        "slug": "artisan-polo-grey"
+    },
+    {
+        "id": "bd-36",
+        "name": "Vision Indigo 2.5 Ton AC",
+        "category": "Electronics",
+        "brand": "Vision",
+        "price": 85000,
+        "stock": 5,
+        "images": [
+            "https://rflbestbuy.com/images/ac-vision.jpg"
+        ],
+        "description": "Powerful cooling with energy saving inverter technology.",
+        "slug": "vision-ac-2.5-ton"
+    },
+    {
+        "id": "bd-37",
+        "name": "Gazi Water Pump 1HP",
+        "category": "Home Decor",
+        "brand": "Gazi",
+        "price": 4200,
+        "stock": 15,
+        "images": [
+            "https://gazi-group.com/images/pump.jpg"
+        ],
+        "description": "Reliable water pumping solution for households.",
+        "slug": "gazi-pump-1hp"
+    },
+    {
+        "id": "bd-38",
+        "name": "Premium Katan Saree - Red",
+        "category": "Fashion",
+        "brand": "Traditional",
+        "price": 6500,
+        "stock": 20,
+        "images": [
+            "https://placehold.co/600x600?text=Katan+Saree"
+        ],
+        "description": "Traditional Katan saree with heavy work for weddings.",
+        "slug": "katan-saree-red"
+    },
+    {
+        "id": "bd-39",
+        "name": "Ispahani Zareen Premium Tea 400g",
+        "category": "Beverages",
+        "brand": "Ispahani",
+        "price": 280,
+        "stock": 150,
+        "images": [
+            "https://chaldal.com/_mpimage/ispahani-zareen-tea-400-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127233&width=400&height=400&mode=scale"
+        ],
+        "description": "The premium choice for connoisseurs.",
+        "slug": "ispahani-zareen"
+    },
+    {
+        "id": "bd-40",
+        "name": "Radhuni Garam Masala 40g",
+        "category": "Grocery",
+        "brand": "Radhuni",
+        "price": 45,
+        "stock": 500,
+        "images": [
+            "https://chaldal.com/_mpimage/radhuni-garam-masala-40-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D30715&width=400&height=400&mode=scale"
+        ],
+        "description": "Aromatic blend of roasted ground spices.",
+        "slug": "radhuni-garam-masala"
+    },
+    {
+        "id": "bd-41",
+        "name": "Pran All Time Family Cake 300g",
+        "category": "Snacks",
+        "brand": "Pran",
+        "price": 85,
+        "stock": 120,
+        "images": [
+            "https://chaldal.com/_mpimage/pran-family-cake-300-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127169&width=400&height=400&mode=scale"
+        ],
+        "description": "Soft and tasty snack for the family.",
+        "slug": "pran-family-cake"
+    },
+    {
+        "id": "bd-42",
+        "name": "Bashundhara Diapant XL 40pcs",
+        "category": "Personal Care",
+        "brand": "Bashundhara",
+        "price": 1050,
+        "stock": 50,
+        "images": [
+            "https://chaldal.com/_mpimage/bashundhara-diapant-xl?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D120160&width=400&height=400&mode=scale"
+        ],
+        "description": "High absorbency baby diapers with comfortable fit.",
+        "slug": "bashundhara-diaper-xl"
+    },
+    {
+        "id": "bd-43",
+        "name": "Fresh Drink 1.5L Mineral Water",
+        "category": "Beverages",
+        "brand": "Fresh",
+        "price": 30,
+        "stock": 500,
+        "images": [
+            "https://chaldal.com/_mpimage/fresh-water-1.5-ltr?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D118562&width=400&height=400&mode=scale"
+        ],
+        "description": "Pure and refreshing bottled water.",
+        "slug": "fresh-water-1.5l"
+    },
+    {
+        "id": "bd-44",
+        "name": "Yellow Denim Jacket - Black",
+        "category": "Fashion",
+        "brand": "Yellow",
+        "price": 3450,
+        "stock": 30,
+        "images": [
+            "https://www.yellowbd.com/images/denim-jacket.jpg"
+        ],
+        "description": "Trendy black denim jacket with rugged finish.",
+        "slug": "yellow-denim-jacket"
+    },
+    {
+        "id": "bd-45",
+        "name": "Moushum Hybrid Potato Seeds 5kg",
+        "category": "Agriculture",
+        "brand": "Moushum",
+        "price": 850,
+        "stock": 15,
+        "images": [
+            "https://placehold.co/600x600?text=Potato+Seeds+BD"
+        ],
+        "description": "High quality potato seeds for winter farming.",
+        "slug": "potato-seeds-5kg"
+    },
+    {
+        "id": "bd-46",
+        "name": "Walton Fridge 213L Inverter",
+        "category": "Electronics",
+        "brand": "Walton",
+        "price": 32500,
+        "stock": 6,
+        "images": [
+            "https://waltonbd.com/image/cache/catalog/fridge/213/fridge.jpg"
+        ],
+        "description": "Energy efficient direct cool refrigerator.",
+        "slug": "walton-fridge-213l"
+    },
+    {
+        "id": "bd-47",
+        "name": "Anjans Block Print Kurti - Yellow",
+        "category": "Fashion",
+        "brand": "Anjans",
+        "price": 1850,
+        "stock": 40,
+        "images": [
+            "https://scontent.fdac24-1.fna.fbcdn.net/kurtis.jpg"
+        ],
+        "description": "Bright and colorful cotton kurti for daily wear.",
+        "slug": "anjans-kurti-yellow"
+    },
+    {
+        "id": "bd-48",
+        "name": "Beximco T-Shirt - Red Casual",
+        "category": "Fashion",
+        "brand": "Yellow",
+        "price": 1050,
+        "stock": 100,
+        "images": [
+            "https://www.yellowbd.com/images/tshirt-red.jpg"
+        ],
+        "description": "Premium cotton T-shirt, breathable fabric.",
+        "slug": "yellow-casual-red"
+    },
+    {
+        "id": "bd-49",
+        "name": "RFL Water Bottle 1L - Set of 6",
+        "category": "Home Decor",
+        "brand": "RFL",
+        "price": 450,
+        "stock": 100,
+        "images": [
+            "https://rflbestbuy.com/images/rfl-bottles.jpg"
+        ],
+        "description": "Food grade plastic water bottles for storage.",
+        "slug": "rfl-bottles-set"
+    },
+    {
+        "id": "bd-50",
+        "name": "Square Radhuni Meat Curry Masala 50g",
+        "category": "Grocery",
+        "brand": "Radhuni",
+        "price": 42,
+        "stock": 300,
+        "images": [
+            "https://chaldal.com/_mpimage/radhuni-meat-masala?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D30716&width=400&height=400&mode=scale"
+        ],
+        "description": "The secret to the perfect Bangladeshi meat curry.",
+        "slug": "radhuni-meat-masala-50g"
+    },
+    {
+        "id": "bd-51",
+        "name": "Akij Ceramics Floor Tiles - Grey",
+        "category": "Home Decor",
+        "brand": "Akij",
+        "price": 85,
+        "stock": 1000,
+        "images": [
+            "https://placehold.co/600x600?text=Akij+Tiles"
+        ],
+        "description": "Elegant and durable floor tiles (Price per sqft).",
+        "slug": "akij-tiles-grey"
+    },
+    {
+        "id": "bd-52",
+        "name": "Moushum Tomato Seeds 10g",
+        "category": "Agriculture",
+        "brand": "Moushum",
+        "price": 120,
+        "stock": 50,
+        "images": [
+            "https://placehold.co/600x600?text=Tomato+Seeds"
+        ],
+        "description": "Hybrid tomato seeds for patio and field gardening.",
+        "slug": "tomato-seeds-10g"
+    },
+    {
+        "id": "bd-53",
+        "name": "Pran Lachha Semai 200g",
+        "category": "Grocery",
+        "brand": "Pran",
+        "price": 65,
+        "stock": 200,
+        "images": [
+            "https://chaldal.com/_mpimage/pran-lachha-semai-200-gm?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127171&width=400&height=400&mode=scale"
+        ],
+        "description": "Crispy lachha semai for traditional Eid sweets.",
+        "slug": "pran-semai-200g"
+    },
+    {
+        "id": "bd-54",
+        "name": "Teer Full Cream Milk Powder 400g",
+        "category": "Grocery",
+        "brand": "Teer",
+        "price": 380,
+        "stock": 100,
+        "images": [
+            "https://chaldal.com/_mpimage/teer-milk-powder?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D118564&width=400&height=400&mode=scale"
+        ],
+        "description": "Nutritious full cream milk powder.",
+        "slug": "teer-milk-powder"
+    },
+    {
+        "id": "bd-55",
+        "name": "Symphony i98 Smart Phone",
+        "category": "Electronics",
+        "brand": "Symphony",
+        "price": 7500,
+        "stock": 40,
+        "images": [
+            "https://symphony-mobile.com/images/i98.jpg"
+        ],
+        "description": "Reliable smartphone with high-definition display.",
+        "slug": "symphony-i98"
+    },
+    {
+        "id": "bd-56",
+        "name": "Bashundhara LP Gas 12kg Refill",
+        "category": "Home Decor",
+        "brand": "Bashundhara",
+        "price": 1450,
+        "stock": 100,
+        "images": [
+            "https://placehold.co/600x600?text=LP+Gas+BD"
+        ],
+        "description": "Safe and reliable cooking gas delivery.",
+        "slug": "bashundhara-gas-12kg"
+    },
+    {
+        "id": "bd-57",
+        "name": "Fresh Tea Biscuit 100g",
+        "category": "Snacks",
+        "brand": "Fresh",
+        "price": 25,
+        "stock": 400,
+        "images": [
+            "https://chaldal.com/_mpimage/fresh-tea-biscuit?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D118566&width=400&height=400&mode=scale"
+        ],
+        "description": "Simple tea biscuit, best snack with milk tea.",
+        "slug": "fresh-tea-biscuit"
+    },
+    {
+        "id": "bd-58",
+        "name": "Artisan Polo Shirt - Sky Blue",
+        "category": "Fashion",
+        "brand": "Artisan",
+        "price": 950,
+        "stock": 60,
+        "images": [
+            "https://www.artisanoutfitters.com.bd/images/polo-sky.jpg"
+        ],
+        "description": "Casual sky blue polo for a smart summer look.",
+        "slug": "artisan-polo-sky"
+    },
+    {
+        "id": "bd-59",
+        "name": "Vision Inverter Iron",
+        "category": "Electronics",
+        "brand": "Vision",
+        "price": 1850,
+        "stock": 25,
+        "images": [
+            "https://rflbestbuy.com/images/vision-iron.jpg"
+        ],
+        "description": "Quick heating and smooth gliding iron.",
+        "slug": "vision-iron-inverter"
+    },
+    {
+        "id": "bd-60",
+        "name": "Traditional Cotton Lungi - Checked",
+        "category": "Fashion",
+        "brand": "Lungura",
+        "price": 450,
+        "stock": 200,
+        "images": [
+            "https://placehold.co/600x600?text=Cotton+Lungi"
+        ],
+        "description": "Cotton checked lungi for daily comfort.",
+        "slug": "traditional-lungi-checked"
+    },
+    {
+        "id": "bd-61",
+        "name": "ACI Pure Sunflower Oil 1L",
+        "category": "Grocery",
+        "brand": "ACI",
+        "price": 280,
+        "stock": 150,
+        "images": [
+            "https://chaldal.com/_mpimage/aci-sunflower-oil?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D11558&width=400&height=400&mode=scale"
+        ],
+        "description": "Heart-healthy pure sunflower oil.",
+        "slug": "aci-sunflower-oil-1l"
+    },
+    {
+        "id": "bd-62",
+        "name": "Radhuni Kasuri Methi 25g",
+        "category": "Grocery",
+        "brand": "Radhuni",
+        "price": 35,
+        "stock": 300,
+        "images": [
+            "https://chaldal.com/_mpimage/radhuni-kasuri-methi?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D30717&width=400&height=400&mode=scale"
+        ],
+        "description": "Dried fenugreek leaves for rich aromatic curries.",
+        "slug": "radhuni-kasuri-methi"
+    },
+    {
+        "id": "bd-63",
+        "name": "Pran Potato Crackers 25g x 10",
+        "category": "Snacks",
+        "brand": "Pran",
+        "price": 100,
+        "stock": 150,
+        "images": [
+            "https://chaldal.com/_mpimage/pran-potato-crackers?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127173&width=400&height=400&mode=scale"
+        ],
+        "description": "Classic salty potato chips, crispy and thin.",
+        "slug": "pran-crackers-pack"
+    },
+    {
+        "id": "bd-64",
+        "name": "Walton Blender Pro Series",
+        "category": "Electronics",
+        "brand": "Walton",
+        "price": 4500,
+        "stock": 15,
+        "images": [
+            "https://waltonbd.com/image/blender.jpg"
+        ],
+        "description": "Premium blender with stainless steel jars.",
+        "slug": "walton-blender-pro"
+    },
+    {
+        "id": "bd-65",
+        "name": "ACI Savlon Soap Pack of 3",
+        "category": "Health & Beauty",
+        "brand": "ACI",
+        "price": 185,
+        "stock": 300,
+        "images": [
+            "https://chaldal.com/_mpimage/savlon-soap?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D5568&width=400&height=400&mode=scale"
+        ],
+        "description": "Antibacterial soap for daily hygiene.",
+        "slug": "savlon-soap-pack"
+    },
+    {
+        "id": "bd-66",
+        "name": "Fresh Full Cream Powder 500g",
+        "category": "Grocery",
+        "brand": "Fresh",
+        "price": 420,
+        "stock": 100,
+        "images": [
+            "https://chaldal.com/_mpimage/fresh-milk-powder?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D118568&width=400&height=400&mode=scale"
+        ],
+        "description": "Creamy and delicious full cream milk powder.",
+        "slug": "fresh-milk-powder-500g"
+    },
+    {
+        "id": "bd-67",
+        "name": "Moushum Chilli Seeds 5g",
+        "category": "Agriculture",
+        "brand": "Moushum",
+        "price": 150,
+        "stock": 40,
+        "images": [
+            "https://placehold.co/600x600?text=Chilli+Seeds"
+        ],
+        "description": "Hot chilli variety seeds for home gardening.",
+        "slug": "chilli-seeds-agri"
+    },
+    {
+        "id": "bd-68",
+        "name": "Bashundhara Notebooks Set of 5",
+        "category": "Personal Care",
+        "brand": "Bashundhara",
+        "price": 350,
+        "stock": 100,
+        "images": [
+            "https://placehold.co/600x600?text=Bashundhara+Notebooks"
+        ],
+        "description": "High-quality white paper notebooks for students.",
+        "slug": "bashundhara-notebooks"
+    },
+    {
+        "id": "bd-69",
+        "name": "RFL Water Cooler 20L",
+        "category": "Home Decor",
+        "brand": "RFL",
+        "price": 2850,
+        "stock": 20,
+        "images": [
+            "https://rflbestbuy.com/images/rfl-cooler.jpg"
+        ],
+        "description": "Keeps water chilled for hours, portable design.",
+        "slug": "rfl-cooler-20l"
+    },
+    {
+        "id": "bd-70",
+        "name": "Beximco T-Shirt - Black Professional",
+        "category": "Fashion",
+        "brand": "Yellow",
+        "price": 1250,
+        "stock": 150,
+        "images": [
+            "https://www.yellowbd.com/images/tshirt-black.jpg"
+        ],
+        "description": "Deep black premium T-shirt for multipurpose wear.",
+        "slug": "yellow-professional-black"
+    },
+    {
+        "id": "bd-71",
+        "name": "Radhuni Biryani Masala 40g",
+        "category": "Grocery",
+        "brand": "Radhuni",
+        "price": 55,
+        "stock": 400,
+        "images": [
+            "https://chaldal.com/_mpimage/radhuni-biryani-masala?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D30718&width=400&height=400&mode=scale"
+        ],
+        "description": "The aroma of authentic Bangladeshi Biryani.",
+        "slug": "radhuni-biryani-masala"
+    },
+    {
+        "id": "bd-72",
+        "name": "Pran Tamarind Candy Pack 50pcs",
+        "category": "Snacks",
+        "brand": "Pran",
+        "price": 55,
+        "stock": 300,
+        "images": [
+            "https://chaldal.com/_mpimage/pran-tamarind-candy?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127175&width=400&height=400&mode=scale"
+        ],
+        "description": "Tangy and sweet traditional pulse tamarind candy.",
+        "slug": "pran-tamarind-candy"
+    },
+    {
+        "id": "bd-73",
+        "name": "Ispahani Tea Bag 100pcs",
+        "category": "Beverages",
+        "brand": "Ispahani",
+        "price": 310,
+        "stock": 200,
+        "images": [
+            "https://chaldal.com/_mpimage/ispahani-tea-bags-100?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D127235&width=400&height=400&mode=scale"
+        ],
+        "description": "Bulk pack of your favorite morning tea.",
+        "slug": "ispahani-tea-100"
+    },
+    {
+        "id": "bd-74",
+        "name": "ACI Savlon Handwash 200ml Refill",
+        "category": "Personal Care",
+        "brand": "ACI",
+        "price": 65,
+        "stock": 350,
+        "images": [
+            "https://chaldal.com/_mpimage/savlon-handwash-refill?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D5570&width=400&height=400&mode=scale"
+        ],
+        "description": "Maximum protection against germs while keeping hands soft.",
+        "slug": "savlon-handwash-200ml"
+    },
+    {
+        "id": "bd-75",
+        "name": "Bashundhara Toilet Tissue 4pcs Pack",
+        "category": "Personal Care",
+        "brand": "Bashundhara",
+        "price": 120,
+        "stock": 400,
+        "images": [
+            "https://chaldal.com/_mpimage/bashundhara-toilet-tissue?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D120162&width=400&height=400&mode=scale"
+        ],
+        "description": "Premium softness and high absorption for hygiene.",
+        "slug": "bashundhara-tissue-4pack"
+    },
+    {
+        "id": "bd-76",
+        "name": "Walton Smart Oven Luxury 25L",
+        "category": "Electronics",
+        "brand": "Walton",
+        "price": 12500,
+        "stock": 8,
+        "images": [
+            "https://waltonbd.com/image/smart-oven.jpg"
+        ],
+        "description": "Convection microwave with digital control panel.",
+        "slug": "walton-smart-oven-25l"
+    },
+    {
+        "id": "bd-77",
+        "name": "Artisan Polo Shirt - Deep Maroon",
+        "category": "Fashion",
+        "brand": "Artisan",
+        "price": 950,
+        "stock": 80,
+        "images": [
+            "https://www.artisanoutfitters.com.bd/images/polo-maroon.jpg"
+        ],
+        "description": "Classic deep maroon polo for any casual outing.",
+        "slug": "artisan-polo-maroon"
+    },
+    {
+        "id": "bd-78",
+        "name": "Yellow Denim Jean - Light Blue",
+        "category": "Fashion",
+        "brand": "Yellow",
+        "price": 2850,
+        "stock": 40,
+        "images": [
+            "https://www.yellowbd.com/images/jean-light.jpg"
+        ],
+        "description": "Trendy light wash denim for a relaxed day.",
+        "slug": "yellow-denim-light-wash"
+    },
+    {
+        "id": "bd-79",
+        "name": "Fresh Soy Milk 1L",
+        "category": "Beverages",
+        "brand": "Fresh",
+        "price": 185,
+        "stock": 60,
+        "images": [
+            "https://chaldal.com/_mpimage/fresh-soy-milk?src=https%3A%2F%2Feggyolk.chaldal.com%2Fapi%2FImage%2FShowImage%3Fimageid%3D118570&width=400&height=400&mode=scale"
+        ],
+        "description": "Healthy lactose-free alternative milk.",
+        "slug": "fresh-soy-milk-1l"
+    },
+    {
+        "id": "bd-80",
+        "name": "Anjans Panjabi for Kids - Cotton",
+        "category": "Fashion",
+        "brand": "Anjans",
+        "price": 1250,
+        "stock": 50,
+        "images": [
+            "https://scontent.fdac24-1.fna.fbcdn.net/kids-panjabi.jpg"
+        ],
+        "description": "Soft cotton Panjabi with cute embroidery for children.",
+        "slug": "anjans-kids-panjabi"
+    }
+]

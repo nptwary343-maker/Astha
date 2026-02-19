@@ -1,0 +1,24 @@
+
+> aez@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 46s
+  Running TypeScript ...
+Failed to compile.
+
+./actions/checkout.ts:186:29
+Type error: 'currentData' is possibly 'undefined'.
+
+[0m [90m 184 |[39m                 [36mconst[39m currentData [33m=[39m snap[33m.[39mdata()[33m;[39m
+ [90m 185 |[39m                 transaction[33m.[39mupdate(productRefs[i][33m.[39mref[33m,[39m {
+[31m[1m>[22m[39m[90m 186 |[39m                     stock[33m:[39m (currentData[33m.[39mstock [33m||[39m [35m0[39m) [33m-[39m item[33m.[39mquantity[33m,[39m
+ [90m     |[39m                             [31m[1m^[22m[39m
+ [90m 187 |[39m                     lastSoldAt[33m:[39m [36mnew[39m [33mDate[39m()[33m.[39mtoISOString()
+ [90m 188 |[39m                 })[33m;[39m
+ [90m 189 |[39m             }[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,65 @@
+
+> aez@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 48s
+  Running TypeScript ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/37) ...
+  Generating static pages using 1 worker (9/37) 
+  Generating static pages using 1 worker (18/37) 
+  Generating static pages using 1 worker (27/37) 
+Rendering Home Page (Direct Firestore Mode)
+✓ Generating static pages using 1 worker (37/37) in 3.4s
+  Finalizing page optimization ...
+
+Route (app)                Revalidate  Expire
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /account
+├ ○ /admin
+├ ○ /admin-login
+├ ○ /admin/about
+├ ○ /admin/admins
+├ ○ /admin/assign
+├ ○ /admin/banners
+├ ○ /admin/calculation
+├ ○ /admin/create-ad
+├ ○ /admin/customers
+├ ○ /admin/import
+├ ○ /admin/invoices
+├ ○ /admin/manual-orders
+├ ○ /admin/notifications
+├ ○ /admin/orders
+├ ○ /admin/products
+├ ○ /admin/reports
+├ ○ /admin/settings
+├ ○ /admin/tracking
+├ ƒ /api/ai-generate
+├ ƒ /api/create-radius-ad
+├ ƒ /api/dev-verify
+├ ƒ /api/settings
+├ ƒ /api/sync-pixel
+├ ○ /billing
+├ ○ /cart
+├ ○ /login
+├ ƒ /order-success/[id]
+├ ƒ /product/[id]
+├ ○ /robots.txt
+├ ○ /shop
+├ ○ /signup
+├ ○ /sitemap.xml                   1h      1y
+└ ○ /tracking
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 🔐 0. Helper Functions for Zero Trust
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      // Check if the user exists in 'admin_users' collection and has admin/super_admin/manager role
+      // Note: This costs 1 read per request.
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid));
+    }
+
+    function isDeliveryMan() {
+        // We assume delivery men are also in 'admin_users' or a separate 'delivery_users' collection?
+        // For now, let's assume they are in 'admin_users' with role 'delivery'
+        // OR we just check if they are assigned to the order.
+        return isAuthenticated();
+    }
+
+    // 🛡️ 1. Products: Public Read, Admin Write
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin(); 
+    }
+
+    // 🛡️ 2. Orders: Granular Access
+    match /orders/{orderId} {
+      allow read: if isAdmin() || 
+        (isAuthenticated() && resource.data.customer.userId == request.auth.uid) || 
+        (isAuthenticated() && resource.data.deliveryManId == request.auth.uid);
+      
+      allow update: if isAdmin() || 
+        (isAuthenticated() && resource.data.deliveryManId == request.auth.uid && 
+         request.resource.data.diff(resource.data).affectedKeys()
+         .hasOnly(['orderStatus', 'payment', 'deliveredAt']));
+
+      allow create: if isAuthenticated();
+    }
+
+    // 🛡️ 3. Admin Users: Read Own OR if Admin
+    match /admin_users/{userId} {
+      // Allow if UID matches OR if searching by email (doc ID) and it matches auth email
+      allow read: if isAuthenticated() && (
+        request.auth.uid == userId || 
+        userId == request.auth.token.email ||
+        isAdmin()
+      );
+      allow write: if false; 
+    }
+
+    // 🛡️ 4. Regular Users: Read/Write Own
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 🛡️ 5. Activity Logs
+    match /activity_logs/{logId} {
+      allow create: if isAuthenticated();
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // 🛡️ 6. Public Content & Settings
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Match all others
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

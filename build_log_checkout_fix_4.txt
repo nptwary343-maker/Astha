@@ -1,0 +1,35 @@
+
+> aez@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.9min
+  Running TypeScript ...
+  Collecting page data using 1 worker ...
+❌ ADMIN_SDK_ERROR: Error: Service account object must contain a string "project_id" property.
+    at instantiateModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:740:9)
+    at instantiateRuntimeModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:768:12)
+    at getOrInstantiateRuntimeModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:781:12)
+    at Object.m (C:\aez\.next\server\chunks\[turbopack]_runtime.js:790:18)
+    at Object.<anonymous> (C:\aez\.next\server\app\api\dev-verify\security-test\route.js:8:3) {
+  errorInfo: [Object],
+  codePrefix: 'app'
+}
+Error: The default Firebase app does not exist. Make sure you call initializeApp() before using any of the Firebase services.
+    at instantiateModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:740:9)
+    at instantiateRuntimeModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:768:12)
+    at getOrInstantiateRuntimeModule (C:\aez\.next\server\chunks\[turbopack]_runtime.js:781:12)
+    at Object.m (C:\aez\.next\server\chunks\[turbopack]_runtime.js:790:18) {
+  errorInfo: [Object],
+  codePrefix: 'app'
+}
+
+> Build error occurred
+Error: Failed to collect page data for /api/dev-verify/security-test
+    at ignore-listed frames {
+  type: 'Error'
+}
