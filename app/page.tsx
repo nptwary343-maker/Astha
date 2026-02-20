@@ -14,6 +14,9 @@ import AlienBackground from '@/components/AlienBackground';
 
 import TrustBar from '@/components/TrustBar';
 
+export const runtime = 'edge';
+
+
 export default async function Home() {
   let products = await getFeaturedProducts();
   console.log(`🏠 Home Page: Rendering with ${products?.length} products`);

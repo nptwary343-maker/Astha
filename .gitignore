@@ -42,3 +42,4 @@ next-env.d.ts
 
 # local secrets
 service-account.json
+.dev.vars

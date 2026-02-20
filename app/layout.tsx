@@ -17,6 +17,8 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/components/ToastProvider";
 import { I18nProvider } from "@/context/I18nContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+export const runtime = 'edge';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
