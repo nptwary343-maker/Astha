@@ -1,7 +1,6 @@
 'use server';
 
-import clientPromise from '@/lib/mongodb-client';
-import { ObjectId } from 'mongodb';
+import { mongoDataApi } from '@/lib/mongo-data-api';
 import { revalidatePath } from 'next/cache';
 
 const DB_NAME = "astharhat_analytics";
@@ -18,12 +17,11 @@ export interface EmailTemplate {
 
 export async function getEmailTemplates() {
     try {
-        const client = await clientPromise;
-        const db = client.db(DB_NAME);
-        const templates = await db.collection(COLLECTION).find({}).toArray();
+        const response = await mongoDataApi.find(COLLECTION, {}, 100);
+        const templates = response?.documents || [];
         return templates.map((t: any) => ({
             ...t,
-            _id: t._id.toString()
+            _id: t._id?.toString() || ""
         })) as EmailTemplate[];
     } catch (e) {
         console.error("Failed to fetch templates", e);
@@ -33,9 +31,6 @@ export async function getEmailTemplates() {
 
 export async function saveEmailTemplate(template: EmailTemplate) {
     try {
-        const client = await clientPromise;
-        const db = client.db(DB_NAME);
-
         const { _id, ...data } = template;
         const updateData = {
             ...data,
@@ -43,12 +38,16 @@ export async function saveEmailTemplate(template: EmailTemplate) {
         };
 
         if (_id) {
-            await db.collection(COLLECTION).updateOne(
-                { _id: new ObjectId(_id) },
+            // Data API uses $oid for _id filtering if it's a real ObjectId string, 
+            // but for simple cases we can try matching by string or skip ObjectId if it's stored as string.
+            // Let's assume standard ObjectId string for now.
+            await mongoDataApi.updateOne(
+                COLLECTION,
+                { _id: { $oid: _id } },
                 { $set: updateData }
             );
         } else {
-            await db.collection(COLLECTION).insertOne(updateData);
+            await mongoDataApi.insertOne(COLLECTION, updateData);
         }
 
         revalidatePath('/admin/emails');
@@ -61,12 +60,11 @@ export async function saveEmailTemplate(template: EmailTemplate) {
 
 export async function deleteEmailTemplate(id: string) {
     try {
-        const client = await clientPromise;
-        const db = client.db(DB_NAME);
-        await db.collection(COLLECTION).deleteOne({ _id: new ObjectId(id) });
+        await mongoDataApi.deleteOne(COLLECTION, { _id: { $oid: id } });
         revalidatePath('/admin/emails');
         return { success: true };
     } catch (e) {
+        console.error("Failed to delete template", e);
         return { success: false, error: "Failed to delete" };
     }
 }

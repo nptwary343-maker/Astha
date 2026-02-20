@@ -1,6 +1,6 @@
 'use server';
 
-import { MongoClient } from 'mongodb';
+import { mongoDataApi } from '@/lib/mongo-data-api';
 import { revalidatePath } from 'next/cache';
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -10,8 +10,6 @@ const DB_NAME = "astharhat_analytics";
  * 🛠️ Update AI Configuration in MongoDB
  */
 export async function updateAIConfig(formData: FormData) {
-    if (!MONGODB_URI) throw new Error("MONGODB_URI is not defined");
-
     const systemInstruction = formData.get('systemInstruction') as string;
     const modelName = formData.get('modelName') as string;
     const nsfwFilter = formData.get('nsfwFilter') === 'on';
@@ -21,15 +19,10 @@ export async function updateAIConfig(formData: FormData) {
     const activeKeysString = formData.get('activeKeys') as string;
     const activeKeys = activeKeysString.split(',').map(k => k.trim()).filter(Boolean);
 
-    const client = new MongoClient(MONGODB_URI);
-
     try {
-        await client.connect();
-        const db = client.db(DB_NAME);
-        const col = db.collection("system_config");
-
-        await col.updateOne(
-            { _id: "ai_settings" as any },
+        await mongoDataApi.updateOne(
+            'system_config',
+            { _id: "ai_settings" },
             {
                 $set: {
                     systemInstruction,
@@ -44,7 +37,7 @@ export async function updateAIConfig(formData: FormData) {
                     lastUpdated: Date.now()
                 }
             },
-            { upsert: true }
+            true
         );
 
         revalidatePath('/admin/ai-settings');
@@ -52,8 +45,6 @@ export async function updateAIConfig(formData: FormData) {
     } catch (error) {
         console.error("Failed to update AI config:", error);
         return { success: false, error: "Database update failed" };
-    } finally {
-        await client.close();
     }
 }
 
@@ -61,22 +52,15 @@ export async function updateAIConfig(formData: FormData) {
  * 📜 Add a new Wisdom Entry
  */
 export async function addWisdomEntry(formData: FormData) {
-    if (!MONGODB_URI) throw new Error("MONGODB_URI is not defined");
-
     const category = formData.get('category') as string;
     const core_philosophy = formData.get('philosophy') as string;
     const insight = formData.get('insight') as string;
     const hook = formData.get('hook') as string;
 
-    const client = new MongoClient(MONGODB_URI);
-
     try {
-        await client.connect();
-        const db = client.db(DB_NAME);
-        const col = db.collection("wisdom_vault");
-
-        await col.updateOne(
-            { category: category as any },
+        await mongoDataApi.updateOne(
+            'wisdom_vault',
+            { category: category },
             {
                 $set: { category, core_philosophy, lastUpdated: Date.now() },
                 $push: {
@@ -84,7 +68,7 @@ export async function addWisdomEntry(formData: FormData) {
                     conversation_hooks: hook
                 } as any
             },
-            { upsert: true }
+            true
         );
 
         revalidatePath('/admin/ai-settings');
@@ -92,7 +76,5 @@ export async function addWisdomEntry(formData: FormData) {
     } catch (error) {
         console.error("Failed to add wisdom:", error);
         return { success: false, error: "Failed to save wisdom" };
-    } finally {
-        await client.close();
     }
 }

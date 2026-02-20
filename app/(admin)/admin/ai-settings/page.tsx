@@ -2,7 +2,7 @@ export const runtime = 'edge';
 import { AIConfigManager } from '@/lib/ai-config-manager';
 import AISettingsForm from '@/components/admin/AISettingsForm';
 import { WisdomVault } from '@/lib/wisdom-vault';
-import { MongoClient } from 'mongodb';
+import { mongoDataApi } from '@/lib/mongo-data-api';
 
 export const dynamic = 'force-dynamic';
 export default async function AISettingsPage() {
@@ -13,15 +13,11 @@ export default async function AISettingsPage() {
     let wisdomEntries: any[] = [];
 
     if (MONGODB_URI) {
-        const client = new MongoClient(MONGODB_URI);
         try {
-            await client.connect();
-            const db = client.db("astharhat_analytics");
-            wisdomEntries = await db.collection("wisdom_vault").find({}).toArray();
+            const response = await mongoDataApi.find("wisdom_vault", {}, 100);
+            wisdomEntries = response?.documents || [];
         } catch (e) {
             console.error("Wisdom fetch failed:", e);
-        } finally {
-            await client.close();
         }
     }
 
