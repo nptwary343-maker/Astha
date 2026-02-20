@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { NextResponse } from 'next/server';
 import { getSearchIndex } from '@/lib/db-utils';
 import Fuse from 'fuse.js';

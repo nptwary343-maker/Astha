@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { AIConfigManager } from '@/lib/ai-config-manager';
 import AISettingsForm from '@/components/admin/AISettingsForm';
 import { WisdomVault } from '@/lib/wisdom-vault';

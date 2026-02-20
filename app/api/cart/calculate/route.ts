@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
 import { calculateCart, CouponData, UserContext } from '@/lib/cart-calculator';
 import { db } from '@/lib/firebase';

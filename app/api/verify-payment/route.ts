@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase'; // Client SDK for DB updates (works in server actions too if rules allow, but ideally use Admin SDK for unrestricted access)
 import { doc, getDoc, updateDoc, collection, getDocs, query, where } from 'firebase/firestore';

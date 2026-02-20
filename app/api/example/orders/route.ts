@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 /**
  * Example API Route with Comprehensive Error Handling
  * This example shows best practices for implementing error handling in API routes
