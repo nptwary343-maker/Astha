@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
 import { Save, RefreshCw, LayoutTemplate } from 'lucide-react';
@@ -28,7 +29,7 @@ export default function EditAboutPage() {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setContent(JSON.parse(saved));
         }
-         
+
         setIsLoaded(true);
     }, []);
 
