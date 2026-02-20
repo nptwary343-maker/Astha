@@ -9,7 +9,6 @@
     "dev": "next dev",
     "build": "next build",
     "pages:build": "npx @cloudflare/next-on-pages",
-    "pages:deploy": "npx wrangler pages deploy .vercel/output/static",
     "lint": "eslint"
   },
   "dependencies": {
