@@ -92,7 +92,7 @@ export async function updateOrderSettings(newSettings: Partial<OrderSettings>, a
         });
 
         // Instant Sync (SCENARIO 3)
-        revalidateTag(SETTINGS_CACHE_TAG, 'default');
+        revalidateTag(SETTINGS_CACHE_TAG);
 
         return { success: true };
     } catch (e) {

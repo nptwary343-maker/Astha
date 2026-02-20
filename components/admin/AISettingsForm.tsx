@@ -16,7 +16,7 @@ import {
     MessageSquare,
     Eye
 } from 'lucide-react';
-import { updateAIConfig, addWisdomEntry } from '@/lib/actions/ai-settings';
+import { updateAIConfig, addWisdomEntry } from '../../lib/actions/ai-settings';
 
 interface AISettingsFormProps {
     initialConfig: any;
@@ -74,8 +74,8 @@ export default function AISettingsForm({ initialConfig, wisdomEntries }: AISetti
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === tab.id
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 font-medium'
-                                : 'text-gray-500 hover:bg-white hover:text-blue-600'
+                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 font-medium'
+                            : 'text-gray-500 hover:bg-white hover:text-blue-600'
                             }`}
                     >
                         <tab.icon size={20} />

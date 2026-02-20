@@ -20,12 +20,12 @@ export async function POST(request: NextRequest) {
         // 2. Revalidate Logic
         // Invalidate the 'product-pricing' tag we used in unstable_cache
         if (body.tag) {
-            revalidateTag(body.tag, {});
+            revalidateTag(body.tag);
             return NextResponse.json({ revalidated: true, now: Date.now(), tag: body.tag });
         }
 
         // Default to pricing tag
-        revalidateTag('product-pricing', {});
+        revalidateTag('product-pricing');
 
         return NextResponse.json({ revalidated: true, now: Date.now(), tag: 'product-pricing' });
     } catch (err) {

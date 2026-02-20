@@ -210,7 +210,7 @@ export const GET = withApiErrorHandler(async (req: NextRequest) => {
 /**
  * Example: How to use this API from the client
  */
-export const exampleUsage = `
+const exampleUsage = `
 // Client-side usage example:
 
 import { useToast } from '@/components/ToastProvider';
