@@ -10,7 +10,6 @@ import { cookies } from 'next/headers';
 
 // Modern Model Configurations
 const CF_MODEL = "@cf/meta/llama-3-8b-instruct";
-const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2";
 
 export async function POST(req: Request) {
     try {
@@ -43,11 +42,8 @@ export async function POST(req: Request) {
             ...messages.slice(-10) // Keep context tight for edge performance
         ];
 
-        if (isVerifiedAdmin && useUncensored) {
-            return await handleHuggingFaceAI(finalMessages);
-        } else {
-            return await handleCloudflareAI(finalMessages);
-        }
+        // ⚡ NATIVE CLOUDFLARE AI (Universal Integration)
+        return await handleCloudflareAI(finalMessages);
 
     } catch (error: any) {
         console.error("Critical AI Route Error:", error);
@@ -74,34 +70,6 @@ async function handleCloudflareAI(messages: any[]) {
     );
 
     if (!response.ok) throw new Error(`CF AI Error: ${await response.text()}`);
-
-    return new Response(response.body, {
-        headers: { 'Content-Type': 'text/event-stream' },
-    });
-}
-
-async function handleHuggingFaceAI(messages: any[]) {
-    const HF_TOKEN = process.env.HUGGINGFACE_API_KEY;
-    if (!HF_TOKEN) throw new Error("HF API Key Missing");
-
-    const response = await fetch(
-        `https://api-inference.huggingface.co/models/${HF_MODEL}/v1/chat/completions`,
-        {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${HF_TOKEN}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: HF_MODEL,
-                messages,
-                max_tokens: 1500,
-                stream: true,
-            }),
-        }
-    );
-
-    if (!response.ok) throw new Error(`HF AI Error: ${await response.text()}`);
 
     return new Response(response.body, {
         headers: { 'Content-Type': 'text/event-stream' },
