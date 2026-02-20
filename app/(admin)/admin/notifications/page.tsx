@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import { Bell, Check, Info, AlertTriangle, X, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';

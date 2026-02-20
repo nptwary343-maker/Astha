@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import { useState, useEffect } from 'react';
 import { Save, Image as ImageIcon, Layout, Type, UploadCloud, X, Link as LinkIcon, Trash2 } from 'lucide-react';

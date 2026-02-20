@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 // Force rebuild
 import { ShieldCheck, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';

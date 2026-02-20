@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Calculator, Receipt, Users, DollarSign, PieChart, FileText, Printer } from 'lucide-react';

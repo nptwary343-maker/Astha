@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import StatsGrid from '@/components/admin/dashboard/StatsGrid';
 import ChartsSection from '@/components/admin/dashboard/ChartsSection';

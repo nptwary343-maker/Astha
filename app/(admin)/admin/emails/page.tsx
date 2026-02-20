@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import EmailTemplateManager from '@/components/admin/EmailTemplateManager';
 import AdminHeader from '@/components/admin/AdminHeader';
 

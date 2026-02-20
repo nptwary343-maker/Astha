@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 "use client";
 
 import { ShoppingCart, Filter, Image as ImageIcon, Award } from 'lucide-react';

@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import { useState, useEffect } from 'react';
 import { Trash2, Plus, Minus, CreditCard, ShoppingBag, ArrowRight, ShieldCheck, Copy, Phone, Loader2 } from 'lucide-react';

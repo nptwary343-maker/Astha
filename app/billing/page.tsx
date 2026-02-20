@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import { Download, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { ProtectedRoute } from '@/context/AuthContext';

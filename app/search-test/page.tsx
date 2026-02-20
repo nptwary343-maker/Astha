@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import AlgoliaSearchBar from '@/components/AlgoliaSearchBar';
 import { ArrowLeft } from 'lucide-react';

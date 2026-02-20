@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import { useState, useEffect } from 'react';
 import { FileBarChart, Download, Calendar, TrendingUp } from 'lucide-react';

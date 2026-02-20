@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';;
 
 import React, { useState, useEffect } from 'react';
 import { Truck, ShieldCheck, Users, Headphones } from 'lucide-react';

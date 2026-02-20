@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { unstable_cache } from 'next/cache';
 
 // Simulate a database fetch (e.g., from Firebase)
