@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 
 import { mongoDataApi } from '@/lib/mongo-data-api';
 
-export const runtime = 'edge';
-
 export async function POST(req: Request) {
     try {
         const body = await req.json();

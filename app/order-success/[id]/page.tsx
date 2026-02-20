@@ -1,7 +1,5 @@
-'use client';
-
 export const runtime = 'edge';
-
+'use client';
 
 import { CheckCircle, Package, ArrowRight, Home, Phone, Mail } from 'lucide-react';
 import Link from 'next/link';

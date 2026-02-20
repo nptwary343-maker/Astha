@@ -1,5 +1,4 @@
 export const runtime = 'edge';
-
 import ShapeSelector from "@/components/admin/ShapeSelector";
 
 export default function ShapeTestPage() {

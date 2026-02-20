@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 import { getSearchIndex } from '@/lib/db-utils';
 import Fuse from 'fuse.js';
 
-export const runtime = 'edge';
-
 // 🚀 EDGE_COMPATIBLE: Vercel can cache this
 // This endpoint returns search suggestions quickly using Fuse.js on the server-side cache.
 // It completely replaces Algolia, saving $0.00 since it uses existing memory.

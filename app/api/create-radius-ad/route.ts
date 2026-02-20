@@ -4,8 +4,6 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-export const runtime = 'edge';
-
 export async function POST(req: Request) {
     try {
         const { lat, lng, radius, type, message, link, postId, goal } = await req.json();

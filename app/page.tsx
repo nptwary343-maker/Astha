@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { getFeaturedProducts } from '@/lib/db-utils';
 import HeroBanner from '@/components/HeroBanner';
 import ProductGrid from '@/components/ProductGrid';
@@ -13,9 +14,6 @@ import { MENU_ITEMS } from '@/components/navigation-config';
 import AlienBackground from '@/components/AlienBackground';
 
 import TrustBar from '@/components/TrustBar';
-
-export const runtime = 'edge';
-
 
 export default async function Home() {
   let products = await getFeaturedProducts();

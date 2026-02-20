@@ -6,8 +6,6 @@ import { AIMirrorService } from '@/lib/ai-mirror-service';
  * ⚡ MIRROR SYNC API
  * Force sync products from Firebase to MongoDB to ensure AI has 0 Firebase hits.
  */
-export const runtime = 'edge';
-
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const token = searchParams.get('token');

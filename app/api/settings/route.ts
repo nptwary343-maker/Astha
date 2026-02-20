@@ -4,9 +4,6 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { unstable_cache } from 'next/cache';
 
-export const runtime = 'edge';
-
-
 // Standard Node.js runtime for Firebase compliance
 
 // Cache the Facebook Config for 1 hour to save Firebase Reads

@@ -6,8 +6,6 @@ import { generateDocumentHash, logAction } from '@/amrafund/lib/security';
  * API for Securing Legal Documents
  * Generates a tamper-proof hash and logs the action for audit trails.
  */
-export const runtime = 'edge';
-
 export async function POST(request: Request) {
     try {
         const { investorId, projectId, deedContent, stampSerial } = await request.json();

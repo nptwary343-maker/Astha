@@ -1,8 +1,6 @@
 export const runtime = 'edge';
 import { NextResponse } from 'next/server';
 
-export const runtime = 'edge';
-
 // This is a placeholder for a real MongoDB fetch.
 // In a real production setup, you would use the 'mongodb' driver here 
 // to fetch orders that were saved when Firebase was down.

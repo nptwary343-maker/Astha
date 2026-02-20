@@ -6,8 +6,6 @@ import { getCachedProducts } from '@/lib/db-utils';
 // 🛡️ DAISY PRO (ADMIN SIDE) - NATIVE API INTEGRATION (STABLE)
 // ------------------------------------------------------------------
 
-export const runtime = 'edge';
-
 export async function POST(req: Request): Promise<Response> {
     try {
         const token = process.env.HF_TOKEN || process.env.HUGGINGFACE_API_KEY;

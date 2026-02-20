@@ -1,6 +1,5 @@
-import AmraFundLanding from '@/amrafund/components/LandingPage';
-
 export const runtime = 'edge';
+import AmraFundLanding from '@/amrafund/components/LandingPage';
 
 export const metadata = {
     title: 'E-Farming Partnership | Invest in Bangladesh\'s Future',

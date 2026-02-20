@@ -4,8 +4,6 @@ import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, Timestamp, limit } from 'firebase/firestore';
 import { sendPixelEvent } from '@/lib/capi-bridge';
 
-export const runtime = 'edge';
-
 /**
  * ⚡ PERIODIC 5-HOUR SYNC (Rule 4)
  * এই এপিআই রুটটি ৫ ঘণ্টা পর পর কল করা হবে যাতে ডেলিভারি স্ট্যাটাস পিক্সেলে সিঙ্ক হয়।

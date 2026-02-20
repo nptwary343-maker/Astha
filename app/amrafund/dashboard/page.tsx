@@ -1,6 +1,5 @@
-import InvestorDashboard from '@/amrafund/components/InvestorDashboard';
-
 export const runtime = 'edge';
+import InvestorDashboard from '@/amrafund/components/InvestorDashboard';
 
 export const metadata = {
     title: 'Investor Dashboard | E-Farming Partnership',

@@ -4,8 +4,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export const runtime = 'edge';
-
 export async function POST(req: NextRequest) {
     try {
         const { prompt, secret } = await req.json();

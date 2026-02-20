@@ -5,8 +5,6 @@ import { doc, getDoc, updateDoc, collection, getDocs, query, where } from 'fireb
 // Note: Real FCM sending requires firebase-admin. Since we are in an Edge/Node environment without the full Admin SDK setup in this file (simulated for now), 
 // we will implement the LOIGC structure. In a real deployment, import 'firebase-admin' initialized with service-account.
 
-export const runtime = 'edge';
-
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();

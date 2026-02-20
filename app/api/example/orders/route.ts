@@ -17,9 +17,6 @@ import { validateSchema, validateEmail } from '@/lib/validation';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
-export const runtime = 'edge';
-
-
 // Example: Order Creation API Route
 
 interface CreateOrderRequest {

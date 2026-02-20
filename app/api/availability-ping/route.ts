@@ -4,10 +4,7 @@ import { calculateCart } from '@/lib/cart-calculator';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export const runtime = 'edge';
-
-
-// export const runtime = 'edge'; // Removed to avoid Firebase 'navigator' error in Edge
+// // Removed to avoid Firebase 'navigator' error in Edge
 
 /**
  * AVAILABILITY & ANALYSIS VERIFICATION

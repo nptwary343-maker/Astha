@@ -7,8 +7,6 @@ import { cookies } from 'next/headers';
  * Optimized for: Zero-Latency, Intelligence, and Admin-Freedom
  */
 
-export const runtime = 'edge';
-
 // Modern Model Configurations
 const CF_MODEL = "@cf/meta/llama-3-8b-instruct";
 const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2";

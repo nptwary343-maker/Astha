@@ -2,8 +2,6 @@ export const runtime = 'edge';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, getCountFromServer } from 'firebase/firestore';
 
-export const runtime = 'edge';
-
 // This API is intended to be called by a Cron Job scheduler (e.g. Vercel Cron)
 // Schedule: Every 3 hours
 export async function GET(request: Request) {
