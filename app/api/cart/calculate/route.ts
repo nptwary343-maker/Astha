@@ -4,6 +4,9 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { unstable_cache } from 'next/cache';
 
+export const runtime = 'edge';
+
+
 // Node runtime for Firebase support
 
 const RATE_LIMIT_WINDOW = 2 * 60 * 60 * 1000;

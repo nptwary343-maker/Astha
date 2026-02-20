@@ -2,6 +2,9 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { getCachedProductById, getSimilarProducts } from '@/lib/db-utils';
 import ProductDetailClient from './ProductDetailClient';
 
+export const runtime = 'edge';
+
+
 interface Product {
     id: string;
     name: string;

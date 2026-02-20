@@ -4,6 +4,8 @@ import { WisdomVault } from '@/lib/wisdom-vault';
 import { MongoClient } from 'mongodb';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
+
 
 export default async function AISettingsPage() {
     const config = await AIConfigManager.getConfig();
