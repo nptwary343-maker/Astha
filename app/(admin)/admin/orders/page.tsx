@@ -1,5 +1,5 @@
 'use client';
-export const runtime = 'edge';;
+export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Eye, MoreHorizontal, Filter, Search, Download, DollarSign, Package, CheckCircle, Clock, PlusCircle, XCircle, Trash2, AlertTriangle, Mail } from 'lucide-react';

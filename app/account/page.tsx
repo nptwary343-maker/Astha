@@ -1,5 +1,5 @@
 'use client';
-export const runtime = 'edge';;
+export const runtime = 'edge';
 
 import { User, MapPin, Package, CreditCard, Settings, LogOut, ChevronRight, Plus, Trash2, Edit2, Shield, Bell, Sparkles, Layers, Database } from 'lucide-react';
 import { useState } from 'react';

@@ -1,5 +1,5 @@
 'use client';
-export const runtime = 'edge';;
+export const runtime = 'edge';
 
 import { UploadCloud, FileSpreadsheet, AlertCircle } from 'lucide-react';
 import { useState } from 'react';

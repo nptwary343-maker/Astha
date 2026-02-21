@@ -1,5 +1,6 @@
 'use client';
-export const runtime = 'edge';;
+export const runtime = 'edge';
+
 
 import React, { useState, useEffect } from 'react';
 import { Truck, ShieldCheck, Users, Headphones } from 'lucide-react';
@@ -28,7 +29,7 @@ export default function AboutPage() {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setContent(JSON.parse(saved));
         }
-         
+
         setIsLoaded(true);
     }, []);
 

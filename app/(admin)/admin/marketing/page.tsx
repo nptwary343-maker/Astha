@@ -1,5 +1,5 @@
 'use client';
-export const runtime = 'edge';;
+export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';

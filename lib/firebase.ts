@@ -42,44 +42,26 @@ if (typeof window !== "undefined") {
 export { messaging };
 
 // Re-export common SDK functions to fix broken imports in @/lib/firebase
-import {
-    collection as firestoreCollection,
-    doc as firestoreDoc,
-    getDoc as firestoreGetDoc,
-    setDoc as firestoreSetDoc,
-    addDoc as firestoreAddDoc,
-    updateDoc as firestoreUpdateDoc,
-    deleteDoc as firestoreDeleteDoc,
-    query as firestoreQuery,
-    where as firestoreWhere,
-    orderBy as firestoreOrderBy,
-    limit as firestoreLimit,
-    onSnapshot as firestoreOnSnapshot,
-    getDocs as firestoreGetDocs,
-    serverTimestamp as firestoreServerTimestamp,
-    runTransaction as firestoreRunTransaction,
-    getCountFromServer as firestoreGetCountFromServer,
-    writeBatch as firestoreWriteBatch,
-    increment as firestoreIncrement
+export {
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    query,
+    where,
+    orderBy,
+    limit,
+    onSnapshot,
+    getDocs,
+    serverTimestamp,
+    runTransaction,
+    getCountFromServer,
+    writeBatch,
+    increment
 } from "firebase/firestore";
 
-export const collection = firestoreCollection;
-export const doc = firestoreDoc;
-export const getDoc = firestoreGetDoc;
-export const setDoc = firestoreSetDoc;
-export const addDoc = firestoreAddDoc;
-export const updateDoc = firestoreUpdateDoc;
-export const deleteDoc = firestoreDeleteDoc;
-export const query = firestoreQuery;
-export const where = firestoreWhere;
-export const orderBy = firestoreOrderBy;
-export const limit = firestoreLimit;
-export const onSnapshot = firestoreOnSnapshot;
-export const getDocs = firestoreGetDocs;
-export const serverTimestamp = firestoreServerTimestamp;
-export const runTransaction = firestoreRunTransaction;
-export const getCountFromServer = firestoreGetCountFromServer;
-export const writeBatch = firestoreWriteBatch;
-export const increment = firestoreIncrement;
-
 export default app;
+

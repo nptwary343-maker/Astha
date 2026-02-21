@@ -1,5 +1,6 @@
-export const runtime = 'edge';
 "use client";
+export const runtime = 'edge';
+
 
 import Link from "next/link";
 import { auth, googleProvider } from "@/lib/firebase";

@@ -1,5 +1,5 @@
 'use client';
-export const runtime = 'edge';;
+export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
 import { Save, Lock, Globe, Bell, CreditCard, UserPlus, Trash2, Shield, UploadCloud, Image as ImageIcon, Loader, Facebook, Layout, Zap, Award } from 'lucide-react';

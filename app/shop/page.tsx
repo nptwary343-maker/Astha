@@ -1,14 +1,14 @@
-export const runtime = 'edge';
 "use client";
+export const runtime = 'edge';
+
 
 import { ShoppingCart, Filter, Image as ImageIcon, Award } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, getDocs } from 'firebase/firestore';
 
 import { useCart } from '@/context/CartContext';
+
 import { useSound } from '@/context/SoundContext';
 import { fetchProductsAction, fetchSiteSettingsAction } from '@/actions/public-data';
 
