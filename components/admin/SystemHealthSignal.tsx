@@ -1,12 +1,13 @@
 'use client';
-
 import { useState, useEffect } from 'react';
-import { Activity, ShieldCheck, Database, Server, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Activity, ShieldCheck, Database, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
+import { db, collection, query, orderBy, limit, onSnapshot } from '@/lib/firebase';
 
 export default function SystemHealthSignal() {
     const [status, setStatus] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [lastPulse, setLastPulse] = useState<any>(null);
 
     const checkHealth = async () => {
         setRefreshing(true);
@@ -27,6 +28,16 @@ export default function SystemHealthSignal() {
 
     useEffect(() => {
         checkHealth();
+
+        // 📡 REAL-TIME PULSE MONITOR (Zero Trust Verification)
+        const q = query(collection(db, 'system_signals'), orderBy('timestamp', 'desc'), limit(1));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            if (!snapshot.empty) {
+                setLastPulse(snapshot.docs[0].data());
+            }
+        });
+
+        return () => unsubscribe();
     }, []);
 
     if (loading) return (
@@ -46,7 +57,10 @@ export default function SystemHealthSignal() {
                     <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
                         <Activity size={20} />
                     </div>
-                    <h2 className="font-bold text-gray-900">System Availability Signal</h2>
+                    <div>
+                        <h2 className="font-bold text-gray-900 leading-none">System Health Signal</h2>
+                        <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest leading-none mt-1 inline-block">Live Heartbeat</span>
+                    </div>
                 </div>
                 <button
                     onClick={checkHealth}
@@ -83,16 +97,18 @@ export default function SystemHealthSignal() {
                     </div>
                 </div>
 
-                {/* MongoDB Failover */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
-                    <div className="flex items-center gap-3">
-                        <Server size={16} className="text-emerald-500" />
-                        <span className="text-sm font-medium text-gray-700">Storage Cluster</span>
+                {/* Real-time Pulse Status */}
+                {lastPulse && (
+                    <div className="p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
+                            <span className="text-[11px] font-bold text-emerald-700 uppercase">Latest Pulse Detected</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-emerald-600/60">
+                            {lastPulse.timestamp?.toDate ? lastPulse.timestamp.toDate().toLocaleTimeString() : 'Just now'}
+                        </span>
                     </div>
-                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${status?.checks?.mongodb?.status?.includes('🟢') ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700'}`}>
-                        {status?.checks?.mongodb?.status || 'MISSING'}
-                    </span>
-                </div>
+                )}
             </div>
 
             <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">

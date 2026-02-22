@@ -6,10 +6,8 @@ import { Package, Plus, Search, Trash2, Edit, Filter, LayoutGrid, List, UploadCl
 import { db } from '@/lib/firebase';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
-import { syncProduct, deleteProduct } from '@/actions/algolia-sync';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { deleteImagesFromCloudinary } from '@/actions/cloudinary';
-import { syncProductAction, deleteProductAction, bulkSyncProductsAction, cleanupOldOrdersAction } from '@/actions/mongo-actions';
 import confetti from 'canvas-confetti';
 
 // Types
@@ -139,12 +137,7 @@ export default function ProductsPage() {
 
                 await deleteDoc(doc(db, "products", id));
 
-                // Algolia Sync (Delete)
-                await deleteProduct(id);
-
-                // 🚀 MongoDB Sync (AI Cache Delete)
-                deleteProductAction(id).catch(err => console.error("Mongo Sync Error:", err));
-
+                await deleteDoc(doc(db, "products", id));
                 setProducts(products.filter(p => p.id !== id));
             } catch (error) {
                 console.error("Error deleting product: ", error);
@@ -153,76 +146,6 @@ export default function ProductsPage() {
         }
     };
 
-    const handleBulkSync = async () => {
-        if (!isSuperAdmin) {
-            alert("Permission denied.");
-            return;
-        }
-        if (!confirm(`Sync ${products.length} items to AI Cache (MongoDB)?`)) return;
-
-        setIsSyncing(true);
-        try {
-            const mongoProducts = products.map(p => ({
-                firebaseId: p.id,
-                name: p.name,
-                price: Number(p.price),
-                category: p.category,
-                description: p.description || "",
-                images: p.images || [],
-                stock: Number(p.stock),
-                updatedAt: Date.now()
-            }));
-
-            await bulkSyncProductsAction(mongoProducts);
-            alert("AI Cache Sync Successful!");
-        } catch (error) {
-            console.error(error);
-            alert("Bulk sync failed.");
-        } finally {
-            setIsSyncing(false);
-        }
-    };
-
-    const handleAlgoliaBulkSync = async () => {
-        if (!isSuperAdmin) {
-            alert("Permission denied.");
-            return;
-        }
-        if (!confirm(`Sync ${products.length} items to Search Index (Algolia)?`)) return;
-
-        setIsAlgoliaSyncing(true);
-        let successCount = 0;
-        try {
-            for (const p of products) {
-                const res = await syncProduct(p, p.id);
-                if (res.success) successCount++;
-            }
-            alert(`Search Index Sync Successful! ${successCount} products updated.`);
-        } catch (error) {
-            console.error(error);
-            alert("Algolia bulk sync failed.");
-        } finally {
-            setIsAlgoliaSyncing(false);
-        }
-    };
-
-    const handleCleanup = async () => {
-        if (!isSuperAdmin) {
-            alert("Only Super Admin can purge data.");
-            return;
-        }
-        if (!confirm("Delete all orders older than 30 days permanently from Firebase?")) return;
-
-        setIsCleaning(true);
-        try {
-            const res = await cleanupOldOrdersAction();
-            alert(`Maintenance Success: ${res.count} old orders deleted.`);
-        } catch (err) {
-            alert("Cleanup failed.");
-        } finally {
-            setIsCleaning(false);
-        }
-    };
 
     const handleEdit = (product: Product) => {
         setEditingId(product.id);
@@ -340,47 +263,9 @@ export default function ProductsPage() {
                 const productRef = doc(db, "products", editingId);
                 await updateDoc(productRef, productData);
 
-                // 🚀 Algolia Sync (Edit)
-                try {
-                    await syncProduct({ ...productData, id: editingId }, editingId);
-                    // 🚀 MongoDB Sync (AI Cache Update)
-                    syncProductAction({
-                        firebaseId: editingId,
-                        name: productData.name,
-                        price: productData.price,
-                        category: productData.category,
-                        description: productData.description,
-                        tags: [],
-                        images: productData.images || [],
-                        stock: productData.stock,
-                        updatedAt: Date.now()
-                    }).catch(err => console.error("Mongo Sync Error:", err));
-                } catch (algoliaError) {
-                    console.error("Sync Failed", algoliaError);
-                }
-
                 setProducts(products.map(p => p.id === editingId ? { ...productData, id: editingId } as Product : p));
             } else {
                 const docRef = await addDoc(collection(db, "products"), productData);
-
-                // 🚀 Algolia Sync (Add)
-                try {
-                    await syncProduct({ ...productData, id: docRef.id }, docRef.id);
-                    // 🚀 MongoDB Sync (AI Cache Add)
-                    syncProductAction({
-                        firebaseId: docRef.id,
-                        name: productData.name,
-                        price: productData.price,
-                        category: productData.category,
-                        description: productData.description,
-                        tags: [],
-                        images: productData.images || [],
-                        stock: productData.stock,
-                        updatedAt: Date.now()
-                    }).catch(err => console.error("Mongo Sync Error:", err));
-                } catch (algoliaError) {
-                    console.error("Sync Failed", algoliaError);
-                }
 
                 setProducts([{ ...productData, id: docRef.id } as unknown as Product, ...products]);
 
@@ -527,30 +412,6 @@ export default function ProductsPage() {
                         title="Force update homepage products cache"
                     >
                         <Zap size={18} /> Refresh Homepage
-                    </button>
-                    <button
-                        onClick={handleBulkSync}
-                        disabled={isSyncing}
-                        className="bg-purple-100 text-purple-700 px-4 py-2.5 rounded-xl font-bold border border-purple-200 flex items-center gap-2 hover:bg-purple-200 transition-colors disabled:opacity-50"
-                        title="Sync all products to MongoDB AI Cache"
-                    >
-                        {isSyncing ? <Loader2 size={18} className="animate-spin" /> : <UploadCloud size={18} />} Sync AI Cache
-                    </button>
-                    <button
-                        onClick={handleAlgoliaBulkSync}
-                        disabled={isAlgoliaSyncing}
-                        className="bg-blue-50 text-blue-700 px-4 py-2.5 rounded-xl font-bold border border-blue-200 flex items-center gap-2 hover:bg-blue-100 transition-colors disabled:opacity-50"
-                        title="Sync all products to Algolia Search Index"
-                    >
-                        {isAlgoliaSyncing ? <Loader2 size={18} className="animate-spin" /> : <Search size={18} />} Sync Search
-                    </button>
-                    <button
-                        onClick={handleCleanup}
-                        disabled={isCleaning}
-                        className="bg-red-50 text-red-700 px-4 py-2.5 rounded-xl font-bold border border-red-200 flex items-center gap-2 hover:bg-red-100 transition-colors disabled:opacity-50"
-                        title="Permanently delete Firebase orders older than 30 days"
-                    >
-                        {isCleaning ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />} Auto-Cleanup
                     </button>
                     <button className="bg-white text-gray-700 px-4 py-2.5 rounded-xl font-bold border border-gray-200 flex items-center gap-2 hover:bg-gray-50 transition-colors">
                         <Filter size={18} /> Filter

@@ -256,25 +256,6 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                 items: items
             }, `PUR-${result.orderId}`),
 
-            // 2. MongoDB Sync
-            (async () => {
-                try {
-                    const { syncOrderToMongo } = await import('@/lib/mongo-sync');
-                    await syncOrderToMongo({
-                        orderId: result.orderId,
-                        total: result.finalTotal,
-                        status: 'New',
-                        createdAt: new Date().toISOString(),
-                        customer: {
-                            name: customer.name,
-                            phone: customer.phone,
-                            address: customer.address
-                        }
-                    });
-                } catch (e) {
-                    console.error("Mongo Order Sync Error:", e);
-                }
-            })(),
 
             // 3. Stock Revalidation (Global Cache Flush)
             (async () => {

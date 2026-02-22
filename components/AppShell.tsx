@@ -7,7 +7,6 @@ import Sidebar from "@/components/Sidebar";
 import FloatingActionButtons from "./FloatingActionButtons";
 import DynamicFooter from "./DynamicFooter";
 import BottomNav from "./BottomNav";
-import AIConcierge from "./AIConcierge";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();

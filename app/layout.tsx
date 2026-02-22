@@ -8,15 +8,11 @@ import { Suspense } from "react";
 import { CartProvider } from "@/context/CartContext";
 import { SoundProvider } from "@/context/SoundContext";
 import DynamicFooter from "@/components/DynamicFooter";
-import StyleDNAWidget from "@/components/StyleDNAWidget";
-import FashionPersonaSidebar from "@/components/FashionPersonaSidebar";
-import FloatingTracker from "@/components/FloatingTracker";
-import AIConcierge from "@/components/AIConcierge";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/components/ToastProvider";
 import { I18nProvider } from "@/context/I18nContext";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 export const runtime = 'edge';
 
 
@@ -118,9 +114,6 @@ export default function RootLayout({
                     <AppShell>
                       {children}
                     </AppShell>
-                    <FashionPersonaSidebar />
-                    <FloatingTracker />
-                    <AIConcierge />
                     <DynamicFooter />
                     <LanguageSwitcher />
                   </SoundProvider>

@@ -222,13 +222,18 @@ export default function DynamicFooter() {
 
                     {/* Payments & Legal Bar - Unified */}
                     <div className="mt-12 pt-8 border-t border-gray-200 dark:border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="flex items-center gap-6">
+                        <div className="flex flex-col md:flex-row items-center gap-6">
                             <p className="text-[10px] tracking-[0.2em] font-bold text-gray-400">
                                 {t('footer.copyright', { year: new Date().getFullYear().toString() })}
                             </p>
                             <div className="hidden md:flex gap-4 text-[9px] tracking-[0.2em] font-bold text-gray-500 dark:text-gray-400">
                                 <Link href="/privacy" className="hover:text-black dark:hover:text-white transition-colors">{t('footer.privacy')}</Link>
                                 <Link href="/terms" className="hover:text-black dark:hover:text-white transition-colors">{t('footer.terms')}</Link>
+                            </div>
+                            {/* Zero Trust Badge */}
+                            <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                <span className="text-[8px] font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">ZERO TRUST SECURED</span>
                             </div>
                         </div>
 

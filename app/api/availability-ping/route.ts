@@ -1,18 +1,14 @@
 export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
+import { db, addDoc, collection, serverTimestamp, doc, getDoc } from '@/lib/firebase';
 import { calculateCart } from '@/lib/cart-calculator';
-import { db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-
-// // Removed to avoid Firebase 'navigator' error in Edge
 
 /**
  * AVAILABILITY & ANALYSIS VERIFICATION
  * Sends a "Ping Mock Signal" across the entire system.
  * 1. Firebase Readiness
- * 2. MongoDB Resilience Check
- * 3. Cart Logic Analysis Verification (Mock Signal)
- * 4. Hosting Environment Check
+ * 2. Cart Logic Analysis Verification (Mock Signal)
+ * 3. Hosting Environment Check
  */
 export async function GET(req: NextRequest) {
     const authHeader = req.headers.get('authorization');
@@ -21,7 +17,6 @@ export async function GET(req: NextRequest) {
     // In production, we should protect this but allow easy monitoring
     const secret = process.env.INTERNAL_API_SECRET || 'dev_secret_bypass';
     if (!isLocal && authHeader !== `Bearer ${secret}`) {
-        // Return structured but restricted data if not authorized
         return NextResponse.json({ status: "RESTRICTED", message: "Authorization required for full metrics" }, { status: 401 });
     }
 
@@ -35,8 +30,8 @@ export async function GET(req: NextRequest) {
     // 1. FIREBASE PING
     try {
         const start = Date.now();
-        const docRef = doc(db, 'settings', 'siteSettings');
-        await getDoc(docRef);
+        const settingsRef = doc(db, 'settings', 'siteSettings');
+        await getDoc(settingsRef);
         results.checks.firebase = {
             status: "🟢 ONLINE",
             latency: `${Date.now() - start}ms`
@@ -45,7 +40,7 @@ export async function GET(req: NextRequest) {
         results.checks.firebase = { status: "🔴 OFFLINE", error: e.message };
     }
 
-    // 2. MOCKED CART SIGNAL (Analysis Verification)
+    // 2. MOCKED CART SIGNAL
     try {
         const mockCatalog = {
             "ping-test-1": { name: "Ping Pulse Item", price: 1000, stock: 50, category: "Test" }
@@ -58,9 +53,19 @@ export async function GET(req: NextRequest) {
 
         const isValid = calculation.summary.finalTotal === 2000;
 
+        if (isValid) {
+            // 📡 PING SIGNAL: Log a heartbeat in Firestore for Admin visibility
+            await addDoc(collection(db, 'system_signals'), {
+                type: 'CART_ANALYSIS_PULSE',
+                status: 'HEALTHY',
+                latency: `${(cartEnd - cartStart).toFixed(4)}ms`,
+                timestamp: serverTimestamp(),
+                source: 'edge_availability_ping'
+            });
+        }
+
         results.checks.cart_analysis = {
             status: isValid ? "🟢 VERIFIED" : "🔴 CALCULATION_ERROR",
-            mock_signal: "RECEIVED",
             latency: `${(cartEnd - cartStart).toFixed(4)}ms`,
             summary: calculation.summary
         };
@@ -68,19 +73,7 @@ export async function GET(req: NextRequest) {
         results.checks.cart_analysis = { status: "🔴 CRITICAL_FAILURE", error: e.message };
     }
 
-    // 3. MONGODB PING (Optional Check)
-    try {
-        const mongoUri = process.env.MONGODB_URI;
-        if (mongoUri) {
-            results.checks.mongodb = { status: "🟢 CONFIGURED", info: "Ready for failover" };
-        } else {
-            results.checks.mongodb = { status: "🟡 MISSING", info: "System will run on Firebase only" };
-        }
-    } catch (e) {
-        results.checks.mongodb = { status: "🔴 ERROR" };
-    }
-
-    // 4. SEARCH AVAILABILITY
+    // 3. SEARCH AVAILABILITY
     try {
         const { getSearchIndex } = await import('@/lib/db-utils');
         const index = await getSearchIndex();
@@ -89,16 +82,15 @@ export async function GET(req: NextRequest) {
         results.checks.search = { status: "🔴 ERROR" };
     }
 
-    // 5. HOSTING READINESS
+    // 4. HOSTING READINESS
     const requiredEnvs = [
         'NEXT_PUBLIC_FIREBASE_API_KEY',
-        'GEMINI_API_KEY',
         'INTERNAL_API_SECRET'
     ];
     const missing = requiredEnvs.filter(env => !process.env[env]);
 
     results.hosting_readiness = {
-        status: missing.length === 0 ? "🟢 READY_ TO_HOST" : "🟡 MISSING_CONFIG",
+        status: missing.length === 0 ? "🟢 READY_TO_HOST" : "🟡 MISSING_CONFIG",
         missing_vars: missing
     };
 

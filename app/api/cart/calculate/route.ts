@@ -4,6 +4,7 @@ import { calculateCart, CouponData, UserContext } from '@/lib/cart-calculator';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { unstable_cache } from 'next/cache';
+import { sanitizeInput } from '@/lib/security';
 
 // Node runtime for Firebase support
 
@@ -73,7 +74,10 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { items, couponCode, userEmail, userTags } = body;
+        const { items, couponCode: rawCoupon, userEmail: rawEmail, userTags } = body;
+
+        const couponCode = rawCoupon ? sanitizeInput(rawCoupon).toUpperCase() : undefined;
+        const userEmail = rawEmail ? sanitizeInput(rawEmail).toLowerCase() : undefined;
 
         if (!items || !Array.isArray(items)) {
             return NextResponse.json({ error: "Invalid payload" }, { status: 400 });

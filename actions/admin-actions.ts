@@ -46,29 +46,3 @@ export async function verifyPaymentAction(payload: {
     }
 }
 
-/**
- * 🛡️ Secure AI Generation Action
- * Replaces public /api/ai-generate calls.
- */
-export async function generateAIContentAction(prompt: any) {
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/ai-generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt,
-                secret: INTERNAL_SECRET
-            })
-        });
-
-        if (!response.ok) {
-            const err = await response.json();
-            return { success: false, error: err.error || 'AI Generation failed' };
-        }
-
-        return await response.json();
-    } catch (error: any) {
-        console.error("generateAIContentAction Error:", error);
-        return { success: false, error: error.message };
-    }
-}

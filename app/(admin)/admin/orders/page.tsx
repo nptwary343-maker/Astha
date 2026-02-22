@@ -7,7 +7,6 @@ import { useAuth } from '@/context/AuthContext';
 import { collection, getDocs, query, orderBy, doc, updateDoc, addDoc, serverTimestamp, deleteDoc, limit, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Order } from '@/types';
-import { syncOrderAction, adminUpdateOrderStatusAction } from '@/actions/mongo-actions';
 
 export default function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -15,7 +14,6 @@ export default function OrdersPage() {
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({ totalOrders: 0, totalRevenue: 0 });
     const [deliveryMen, setDeliveryMen] = useState<any[]>([]);
-    const [isQuotaExceeded, setIsQuotaExceeded] = useState(false);
     const { isSuperAdmin } = useAuth(); // Strict Security
 
     useEffect(() => {
@@ -49,27 +47,6 @@ export default function OrdersPage() {
 
             } catch (error: any) {
                 console.error("Error fetching orders:", error);
-                if (error.code === 'resource-exhausted' || error.message?.includes('quota')) {
-                    setIsQuotaExceeded(true);
-
-                    // 🛡️ AUTO-RETRIEVE FROM BACKUP POOL
-                    console.log("📡 [FAILOVER] Fetching orders from MongoDB Backup Pool...");
-                    try {
-                        const response = await fetch('/api/admin/orders/failover');
-                        if (response.ok) {
-                            const backupData = await response.json();
-                            setOrders(backupData);
-
-                            const totalRev = backupData.reduce((acc: any, order: any) => acc + (order.totals?.total || 0), 0);
-                            setStats({
-                                totalOrders: backupData.length,
-                                totalRevenue: totalRev
-                            });
-                        }
-                    } catch (fetchErr) {
-                        console.error("Critical: Backup Fetch Failed:", fetchErr);
-                    }
-                }
             } finally {
                 setLoading(false);
             }
@@ -89,17 +66,6 @@ export default function OrdersPage() {
                 'payment.isVerified': isVerified
             });
 
-            // Update local state
-            const targetOrder = orders.find(o => o.id === orderId);
-            if (targetOrder) {
-                syncOrderAction({
-                    orderId,
-                    total: targetOrder.totals?.total || 0,
-                    status: newStatus,
-                    createdAt: targetOrder.createdAt?.seconds ? new Date(targetOrder.createdAt.seconds * 1000).toISOString() : new Date().toISOString()
-                }).catch(e => console.error("Mongo Order Sync Error:", e));
-            }
-
             setOrders(orders.map(o =>
                 o.id === orderId ? { ...o, payment: { ...o.payment!, status: newStatus as any } } : o
             ));
@@ -116,20 +82,6 @@ export default function OrdersPage() {
             await updateDoc(orderRef, {
                 orderStatus: newStatus
             });
-
-            // Update local state
-            const targetOrder = orders.find(o => o.id === orderId);
-            if (targetOrder) {
-                // 📡 Modern Approach: Update Analytics & Trigger Email via Server Action
-                adminUpdateOrderStatusAction({
-                    orderId,
-                    customerName: targetOrder.customer?.name || 'Customer',
-                    totalPrice: targetOrder.totals?.total || 0,
-                    address: targetOrder.customer?.address || 'N/A',
-                    userEmail: targetOrder.userEmail || '', // Now saved in order
-                    status: newStatus
-                }).catch(e => console.error("Admin Status Update Action Error:", e));
-            }
 
             setOrders(orders.map(o =>
                 o.id === orderId ? { ...o, orderStatus: newStatus } : o
@@ -158,22 +110,7 @@ export default function OrdersPage() {
             return;
         }
 
-        if (confirm(`Send status email (${order.orderStatus || 'Pending'}) to ${order.userEmail}?`)) {
-            try {
-                await adminUpdateOrderStatusAction({
-                    orderId: order.id,
-                    customerName: order.customer?.name || 'Customer',
-                    totalPrice: order.totals?.total || 0,
-                    address: order.customer?.address || 'N/A',
-                    userEmail: order.userEmail,
-                    status: order.orderStatus || 'Pending'
-                });
-                alert("Email sent successfully!");
-            } catch (error) {
-                console.error("Manual Email Error:", error);
-                alert("Failed to send email.");
-            }
-        }
+        alert("Email functionality is currently being migrated to the System Signal Pulse.");
     };
 
     const handleDeleteOrder = async (orderId: string) => {
@@ -364,25 +301,6 @@ export default function OrdersPage() {
                 </div>
             </div>
 
-            {isQuotaExceeded && (
-                <div className="mb-8 p-6 bg-red-600 rounded-3xl text-white shadow-2xl shadow-red-500/40 animate-pulse border-4 border-white">
-                    <div className="flex items-center gap-4">
-                        <div className="bg-white p-3 rounded-full text-red-600">
-                            <AlertTriangle size={32} />
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-black uppercase">⚠️ Firebase Quota Exceeded!</h2>
-                            <p className="font-bold opacity-90">Orders are now being redirected to the MongoDB backup pool. Switch to 'Backup View' to see new orders.</p>
-                        </div>
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="ml-auto bg-white text-red-600 px-6 py-2 rounded-xl font-black hover:bg-gray-100 transition-all uppercase tracking-widest text-sm"
-                        >
-                            Retry Sync
-                        </button>
-                    </div>
-                </div>
-            )}
 
             <div className="flex gap-2">
                 <button

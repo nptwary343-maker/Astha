@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, getDocs } from 'firebase/firestore';
 import { Loader2, Database, CheckCircle2, RefreshCw } from 'lucide-react';
-import { syncProduct } from '@/actions/algolia-sync';
 
 // --- EXISTING CATEGORIES ---
 const ELECTRONICS = [
@@ -399,13 +398,6 @@ export default function SeederPage() {
                     description: p.description || `Premium quality ${p.name} from AstharHat.`
                 });
 
-                // Sync to Algolia
-                await syncProduct({
-                    ...p,
-                    stock: 100,
-                    objectID: docRef.id,
-                    description: p.description || `Premium quality ${p.name} from AstharHat.`,
-                }, docRef.id);
 
                 current++;
                 setCount(current);
@@ -419,31 +411,6 @@ export default function SeederPage() {
         }
     };
 
-    const resyncAll = async () => {
-        setLoading(true);
-        try {
-            const snapshot = await getDocs(collection(db, 'products'));
-            const total = snapshot.size;
-            let current = 0;
-
-            console.log(`Found ${total} products to sync...`);
-
-            for (const doc of snapshot.docs) {
-                const data = doc.data();
-                // Ensure ID is passed correctly
-                await syncProduct({ ...data, objectID: doc.id }, doc.id);
-                current++;
-                setCount(current);
-            }
-            alert(`Successfully re-synced ${total} products!`);
-            setDone(true);
-        } catch (error) {
-            console.error("Resync Error:", error);
-            alert("Failed to re-sync products.");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-8">
@@ -487,23 +454,6 @@ export default function SeederPage() {
                             )}
                         </button>
 
-                        <button
-                            onClick={resyncAll}
-                            disabled={loading}
-                            className="w-full py-4 bg-blue-50 text-blue-700 border border-blue-200 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-100 transition-all active:scale-95 disabled:opacity-50"
-                        >
-                            {loading ? (
-                                <>
-                                    <Loader2 className="animate-spin" size={20} />
-                                    Syncing... ({count})
-                                </>
-                            ) : (
-                                <>
-                                    <RefreshCw size={20} />
-                                    Re-sync Existing Products
-                                </>
-                            )}
-                        </button>
                     </div>
                 )}
             </div>

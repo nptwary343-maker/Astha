@@ -1,16 +1,26 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react';
-import { useAuth } from './AuthContext';
-import { db } from '@/lib/firebase';
-import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { sendSystemPing } from '@/actions/system';
 
 /**
- * 🛒 FIREBASE CART STRATEGY:
- * 1. Guests: Items are stored only in LocalStorage.
- * 2. Logged-in Users: Items are synced in real-time with Firestore (collection: 'carts', docId: uid).
- * 3. Migration: When a user logs in, any existing Guest Items are merged into their Cloud Cart.
+ * 🛒 COOKIE CART STRATEGY (GOOD FORMATION):
+ * Items are stored in Cookies for cross-request stability and server-side visibility.
+ * No server-side synchronization for maximum simplicity.
  */
+
+// Simple Cookie Helpers
+const setCookie = (name: string, value: string, days = 7) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+};
+
+const getCookie = (name: string) => {
+    return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+    }, '');
+};
 
 // Define the shape of a cart item
 export interface CartItem {
@@ -30,118 +40,57 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'aez_cart_v1';
+const STORAGE_KEY = 'aez_cart_v2'; // Bumped version for cookies
 
 export function CartProvider({ children }: { children: ReactNode }) {
-    const { user } = useAuth();
     const [items, setItems] = useState<CartItem[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
-    const isUpdatingFromRemote = useRef(false);
 
-    // 1. Initial Load (Guest Mode)
+    // Initial Load from Cookies
     useEffect(() => {
         try {
-            const stored = localStorage.getItem(STORAGE_KEY);
+            const stored = getCookie(STORAGE_KEY);
             if (stored) {
                 setItems(JSON.parse(stored));
             }
         } catch (error) {
-            console.error("Failed to load local cart", error);
+            console.error("Failed to load cart from cookies", error);
         } finally {
             setIsInitialized(true);
         }
     }, []);
 
-    // 2. Firebase Sync & Listener (User Mode)
+    // Sync state to Cookies
     useEffect(() => {
-        if (!user || !isInitialized) return;
-
-        const cartRef = doc(db, 'carts', user.uid);
-
-        // 🛡️ MIGRATION: Combine guest cart with cloud cart
-        const migrateCart = async () => {
-            try {
-                const { getDoc } = await import('firebase/firestore');
-                const snap = await getDoc(cartRef);
-                const localItems: CartItem[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-                let cloudItems: CartItem[] = [];
-                if (snap.exists()) {
-                    cloudItems = snap.data().items || [];
-                }
-
-                // Merge
-                const merged = [...cloudItems];
-                localItems.forEach(li => {
-                    const ex = merged.find(ci => ci.productId === li.productId);
-                    if (ex) ex.qty += li.qty;
-                    else merged.push(li);
-                });
-
-                if (merged.length > 0) {
-                    await setDoc(cartRef, { items: merged, updatedAt: new Date().toISOString() }, { merge: true });
-                }
-            } catch (e) { console.error("Migration failed", e); }
-        };
-
-        migrateCart();
-
-        // Listener
-        const unsubscribe = onSnapshot(cartRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const cloudData = docSnap.data().items || [];
-                isUpdatingFromRemote.current = true;
-                setItems(cloudData);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudData));
-                setTimeout(() => { isUpdatingFromRemote.current = false; }, 100);
-            }
-        });
-
-        return () => unsubscribe();
-    }, [user, isInitialized]);
-
-    // 3. Sync to Cloud
-    const syncCart = async (newItems: CartItem[]) => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
-        if (user && !isUpdatingFromRemote.current) {
-            try {
-                const cartRef = doc(db, 'carts', user.uid);
-                await setDoc(cartRef, { items: newItems, updatedAt: new Date().toISOString() }, { merge: true });
-            } catch (e) { console.error("Firestore sync failed", e); }
+        if (isInitialized) {
+            setCookie(STORAGE_KEY, JSON.stringify(items));
         }
-    };
+    }, [items, isInitialized]);
 
-    // 4. Cart Handlers
+    // Cart Handlers
     const addToCart = (productId: string, qty: number = 1) => {
+        // 📡 ADD_TO_CART PING (Zero Trust Activity Tracker)
+        sendSystemPing('PRODUCT_ADD_TO_CART', { productId, qty });
+
         setItems(prev => {
             const existing = prev.find(item => item.productId === productId);
-            const updated = existing
-                ? prev.map(item => item.productId === productId ? { ...item, qty: item.qty + qty } : item)
-                : [...prev, { productId, qty }];
-            syncCart(updated);
-            return updated;
+            if (existing) {
+                return prev.map(item => item.productId === productId ? { ...item, qty: item.qty + qty } : item);
+            }
+            return [...prev, { productId, qty }];
         });
     };
 
     const removeFromCart = (productId: string) => {
-        setItems(prev => {
-            const updated = prev.filter(item => item.productId !== productId);
-            syncCart(updated);
-            return updated;
-        });
+        setItems(prev => prev.filter(item => item.productId !== productId));
     };
 
     const updateQty = (productId: string, delta: number) => {
-        setItems(prev => {
-            const updated = prev.map(item => item.productId === productId ? { ...item, qty: Math.max(1, item.qty + delta) } : item);
-            syncCart(updated);
-            return updated;
-        });
+        setItems(prev => prev.map(item => item.productId === productId ? { ...item, qty: Math.max(1, item.qty + delta) } : item));
     };
 
     const clearCart = () => {
         setItems([]);
-        syncCart([]);
     };
 
     const cartCount = items.reduce((acc, item) => acc + item.qty, 0);

@@ -4,8 +4,8 @@ export const runtime = 'edge';
 import StatsGrid from '@/components/admin/dashboard/StatsGrid';
 import ChartsSection from '@/components/admin/dashboard/ChartsSection';
 import SalesAnalyticsTable from '@/components/admin/dashboard/SalesAnalyticsTable';
-import AdminAIPanel from '@/components/AdminAIPanel';
 import SystemHealthSignal from '@/components/admin/SystemHealthSignal';
+import SecurityAssurancePanel from '@/components/admin/SecurityAssurancePanel';
 import { useEffect } from 'react';
 
 export default function AdminDashboardPage() {
@@ -20,7 +20,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="lg:col-span-1 space-y-8">
                     <SystemHealthSignal />
-                    <AdminAIPanel />
+                    <SecurityAssurancePanel />
                 </div>
             </div>
         </div>

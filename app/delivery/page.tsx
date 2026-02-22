@@ -8,7 +8,6 @@ import { collection, query, where, getDocs, updateDoc, doc, orderBy } from 'fire
 import { db } from '@/lib/firebase';
 import { logActivity } from '@/lib/logger';
 import { MapPin, Phone, Package, Clock, CheckCircle } from 'lucide-react';
-import { syncOrderAction } from '@/actions/mongo-actions';
 import { verifyPaymentAction } from '@/actions/admin-actions';
 
 interface Order {
@@ -71,21 +70,6 @@ export default function DeliveryDashboard() {
                 deliveredAt: status === 'Delivered' ? new Date() : null
             });
 
-            // 🚀 SYNC TO MONGO (AI Cache)
-            const targetOrder = orders.find(o => o.id === orderId);
-            if (targetOrder) {
-                syncOrderAction({
-                    orderId,
-                    total: targetOrder.totals?.total || 0,
-                    status: status,
-                    createdAt: targetOrder.createdAt?.seconds ? new Date(targetOrder.createdAt.seconds * 1000).toISOString() : new Date().toISOString(),
-                    customer: targetOrder.customer ? {
-                        name: targetOrder.customer.name,
-                        phone: targetOrder.customer.phone,
-                        address: targetOrder.customer.address
-                    } : undefined
-                }).catch(e => console.error("Mongo Sync Error:", e));
-            }
             // Update local state
             setOrders(orders.map(o => o.id === orderId ? { ...o, orderStatus: status } : o));
         } catch (error) {
@@ -113,21 +97,6 @@ export default function DeliveryDashboard() {
 
             alert(`Success: ${result.message || 'Payment Verified & Customer Notified'}`);
 
-            // 🚀 SYNC TO MONGO (AI Cache)
-            const targetOrder = orders.find(o => o.id === orderId);
-            if (targetOrder) {
-                syncOrderAction({
-                    orderId,
-                    total: targetOrder.totals?.total || 0,
-                    status: 'Delivered', // Payment verification by DM usually ends the order
-                    createdAt: targetOrder.createdAt?.seconds ? new Date(targetOrder.createdAt.seconds * 1000).toISOString() : new Date().toISOString(),
-                    customer: targetOrder.customer ? {
-                        name: targetOrder.customer.name,
-                        phone: targetOrder.customer.phone,
-                        address: targetOrder.customer.address
-                    } : undefined
-                }).catch(e => console.error("Mongo Sync Error:", e));
-            }
 
             // Update local state
             setOrders(orders.map(o => o.id === orderId ? {

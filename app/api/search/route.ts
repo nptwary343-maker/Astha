@@ -2,6 +2,7 @@ export const runtime = 'edge';
 import { NextResponse } from 'next/server';
 import { getSearchIndex } from '@/lib/db-utils';
 import Fuse from 'fuse.js';
+import { sanitizeInput } from '@/lib/security';
 
 // 🚀 EDGE_COMPATIBLE: Vercel can cache this
 // This endpoint returns search suggestions quickly using Fuse.js on the server-side cache.
@@ -10,7 +11,8 @@ import Fuse from 'fuse.js';
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const query = searchParams.get('q');
+        const rawQuery = searchParams.get('q');
+        const query = sanitizeInput(rawQuery);
 
         if (!query || query.length < 2) {
             return NextResponse.json([]);
