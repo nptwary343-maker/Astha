@@ -1,15 +1,8 @@
 {
-    "name": "astheer",
+    "name": "astha",
     "compatibility_date": "2025-02-14",
     "compatibility_flags": [
         "nodejs_compat"
     ],
-    "pages_build_output_dir": ".vercel/output/static",
-    "d1_databases": [
-        {
-            "binding": "MY_DB",
-            "database_name": "YOUR_DB_NAME",
-            "database_id": "PASTE_YOUR_DATABASE_ID_HERE"
-        }
-    ]
+    "pages_build_output_dir": ".vercel/output/static"
 }

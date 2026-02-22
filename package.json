@@ -25,7 +25,6 @@
     "cloudinary": "^2.9.0",
     "firebase": "^12.8.0",
     "firebase-admin": "^13.6.1",
-    "flexsearch": "^0.8.212",
     "framer-motion": "^12.33.0",
     "fuse.js": "^7.1.0",
     "groq-sdk": "^0.37.0",
