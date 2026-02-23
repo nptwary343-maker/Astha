@@ -19,16 +19,6 @@ export default async function Home() {
   let products = await getFeaturedProducts();
   console.log(`🏠 Home Page: Rendering with ${products?.length} products`);
 
-  // Shuffle products on the server to avoid hydration mismatch (Ghost Error) in ProductGrid
-  if (products && products.length > 0) {
-    const shuffled = [...products];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    products = shuffled;
-  }
-
   return (
     <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 relative overflow-hidden selection:bg-blue-500/30">
 

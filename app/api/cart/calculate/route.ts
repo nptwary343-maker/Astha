@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { calculateCart, CouponData, UserContext } from '@/lib/cart-calculator';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { unstable_cache } from 'next/cache';
+
 import { sanitizeInput } from '@/lib/security';
 
 // Node runtime for Firebase support
@@ -28,43 +28,35 @@ function checkRateLimit(ip: string): boolean {
     return true;
 }
 
-const getCachedProduct = unstable_cache(
-    async (id: string) => {
-        const docRef = doc(db, 'products', id);
-        const snap = await getDoc(docRef);
-        if (snap.exists()) {
-            const data = snap.data();
-            return {
-                id,
-                name: data.name || "Unnamed Product",
-                price: Number(data.price || 0),
-                stock: Number(data.stock ?? 0),
-                taxPercent: Number(data.taxPercent || 0),
-                category: data.category || "General",
-                discount: data.discount,
-                discountType: data.discountType,
-                discountValue: data.discountValue ? Number(data.discountValue) : 0
-            };
-        }
-        return null;
-    },
-    ['product-pricing'],
-    { revalidate: 86400, tags: ['product-pricing'] }
-);
+const getCachedProduct = async (id: string) => {
+    const docRef = doc(db, 'products', id);
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+        const data = snap.data();
+        return {
+            id,
+            name: data.name || "Unnamed Product",
+            price: Number(data.price || 0),
+            stock: Number(data.stock ?? 0),
+            taxPercent: Number(data.taxPercent || 0),
+            category: data.category || "General",
+            discount: data.discount,
+            discountType: data.discountType,
+            discountValue: data.discountValue ? Number(data.discountValue) : 0
+        };
+    }
+    return null;
+};
 
 // 1. Hybrid Coupon Cache: Static data is cached for 1 hour
-const getStaticCouponData = unstable_cache(
-    async (code: string) => {
-        const couponRef = doc(db, 'coupons', code.toUpperCase().trim());
-        const snap = await getDoc(couponRef);
-        if (snap.exists()) {
-            return { ...snap.data(), code: snap.id } as CouponData;
-        }
-        return null;
-    },
-    ['coupon-static'],
-    { revalidate: 3600, tags: ['coupon-static'] }
-);
+const getStaticCouponData = async (code: string) => {
+    const couponRef = doc(db, 'coupons', code.toUpperCase().trim());
+    const snap = await getDoc(couponRef);
+    if (snap.exists()) {
+        return { ...snap.data(), code: snap.id } as CouponData;
+    }
+    return null;
+};
 
 export async function POST(req: NextRequest) {
     try {

@@ -1,40 +1,43 @@
 // lib/db-utils.ts
 import { db } from './firebase';
 import { collection, getDocs, query, limit, doc, getDoc, where } from 'firebase/firestore';
-import { unstable_cache } from 'next/cache';
 import { FALLBACK_PRODUCTS, FALLBACK_SETTINGS } from './fallback-data';
 
 /**
- * 📦 UNIFIED PRODUCT CACHE (1-Hour Revalidation)
- * Strategy: 1 Firebase hit per hour for ALL products.
- * Helps Vercel Free users stay within 50k reads limit.
+ * 📦 SIMPLE IN-MEMORY CACHE (Edge-compatible)
+ * unstable_cache does NOT work on Cloudflare Pages edge runtime.
  */
-export const getCachedProducts = unstable_cache(
-    async () => {
-        console.log("🔥 [FIREBASE_HIT] Fetching all products for global cache...");
-        try {
-            const q = query(collection(db, 'products'));
-            const snap = await getDocs(q);
-            const data = snap.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            console.log(`✅ [CACHE_REFILLED] Loaded ${data.length} products.`);
-            return data.length > 0 ? data : FALLBACK_PRODUCTS;
-        } catch (e: any) {
-            console.error("Firebase read failed:", e.code || e.message);
+let _productCache: any[] | null = null;
+let _cacheTime = 0;
+const CACHE_TTL = 3600 * 1000; // 1 hour in ms
 
-            // 🛡️ EMERGENCY QUOTA CHECK
-            if (e.code === 'resource-exhausted' || e.message?.includes('quota')) {
-                console.warn("⚠️ [QUOTA_EXCEEDED] Providing fallback products to keep site alive.");
-            }
+export const getCachedProducts = async () => {
+    const now = Date.now();
+    if (_productCache && (now - _cacheTime) < CACHE_TTL) {
+        return _productCache;
+    }
 
-            return FALLBACK_PRODUCTS;
+    console.log("🔥 [FIREBASE_HIT] Fetching all products...");
+    try {
+        const q = query(collection(db, 'products'));
+        const snap = await getDocs(q);
+        const data = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+        }));
+        console.log(`✅ [CACHE_REFILLED] Loaded ${data.length} products.`);
+        _productCache = data.length > 0 ? data : FALLBACK_PRODUCTS;
+        _cacheTime = now;
+        return _productCache;
+    } catch (e: any) {
+        console.error("Firebase read failed:", e.code || e.message);
+        if (e.code === 'resource-exhausted' || e.message?.includes('quota')) {
+            console.warn("⚠️ [QUOTA_EXCEEDED] Providing fallback products.");
         }
-    },
-    ['global-products-cache-v3'],
-    { revalidate: 3600, tags: ['products'] }
-);
+        return FALLBACK_PRODUCTS;
+    }
+};
+
 
 /**
  * FETCH FEATURED PRODUCTS (From Cache)
@@ -67,41 +70,28 @@ export const getCachedProductById = async (id: string) => {
 };
 
 /**
- * ⚙️ SITE SETTINGS CACHE
+ * ⚙️ SITE SETTINGS (Edge-compatible)
  */
-/**
- * ⚙️ SITE SETTINGS CACHE (Middle-Layer)
- */
-export const getSiteSettings = unstable_cache(
-    async () => {
-        try {
-            // Check both general and footer configs for middle-layer isolation
-            const mainSnap = await getDoc(doc(db, 'settings', 'general'));
-            const footerSnap = await getDoc(doc(db, 'site_config', 'footer_master'));
-
-            return {
-                ...(mainSnap.exists() ? mainSnap.data() : {}),
-                ...(footerSnap.exists() ? footerSnap.data() : {}),
-                _lastUpdated: Date.now()
-            };
-        } catch (e: any) {
-            console.error("Middle-layer settings fetch failed:", e.code || e.message);
-            if (e.code === 'resource-exhausted' || e.message?.includes('quota')) {
-                console.warn("⚠️ [QUOTA_EXCEEDED] Providing fallback settings.");
-            }
-            return FALLBACK_SETTINGS;
-        }
-    },
-    ['site-settings-v5-cache'],
-    { revalidate: 3600, tags: ['settings'] }
-);
+export const getSiteSettings = async () => {
+    try {
+        const mainSnap = await getDoc(doc(db, 'settings', 'general'));
+        const footerSnap = await getDoc(doc(db, 'site_config', 'footer_master'));
+        return {
+            ...(mainSnap.exists() ? mainSnap.data() : {}),
+            ...(footerSnap.exists() ? footerSnap.data() : {}),
+            _lastUpdated: Date.now()
+        };
+    } catch (e: any) {
+        console.error("Settings fetch failed:", e.code || e.message);
+        return FALLBACK_SETTINGS;
+    }
+};
 
 /**
  * 🔍 FIND SIMILAR PRODUCTS (By Name/Category for Brand Options)
  */
 export const getSimilarProducts = async (productName: string, category: string, currentId: string) => {
     const all = await getCachedProducts();
-    // Normalize name for comparison (e.g. "iPhone 15 Pro" -> "iphone-15-pro")
     const normalize = (s: string) => s.toLowerCase().trim().replace(/\s+/g, '-');
     const baseName = normalize(productName);
 
@@ -112,72 +102,57 @@ export const getSimilarProducts = async (productName: string, category: string, 
 };
 
 /**
- * 🎨 HERO BANNER CONFIG CACHE
+ * 🎨 HERO BANNER CONFIG (Edge-compatible)
  */
-export const getBannerConfig = unstable_cache(
-    async () => {
-        try {
-            const snap = await getDoc(doc(db, 'site_config', 'hero_banner'));
-            return snap.exists() ? snap.data() : null;
-        } catch (e: any) {
-            console.error("Banner fetch failed:", e);
-            return null;
-        }
-    },
-    ['hero-banner-cache'],
-    { revalidate: 3600, tags: ['banners'] }
-);
+export const getBannerConfig = async () => {
+    try {
+        const snap = await getDoc(doc(db, 'site_config', 'hero_banner'));
+        return snap.exists() ? snap.data() : null;
+    } catch (e: any) {
+        console.error("Banner fetch failed:", e);
+        return null;
+    }
+};
 
 /**
- * ⚡ FLASH SALE CONFIG CACHE
+ * ⚡ FLASH SALE CONFIG (Edge-compatible)
  */
-export const getFlashSaleConfig = unstable_cache(
-    async () => {
-        try {
-            const snap = await getDoc(doc(db, 'site_config', 'flash_sale'));
-            return snap.exists() ? snap.data() : null;
-        } catch (e: any) {
-            console.error("Flash Sale fetch failed:", e);
-            return null;
-        }
-    },
-    ['flash-sale-cache'],
-    { revalidate: 3600, tags: ['banners'] }
-);
+export const getFlashSaleConfig = async () => {
+    try {
+        const snap = await getDoc(doc(db, 'site_config', 'flash_sale'));
+        return snap.exists() ? snap.data() : null;
+    } catch (e: any) {
+        console.error("Flash Sale fetch failed:", e);
+        return null;
+    }
+};
 
 /**
- * 👗 FASHION QUIZ CONFIG CACHE
+ * 👗 FASHION QUIZ CONFIG (Edge-compatible)
  */
-export const getFashionQuizConfig = unstable_cache(
-    async () => {
-        try {
-            const snap = await getDoc(doc(db, 'site_config', 'fashion_quiz'));
-            return snap.exists() ? snap.data() : { isActive: false };
-        } catch (e: any) {
-            console.error("Fashion Quiz fetch failed:", e);
-            return { isActive: false };
-        }
-    },
-    ['fashion-quiz-cache'],
-    { revalidate: 3600, tags: ['settings'] }
-);
+export const getFashionQuizConfig = async () => {
+    try {
+        const snap = await getDoc(doc(db, 'site_config', 'fashion_quiz'));
+        return snap.exists() ? snap.data() : { isActive: false };
+    } catch (e: any) {
+        console.error("Fashion Quiz fetch failed:", e);
+        return { isActive: false };
+    }
+};
+
 /**
- * 👤 USER PROFILE CACHE
+ * 👤 USER PROFILE (Edge-compatible)
  */
-export const getUserProfile = unstable_cache(
-    async (email: string) => {
-        try {
-            const q = query(collection(db, 'users'), where('email', '==', email), limit(1));
-            const snap = await getDocs(q);
-            if (!snap.empty) {
-                return { id: snap.docs[0].id, ...snap.docs[0].data() };
-            }
-            return null;
-        } catch (e) {
-            console.error("User profile fetch failed:", e);
-            return null;
+export const getUserProfile = async (email: string) => {
+    try {
+        const q = query(collection(db, 'users'), where('email', '==', email), limit(1));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+            return { id: snap.docs[0].id, ...snap.docs[0].data() };
         }
-    },
-    ['user-profiles'],
-    { revalidate: 300, tags: ['users'] } // 5 minute cache
-);
+        return null;
+    } catch (e) {
+        console.error("User profile fetch failed:", e);
+        return null;
+    }
+};

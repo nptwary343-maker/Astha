@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { db, collection, doc, runTransaction, increment, serverTimestamp } from '@/lib/firebase';
 import { headers } from 'next/headers';
+import { after } from 'next/server';
 import { sendPixelEvent } from '@/lib/capi-bridge';
 
 // ----------------------------------------------------------------------
@@ -240,53 +241,58 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
             return { orderId, finalTotal, currency: 'BDT' };
         });
 
-        // C. Parallelize Post-Transaction Tasks (Critical for Edge Runtime)
-        // We await all promises to prevent early worker termination.
-        await Promise.allSettled([
-            // 1. Pixel Tracking
-            sendPixelEvent('Purchase', {
-                phone: customer.phone,
-                ip,
-                userAgent,
-                userId: userEmail || undefined
-            } as any, {
-                orderId: result.orderId,
-                value: result.finalTotal,
-                currency: 'BDT',
-                items: items
-            }, `PUR-${result.orderId}`),
+        // C. Offload Post-Transaction Tasks (Next.js 15 Background Execution)
+        // This ensures the user gets a response immediately without waiting for slow APIs.
+        after(async () => {
+            console.log(`⏳ [BACKGROUND_TASK] Running post-checkout logic for ${result.orderId}`);
 
+            await Promise.allSettled([
+                // 1. Pixel Tracking
+                sendPixelEvent('Purchase', {
+                    phone: customer.phone,
+                    ip,
+                    userAgent,
+                    userId: userEmail || undefined
+                } as any, {
+                    orderId: result.orderId,
+                    value: result.finalTotal,
+                    currency: 'BDT',
+                    items: items
+                }, `PUR-${result.orderId}`),
 
-            // 3. Stock Revalidation (Global Cache Flush)
-            (async () => {
-                try {
-                    const { revalidatePath } = await import('next/cache');
-                    revalidatePath('/', 'layout');
-                } catch (e) {
-                    console.warn("Stock revalidation failed", e);
-                }
-            })(),
-
-            // 4. Email Confirmation
-            (async () => {
-                if (userEmail) {
+                // 2. Stock Revalidation (Global Cache Flush)
+                (async () => {
                     try {
-                        const { sendOrderEmail } = await import('@/lib/mail-service');
-                        await sendOrderEmail({
-                            orderId: result.orderId,
-                            customerName: customer.name,
-                            totalPrice: result.finalTotal,
-                            address: customer.address,
-                            userEmail: userEmail,
-                            status: 'Processing',
-                            securityKey: result.orderId
-                        });
+                        const { revalidatePath } = await import('next/cache');
+                        revalidatePath('/', 'layout');
                     } catch (e) {
-                        console.error("📧 Email Confirmation Error:", e);
+                        console.warn("Stock revalidation failed", e);
                     }
-                }
-            })()
-        ]);
+                })(),
+
+                // 3. Email Confirmation
+                (async () => {
+                    if (userEmail) {
+                        try {
+                            const { sendOrderEmail } = await import('@/lib/mail-service');
+                            await sendOrderEmail({
+                                orderId: result.orderId,
+                                customerName: customer.name,
+                                totalPrice: result.finalTotal,
+                                address: customer.address,
+                                userEmail: userEmail,
+                                status: 'Processing',
+                                securityKey: result.orderId
+                            });
+                        } catch (e) {
+                            console.error("📧 Email Confirmation Error:", e);
+                        }
+                    }
+                })()
+            ]);
+
+            console.log(`✅ [BACKGROUND_TASK] Completed post-checkout logic for ${result.orderId}`);
+        });
 
         return { success: true, orderId: result.orderId };
 

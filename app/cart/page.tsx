@@ -140,7 +140,7 @@ export default function CartPage() {
         try {
             let fcmToken = null;
             const isNotificationSupported = typeof window !== 'undefined' && 'Notification' in window;
-            if (isNotificationSupported && (permission === 'granted' || (window as any).Notification?.permission === 'granted')) {
+            if (isNotificationSupported && (permission === 'granted' || (typeof window !== 'undefined' && (window as any).Notification?.permission === 'granted'))) {
                 try {
                     fcmToken = await requestPermission();
                 } catch (err) {
@@ -271,7 +271,9 @@ export default function CartPage() {
                                 <p className="text-sm text-pink-700 leading-relaxed font-medium">নিচের বিকাশ নম্বরটি কপি করুন এবং {summary?.finalTotal || 0} টাকা **Send Money** বা **Payment** করুন। তারপর মেসেজ থেকে TrxID-এর **শেষ ৬টি সংখ্যা** নিচে দিন।</p>
                                 <div className="flex items-center gap-3 bg-white p-4 rounded-xl border border-pink-200 justify-between">
                                     <span className="font-black text-pink-600 text-lg">{bkashNumber}</span>
-                                    <button onClick={() => navigator.clipboard.writeText(bkashNumber)} className="p-2 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100"><Copy size={18} /></button>
+                                    <button onClick={() => {
+                                        if (typeof navigator !== 'undefined') navigator.clipboard.writeText(bkashNumber);
+                                    }} className="p-2 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100"><Copy size={18} /></button>
                                 </div>
                                 <input
                                     value={bkashTrxId}
