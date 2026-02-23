@@ -1,6 +1,7 @@
 'use server';
 
 import { db, doc, updateDoc, collection } from '@/lib/firebase';
+import { revalidatePath } from 'next/cache';
 
 const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET;
 
