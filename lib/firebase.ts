@@ -14,13 +14,25 @@ export const firebaseConfig = {
     measurementId: "G-2T32864N2K"
 };
 
-// Singleton initialization for Next.js (Turbo/SSR/Server Actions)
+// Singleton initialization for Next.js
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+// Initialize Analytics safely
+let analytics: any = null;
+if (typeof window !== "undefined") {
+    import("firebase/analytics").then(({ getAnalytics, isSupported }) => {
+        isSupported().then(supported => {
+            if (supported) analytics = getAnalytics(app);
+        });
+    }).catch(err => console.error("Firebase Analytics Error:", err));
+}
+
+export { analytics };
 
 // FCM Initialization (Client Side Only)
 let messaging: any = null;
