@@ -16,8 +16,13 @@ import AlienBackground from '@/components/AlienBackground';
 import TrustBar from '@/components/TrustBar';
 
 export default async function Home() {
-  let products = await getFeaturedProducts();
-  console.log(`🏠 Home Page: Rendering with ${products?.length} products`);
+  let products = [];
+  try {
+    products = await getFeaturedProducts();
+    console.log(`🏠 Home Page: Rendering with ${products?.length || 0} products`);
+  } catch (e) {
+    console.error("Home Page Data Fetch Error:", e);
+  }
 
   return (
     <div className="min-h-screen bg-transparent text-gray-900 dark:text-gray-100 relative overflow-hidden selection:bg-blue-500/30">

@@ -105,23 +105,25 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <FacebookPixel />
         </Suspense>
-        <Providers>
-          <I18nProvider>
-            <ErrorBoundary>
+        <ErrorBoundary>
+          <Providers>
+            <I18nProvider>
               <ToastProvider>
                 <CartProvider>
                   <SoundProvider>
                     <AppShell>
-                      {children}
+                      <Suspense fallback={null}>
+                        {children}
+                      </Suspense>
                     </AppShell>
                     <DynamicFooter />
                     <LanguageSwitcher />
                   </SoundProvider>
                 </CartProvider>
               </ToastProvider>
-            </ErrorBoundary>
-          </I18nProvider>
-        </Providers>
+            </I18nProvider>
+          </Providers>
+        </ErrorBoundary>
       </body>
     </html>
   );
