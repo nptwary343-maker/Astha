@@ -149,7 +149,9 @@ export default function LoginPage() {
                 return;
             }
 
-            setError("Login failed due to a system ghost error. Please refresh and try again.");
+            // More descriptive error for debugging
+            const detail = error.message ? `: ${error.message.split('(')[0]}` : "";
+            setError(`Authentication failed (System Error${detail}). Please check if your domain is authorized in Firebase Console.`);
         }
     };
 
