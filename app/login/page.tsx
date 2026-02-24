@@ -149,9 +149,10 @@ export default function LoginPage() {
                 return;
             }
 
-            // More descriptive error for debugging
+            // More descriptive error for debugging: include the code
+            const errorCode = error.code ? ` (${error.code})` : "";
             const detail = error.message ? `: ${error.message.split('(')[0]}` : "";
-            setError(`Authentication failed (System Error${detail}). Please check if your domain is authorized in Firebase Console.`);
+            setError(`Authentication failed${errorCode}${detail}. Please double-check if your domain matches the one authorized in Firebase Console.`);
         }
     };
 
