@@ -141,8 +141,6 @@ export default function ProductsPage() {
                 }
 
                 await deleteDoc(doc(db, "products", id));
-
-                await deleteDoc(doc(db, "products", id));
                 setProducts(products.filter(p => p.id !== id));
             } catch (error) {
                 console.error("Error deleting product: ", error);
