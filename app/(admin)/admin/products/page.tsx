@@ -395,6 +395,7 @@ export default function ProductsPage() {
     );
 
     if (!mounted) return null;
+
     if (isLoading) return <div className="p-8 text-center text-gray-500 font-mono text-xs animate-pulse uppercase tracking-[0.2em]">Assembling Warehouse Logic...</div>;
 
     return (

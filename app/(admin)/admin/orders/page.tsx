@@ -15,6 +15,7 @@ export default function OrdersPage() {
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({ totalOrders: 0, totalRevenue: 0 });
     const [deliveryMen, setDeliveryMen] = useState<any[]>([]);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const { isSuperAdmin } = useAuth(); // Strict Security
 
     useEffect(() => {
@@ -29,8 +30,8 @@ export default function OrdersPage() {
                 setDeliveryMen(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
             } catch (e) { console.error("Error fetching delivery men:", e); }
         };
-        fetchDeliveryMen();
-    }, []);
+        if (mounted) fetchDeliveryMen();
+    }, [mounted]);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -57,8 +58,8 @@ export default function OrdersPage() {
             }
         };
 
-        fetchOrders();
-    }, []);
+        if (mounted) fetchOrders();
+    }, [mounted]);
 
     const handleVerifyPayment = async (orderId: string, newStatus: string) => {
         const isVerified = newStatus === 'Paid';
