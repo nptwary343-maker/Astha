@@ -17,7 +17,7 @@ export default function BottomNav() {
     ];
 
     // Hide on specific routes if needed (e.g., checkout/admin) but usually good to have
-    if (pathname.startsWith('/admin')) return null;
+    if (pathname?.startsWith('/admin')) return null;
 
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 pb-safe md:hidden">

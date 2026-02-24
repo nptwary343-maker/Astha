@@ -8,7 +8,7 @@
  */
 
 export const SECURITY_HEADERS = {
-    'Content-Security-Policy': "default-src 'self' https://*.google.com https://*.firebaseapp.com https://*.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google.com https://*.firebaseapp.com https://*.algolia.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com; connect-src 'self' https://*.googleapis.com https://*.algolia.net https://*.algolianet.com;",
+    'Content-Security-Policy': "default-src 'self' https://*.google.com https://*.firebaseapp.com https://*.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google.com https://*.firebaseapp.com https://*.algolia.net https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com; connect-src 'self' https://*.googleapis.com https://*.algolia.net https://*.algolianet.com https://*.firebaseio.com wss://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://connect.facebook.net;",
     'X-Frame-Options': 'DENY',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',

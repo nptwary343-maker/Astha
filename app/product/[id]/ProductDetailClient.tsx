@@ -108,7 +108,7 @@ export default function ProductDetailClient({ initialProduct, productId, similar
 
         if (!user) {
             // Guest Redirection Logic
-            const loginUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
+            const loginUrl = `/login?redirect=${encodeURIComponent(pathname || '/')}`;
             router.push(loginUrl);
             return;
         }
@@ -177,7 +177,7 @@ export default function ProductDetailClient({ initialProduct, productId, similar
         e.preventDefault();
 
         if (!user) {
-            router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+            router.push(`/login?redirect=${encodeURIComponent(pathname || '/')}`);
             return;
         }
 
@@ -518,7 +518,7 @@ export default function ProductDetailClient({ initialProduct, productId, similar
                             <div className="bg-blue-50 border border-blue-100 p-6 rounded-2xl text-center space-y-4">
                                 <p className="text-sm font-bold text-blue-900">Sign in to share your experience with this product!</p>
                                 <Link
-                                    href={`/login?redirect=${encodeURIComponent(pathname)}`}
+                                    href={`/login?redirect=${encodeURIComponent(pathname || '/')}`}
                                     className="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl font-bold text-sm hover:bg-blue-700 transition-all"
                                 >
                                     Login to Review

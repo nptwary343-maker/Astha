@@ -12,22 +12,23 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<Theme>(() => {
-        // Initialize theme from localStorage or system preference
-        if (typeof window !== 'undefined') {
-            const savedTheme = localStorage.getItem('theme') as Theme | null;
-            if (savedTheme) return savedTheme;
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        return 'light';
-    });
+    const [theme, setTheme] = useState<Theme>('light');
     const [mounted, setMounted] = useState(false);
 
-    // Apply theme class on mount and when theme changes
+    // Step 2a Fix: Read localStorage in useEffect only (never during SSR)
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') as Theme | null;
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setTheme('dark');
+        }
+        setMounted(true);
+    }, []);
+
+    // Apply dark class whenever theme changes
     useEffect(() => {
         document.documentElement.classList.toggle('dark', theme === 'dark');
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMounted(true);
     }, [theme]);
 
     const toggleTheme = () => {
@@ -37,11 +38,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         document.documentElement.classList.toggle('dark', newTheme === 'dark');
     };
 
+    // Step 2a Fix: No visibility:hidden wrapper — children render immediately
+    // mounted flag kept for Header's theme-toggle icon guard only
+    if (!mounted) {
+        // Suppress theme-specific rendering until hydrated, but DO show children
+        return (
+            <ThemeContext.Provider value={{ theme, toggleTheme }}>
+                {children}
+            </ThemeContext.Provider>
+        );
+    }
+
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
-            <div style={{ visibility: mounted ? 'visible' : 'hidden' }}>
-                {children}
-            </div>
+            {children}
         </ThemeContext.Provider>
     );
 }

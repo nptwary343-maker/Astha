@@ -15,9 +15,9 @@ import { fetchProductsAction, fetchSiteSettingsAction } from '@/actions/public-d
 function ShopContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const category = searchParams.get('category');
-    const searchQuery = searchParams.get('search');
-    const brand = searchParams.get('brand');
+    const category = searchParams?.get('category');
+    const searchQuery = searchParams?.get('search');
+    const brand = searchParams?.get('brand');
 
     const [products, setProducts] = useState<any[]>([]);
     const [settings, setSettings] = useState<any>(null);
@@ -69,7 +69,7 @@ function ShopContent() {
     const prefix = settings?.permalinkPrefix || 'product';
 
     const updateFilter = (type: string, value: string | null) => {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams?.toString() || '');
         if (value) params.set(type, value);
         else params.delete(type);
         router.push(`/shop?${params.toString()}`);

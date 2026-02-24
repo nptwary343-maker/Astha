@@ -1,9 +1,6 @@
-import { db } from './firebase'; // Use client SDK if needed, or strictly fetch
-// import clientPromise from './mongodb-client'; // REMOVED for Edge Compatibility
-// import nodemailer from 'nodemailer'; // REMOVED for Edge Compatibility
-
-const GMAIL_USER = process.env.GMAIL_USER_1;
-const GMAIL_PASS = process.env.GMAIL_PASS_1;
+import { db } from './firebase';
+// Step 4b Fix: nodemailer (TCP/SMTP) fully removed — Edge Runtime incompatible.
+// Email is handled via Resend API (HTTP) → EmailJS (HTTP) fallback only.
 
 const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;

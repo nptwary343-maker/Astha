@@ -23,7 +23,7 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
 
     const handleAuthAction = (action: () => void) => {
         if (!user) {
-            router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+            router.push(`/login?redirect=${encodeURIComponent(pathname ?? '/')}`);
             return;
         }
         action();
@@ -205,7 +205,7 @@ const ProductCard = ({ product, onSelect }: { product: Product, onSelect: (p: Pr
         e.stopPropagation();
 
         if (!user) {
-            router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+            router.push(`/login?redirect=${encodeURIComponent(pathname ?? '/')}`);
             return;
         }
 

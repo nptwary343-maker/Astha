@@ -15,7 +15,7 @@ import { useEffect } from "react";
 export default function LoginPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const redirectUrl = searchParams.get("redirect") || "/account";
+    const redirectUrl = searchParams?.get("redirect") || "/account";
     const { user, isAdmin, loading } = useAuth();
 
     // 🔄 Auto-Redirect & Session Restoration

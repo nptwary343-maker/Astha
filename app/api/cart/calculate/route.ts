@@ -8,24 +8,12 @@ import { sanitizeInput } from '@/lib/security';
 
 // Node runtime for Firebase support
 
-const RATE_LIMIT_WINDOW = 2 * 60 * 60 * 1000;
-const MAX_REQUESTS = 70;
-const rateLimitMap = new Map<string, { count: number; startTime: number }>();
-
-function checkRateLimit(ip: string): boolean {
-    const now = Date.now();
-    const data = rateLimitMap.get(ip);
-    if (!data) {
-        rateLimitMap.set(ip, { count: 1, startTime: now });
-        return true;
-    }
-    if (now - data.startTime > RATE_LIMIT_WINDOW) {
-        rateLimitMap.set(ip, { count: 1, startTime: now });
-        return true;
-    }
-    if (data.count >= MAX_REQUESTS) return false;
-    data.count++;
-    return true;
+// Step 4a Fix: Module-level Map does NOT persist across Cloudflare Edge invocations.
+// Each request gets a fresh isolate — in-memory rate limiting is stateless and broken.
+// TODO: Replace with Cloudflare KV-based rate limiting when needed.
+// For now, rate limiting is DISABLED to prevent false-positive 429 blocks.
+function checkRateLimit(_ip: string): boolean {
+    return true; // Always allow — stateless edge environment
 }
 
 const getCachedProduct = async (id: string) => {
