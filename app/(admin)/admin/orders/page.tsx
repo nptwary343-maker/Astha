@@ -9,12 +9,17 @@ import { db } from '@/lib/firebase';
 import { Order } from '@/types';
 
 export default function OrdersPage() {
+    const [mounted, setMounted] = useState(false);
     const [orders, setOrders] = useState<Order[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({ totalOrders: 0, totalRevenue: 0 });
     const [deliveryMen, setDeliveryMen] = useState<any[]>([]);
     const { isSuperAdmin } = useAuth(); // Strict Security
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const fetchDeliveryMen = async () => {
@@ -164,7 +169,8 @@ export default function OrdersPage() {
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading orders...</div>;
+    if (!mounted) return null;
+    if (loading) return <div className="p-8 text-center text-gray-500 font-mono text-xs animate-pulse uppercase tracking-[0.2em]">Synchronizing Records Cluster...</div>;
 
     const filteredOrders = orders.filter(order => {
         const term = searchTerm.toLowerCase();
