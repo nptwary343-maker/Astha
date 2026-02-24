@@ -59,8 +59,15 @@ export default function Error({
                 </Link>
             </div>
 
-            <div className="mt-12 text-[10px] font-mono text-gray-300 dark:text-gray-700 uppercase tracking-[0.2em]">
-                Digest: {error.digest || "SILENT_FAILURE_O1"}
+            <div className="mt-12 flex flex-col items-center gap-2">
+                <div className="text-[10px] font-mono text-gray-300 dark:text-gray-700 uppercase tracking-[0.2em]">
+                    Digest: {error.digest || "SILENT_FAILURE_O1"}
+                </div>
+                {error.message && (
+                    <div className="text-[9px] font-mono text-red-500/50 uppercase tracking-tight max-w-lg truncate">
+                        Trace: {error.message}
+                    </div>
+                )}
             </div>
         </div>
     );
