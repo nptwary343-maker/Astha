@@ -9,10 +9,10 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const response = NextResponse.next();
 
-    // --- 🛡️ 1. SECURITY HEADERS INJECTION ---
+    /* --- 🛡️ 1. SECURITY HEADERS INJECTION ---
     Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
         response.headers.set(key, value);
-    });
+    }); */
 
     // --- 🔒 2. PROTECT ADMIN & DELIVERY ROUTES ---
     if (pathname.startsWith('/admin') || pathname.startsWith('/delivery')) {
