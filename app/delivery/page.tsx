@@ -33,6 +33,11 @@ export default function DeliveryDashboard() {
     const { user } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const fetchAssignedOrders = async () => {
         if (!user) return;
@@ -111,7 +116,8 @@ export default function DeliveryDashboard() {
         }
     };
 
-    if (loading) return <div className="text-center py-10 text-gray-500">Loading your orders...</div>;
+    if (!mounted) return null;
+    if (loading) return <div className="text-center py-10 text-gray-500 font-mono text-xs animate-pulse uppercase tracking-[0.2em]">Synchronizing Delivery Channel...</div>;
 
     return (
         <div className="space-y-4">

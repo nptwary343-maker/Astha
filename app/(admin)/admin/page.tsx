@@ -6,9 +6,17 @@ import ChartsSection from '@/components/admin/dashboard/ChartsSection';
 import SalesAnalyticsTable from '@/components/admin/dashboard/SalesAnalyticsTable';
 import SystemHealthSignal from '@/components/admin/SystemHealthSignal';
 import SecurityAssurancePanel from '@/components/admin/SecurityAssurancePanel';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AdminDashboardPage() {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
+
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Dashboard Content - Clean Rebuild */}

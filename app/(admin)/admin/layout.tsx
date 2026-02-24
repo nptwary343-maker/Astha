@@ -30,16 +30,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
     }, [isAdmin, loading, router]);
 
-    if (isLoading && loading) {
+    // 🛡️ AUTHENTICATION GUARD: Prevent rendering until identity is confirmed
+    if (loading || isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="animate-spin text-blue-600" size={40} />
+            <div className="min-h-screen flex items-center justify-center bg-[#0F172A]">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="animate-spin text-blue-500" size={48} />
+                    <p className="text-gray-400 font-mono text-xs uppercase tracking-[0.3em] animate-pulse">Verifying Integrity</p>
+                </div>
             </div>
         );
     }
 
+    // Double check if unauthorized (Safety for race conditions)
+    if (!isAdmin && (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('isMasterAdmin') !== 'true' : true)) {
+        return null; // Let the useEffect redirect
+    }
+
     return (
-        <div className="min-h-screen bg-gray-50 font-sans">
+        <div className="min-h-screen bg-gray-50 font-sans selection:bg-blue-500/20">
             <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <AdminHeader onMenuClick={() => setIsSidebarOpen(true)} />
             <main className="p-4 md:p-8 md:ml-64 transition-all duration-300">
