@@ -14,11 +14,14 @@ export const firebaseConfig = {
     measurementId: "G-2T32864N2K"
 };
 
-// Singleton initialization for Next.js
+// Singleton initialization
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
+// Initialize services with safe guards
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 

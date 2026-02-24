@@ -140,6 +140,11 @@ export default function LoginPage() {
             console.error("🚨 Google Auth Error:", error);
             setIsLoading(false);
 
+            // DETAILED DEBUG ALERT (Temporary for troubleshooting)
+            if (error.code) {
+                alert(`Firebase Auth Fail: ${error.code}\n${error.message}`);
+            }
+
             if (error.code === "auth/cancelled-popup-request" || error.code === "auth/popup-closed-by-user") {
                 return;
             }
