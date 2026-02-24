@@ -12,6 +12,13 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ onMenuClick = () => { }, title }: AdminHeaderProps) {
     const [isQuotaExceeded, setIsQuotaExceeded] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return <header className="h-20 bg-white/80 border-b border-gray-100 w-full md:ml-64 md:w-[calc(100%-16rem)]" />;
 
     useEffect(() => {
         const checkHealth = async () => {

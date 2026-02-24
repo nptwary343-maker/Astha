@@ -12,6 +12,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const { user, loading, isAdmin } = useAuth();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         // Protect Admin Route
@@ -46,6 +51,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!isAdmin && (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('isMasterAdmin') !== 'true' : true)) {
         return null; // Let the useEffect redirect
     }
+
+    if (!mounted) return null;
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans selection:bg-blue-500/20">

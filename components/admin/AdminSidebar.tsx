@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { usePathname } from 'next/navigation';
@@ -35,10 +36,15 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
+    const [mounted, setMounted] = useState(false);
     const { role } = useAuth(); // Get role from context
     const pathname = usePathname();
 
-    // Define Role-Based Permissions
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
     // super_admin: Everything
     // admin: Everything except Settings & Sensitive System Actions
     // manager: Operational tasks only (Orders, Products, Customers)
