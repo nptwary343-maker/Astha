@@ -106,13 +106,17 @@ export async function POST(req: NextRequest) {
             }
         }));
 
-        // 3. User Context (Zero Trust: Verify Tags on Server)
+        // 3. User Context
         let verifiedTags = userTags || [];
         if (userEmail) {
-            const { getUserProfile } = await import('@/lib/db-utils');
-            const profile: any = await getUserProfile(userEmail);
-            if (profile) {
-                verifiedTags = profile.tags || [];
+            try {
+                const { getUserProfile } = await import('@/lib/db-utils');
+                const profile: any = await getUserProfile(userEmail);
+                if (profile) {
+                    verifiedTags = profile.tags || [];
+                }
+            } catch (e) {
+                console.warn("User profile fetch failed, continuing with guest context.");
             }
         }
 
