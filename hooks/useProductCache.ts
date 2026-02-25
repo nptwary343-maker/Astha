@@ -1,76 +1,70 @@
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useRef } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { collection, onSnapshot, query, limit, orderBy } from 'firebase/firestore';
 import { Product } from '@/types';
 
-const CACHE_KEY = 'aez_products_cache';
-const CACHE_DURATION = 5 * 60 * 1000; // 5 Minutes
-
+const CACHE_KEY = 'asthar_hat_products_v2';
+const CACHE_DURATION = 10 * 60 * 1000; // 10 Minutes
 
 export const useProductCache = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const unsubscribeRef = useRef<(() => void) | null>(null);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            // 1. Check Local Storage
-            const cachedData = localStorage.getItem(CACHE_KEY);
-            if (cachedData) {
+        // 1. Initial Load from Cache (Instant UI)
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+            try {
                 const { timestamp, data } = JSON.parse(cachedData);
-                const age = Date.now() - timestamp;
-
-                if (age < CACHE_DURATION) {
-                    console.log(`⚡ Using Cached Products (${data.length} items)`);
+                if (Date.now() - timestamp < CACHE_DURATION) {
                     setProducts(data);
                     setLoading(false);
-                    return;
                 }
+            } catch (e) {
+                console.error("Cache parse error", e);
             }
+        }
 
-            // 2. Fetch from Firebase if cache missing or stale
-            console.log("🔥 Fetching Products from Firestore...");
-            try {
-                // OPTIMIZATION: Limit increased to 50 to meet easy "10-15 product" visibility requirements
-                // REMOVING orderBy('createdAt') TEMPORARILY because existing products might lack this field
-                const q = query(collection(db, 'products'), limit(60));
-                const snapshot = await getDocs(q);
+        // 2. Spark-Safe Real-time Sync (onSnapshot)
+        const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(50));
 
-                const items = snapshot.docs.map(doc => {
-                    const data = doc.data();
-                    return {
-                        id: doc.id,
-                        name: data.name,
-                        price: data.price,
-                        salePrice: data.salePrice,
-                        category: data.category,
-                        images: data.images,
-                        description: data.description,
-                        tags: data.tags,
-                        stock: data.stock,
-                        discount: data.discount
-                    };
-                }) as Product[];
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const items = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            })) as Product[];
 
-                setProducts(items);
+            setProducts(items);
+            setLoading(false);
 
-                // 3. Save to Cache
-                localStorage.setItem(CACHE_KEY, JSON.stringify({
-                    timestamp: Date.now(),
-                    data: items
-                }));
+            // 3. Update Cache
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                timestamp: Date.now(),
+                data: items
+            }));
+        }, (error) => {
+            console.error("Firestore real-time error:", error);
+            setLoading(false);
+        });
 
-            } catch (error) {
-                console.error("Error fetching products:", error);
-                // Fallback to cache even if stale on error
-                if (cachedData) {
-                    setProducts(JSON.parse(cachedData).data);
-                }
-            } finally {
-                setLoading(false);
+        unsubscribeRef.current = unsubscribe;
+
+        // 4. Staged Detach (Spark Plan Optimization)
+        // We listen for 5 seconds to catch initial batch + any immediate updates, then detach to save on connections
+        const timer = setTimeout(() => {
+            if (unsubscribeRef.current) {
+                console.log("⚡ Spark Detach: Closing real-time connection to save resources.");
+                unsubscribeRef.current();
+                unsubscribeRef.current = null;
             }
+        }, 5000);
+
+        return () => {
+            clearTimeout(timer);
+            if (unsubscribeRef.current) unsubscribeRef.current();
         };
-
-        fetchProducts();
     }, []);
 
     return { products, loading };

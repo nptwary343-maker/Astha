@@ -6,10 +6,15 @@ interface CloudinaryResponse {
     public_id: string;
 }
 
+// 100% FREE NO-CREDIT-CARD CONFIG
+// User should replace these with their own unsigned preset from Cloudinary Dashboard
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'YOUR_CLOUD_NAME';
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'YOUR_UNSIGNED_PRESET';
+
 export const compressImage = async (file: File): Promise<File> => {
     const options = {
-        maxSizeMB: 0.2, // Max 200KB
-        maxWidthOrHeight: 1000,
+        maxSizeMB: 0.1, // Max 100KB for faster free uploads
+        maxWidthOrHeight: 1200,
         useWebWorker: true,
         fileType: 'image/webp'
     };
@@ -19,56 +24,27 @@ export const compressImage = async (file: File): Promise<File> => {
         return compressedFile;
     } catch (error) {
         console.error("Compression Error:", error);
-        throw error;
+        return file; // Fallback to original
     }
 };
 
+/**
+ * Uploads an image to Cloudinary using the Unsigned Upload API.
+ * This does not require a backend signature or credit card.
+ */
 export const uploadToCloudinary = async (file: File): Promise<string> => {
     try {
-        // 1. Compress
+        // 1. Compress for fastest transfer on free plan
         const compressedFile = await compressImage(file);
 
-        // 2. Get Signature
-        const timestamp = Math.round((new Date()).getTime() / 1000);
-        const paramsToSign = {
-            timestamp: timestamp,
-            upload_preset: 'ml_default', // We'll use unsigned for simplicity first or signed if configured
-            folder: 'asthar-hat-products'
-        };
-
-        // For secure signed uploads, we need to sign the parameters
-        // However, to keep it robust and simple as per request (Serverless signing),
-        // let's grab the signature from our API.
-
-        // NOTE: For 'unsigned' presets, we don't need a signature.
-        // But the user requested "Secure" which usually implies signed uploads.
-        // Let's assume we are using a signed preset or standard signed upload.
-        // If we use standard signed upload, we need API Key + Signature + Timestamp.
-
-        const signResponse = await fetch('/api/cloudinary/sign', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                paramsToSign: {
-                    timestamp,
-                    folder: 'asthar-hat-products'
-                }
-            })
-        });
-
-        if (!signResponse.ok) throw new Error('Failed to get signature');
-        const { signature } = await signResponse.json();
-
-        // 3. Upload
+        // 2. Prepare Form Data for Unsigned Upload
         const formData = new FormData();
         formData.append('file', compressedFile);
-        formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
-        formData.append('timestamp', timestamp.toString());
-        formData.append('signature', signature);
-        formData.append('folder', 'asthar-hat-products');
+        formData.append('upload_preset', UPLOAD_PRESET);
+        formData.append('folder', 'asthar-hat-free-storage');
 
-        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-        const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+        // 3. Direct Browser Fetch to Cloudinary API
+        const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
         const response = await fetch(url, {
             method: 'POST',
@@ -77,15 +53,15 @@ export const uploadToCloudinary = async (file: File): Promise<string> => {
 
         if (!response.ok) {
             const err = await response.json();
-            console.error("Cloudinary Error:", err);
-            throw new Error(err.error?.message || 'Upload failed');
+            console.error("Cloudinary Free Upload Error:", err);
+            throw new Error(err.error?.message || 'Cloudinary upload failed');
         }
 
         const data: CloudinaryResponse = await response.json();
-        return data.secure_url;
+        return data.secure_url; // Returns the optimized HTTPS URL
 
     } catch (error) {
-        console.error("Upload Flow Error:", error);
+        console.error("Cloudinary Integration Error:", error);
         throw error;
     }
 };

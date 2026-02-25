@@ -252,7 +252,7 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
     const products = React.useMemo(() => {
         const base = initialProducts || cachedProducts;
         if (!base || base.length === 0) return [];
-        return base.slice(0, 40);
+        return base.slice(0, 30);
     }, [initialProducts, cachedProducts]);
 
     if (loading) return (

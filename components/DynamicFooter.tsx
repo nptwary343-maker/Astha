@@ -41,9 +41,13 @@ import { fetchSiteSettingsAction } from '@/actions/public-data';
 
 import { usePathname } from 'next/navigation';
 
+import { db } from '@/lib/firebase';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+
 export default function DynamicFooter() {
     const pathname = usePathname();
     const [config, setConfig] = useState<FooterConfig | null>(null);
+    const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
     const { t } = useI18n();
 
     const isAdmin = pathname?.startsWith('/admin');
@@ -172,11 +176,25 @@ export default function DynamicFooter() {
                                 {t('footer.service')}
                             </h3>
                             <ul className="space-y-3">
-                                <FooterLink href="/tracking" label={t('footer.trackOrder')} />
+                                <li>
+                                    <button
+                                        onClick={() => setIsTrackingModalOpen(true)}
+                                        className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white text-xs font-medium transition-colors flex items-center gap-2 group"
+                                    >
+                                        <div className="w-1 h-1 bg-orange-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        {t('footer.trackOrder')} (Secret Key)
+                                    </button>
+                                </li>
                                 <FooterLink href="/refund-policy" label={t('footer.refundPolicy')} />
                                 <FooterLink href="/about" label={t('footer.aboutUs')} />
                             </ul>
                         </div>
+
+                        {/* Order Tracking Modal */}
+                        <OrderTrackingModal
+                            isOpen={isTrackingModalOpen}
+                            onClose={() => setIsTrackingModalOpen(false)}
+                        />
 
                         {/* Column 4: Contact */}
                         <div>
@@ -251,6 +269,129 @@ export default function DynamicFooter() {
                 </div>
             </motion.div>
         </footer>
+    );
+}
+
+function OrderTrackingModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+    const [secretKey, setSecretKey] = useState('');
+    const [orderData, setOrderData] = useState<any>(null);
+    const [isSearching, setIsSearching] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleTrack = () => {
+        if (!secretKey.trim()) return;
+        setIsSearching(true);
+        setError('');
+
+        const q = query(collection(db, 'orders'), where('secretKey', '==', secretKey.trim()));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            if (!snapshot.empty) {
+                setOrderData(snapshot.docs[0].data());
+                setIsSearching(false);
+            } else {
+                setError('No order found with this secret key.');
+                setOrderData(null);
+                setIsSearching(false);
+            }
+        }, (err) => {
+            console.error("Tracking Error:", err);
+            setError('Failed to track order. Please try again.');
+            setIsSearching(false);
+        });
+
+        return () => unsubscribe();
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <AnimatePresence>
+            <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+                <motion.div
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                    onClick={onClose}
+                />
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    className="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] shadow-2xl relative z-10 p-8 border border-white/20"
+                >
+                    <div className="flex justify-between items-center mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white shadow-lg">
+                                <Truck size={20} />
+                            </div>
+                            <h2 className="text-xl font-black text-blue-900 dark:text-white uppercase italic tracking-tighter">Track Order</h2>
+                        </div>
+                        <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                            <ArrowRight className="rotate-180" size={20} />
+                        </button>
+                    </div>
+
+                    {!orderData ? (
+                        <div className="space-y-4">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Enter your secret order key provided in your confirmation email to track status.
+                            </p>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    value={secretKey}
+                                    onChange={(e) => setSecretKey(e.target.value)}
+                                    placeholder="Enter Secret Key..."
+                                    className="w-full px-6 py-4 rounded-2xl bg-gray-50 dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 focus:border-orange-500 outline-none transition-all font-bold text-blue-900 dark:text-white"
+                                />
+                            </div>
+                            {error && <p className="text-xs text-red-500 font-bold ml-2">{error}</p>}
+                            <button
+                                onClick={handleTrack}
+                                disabled={isSearching}
+                                className="w-full py-4 bg-blue-900 dark:bg-orange-500 text-white rounded-2xl font-black uppercase tracking-widest hover:scale-[0.98] transition-transform shadow-xl flex items-center justify-center gap-2"
+                            >
+                                {isSearching ? "Searching..." : "Sync Status Now"}
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                            <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-3xl border border-orange-100 dark:border-orange-500/20">
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className="text-[10px] font-black uppercase text-orange-600 tracking-widest">Order Status</span>
+                                    <span className="bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-full">{orderData.status || 'Processing'}</span>
+                                </div>
+                                <h3 className="text-2xl font-black text-blue-900 dark:text-white mb-2 italic">#{orderData.orderId || 'ORD-SYNC'}</h3>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 font-bold">Estimated Delivery: {orderData.estimatedDelivery || '3-5 Days'}</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <TrackingStep label="Order Placed" active={true} completed={true} />
+                                <TrackingStep label="Processing" active={orderData.status === 'Processing'} completed={['Shipped', 'Delivered'].includes(orderData.status)} />
+                                <TrackingStep label="Out for Delivery" active={orderData.status === 'Shipped'} completed={orderData.status === 'Delivered'} />
+                                <TrackingStep label="Delivered" active={orderData.status === 'Delivered'} completed={orderData.status === 'Delivered'} />
+                            </div>
+
+                            <button
+                                onClick={() => setOrderData(null)}
+                                className="w-full py-3 text-xs font-bold text-gray-400 hover:text-blue-900 transition-colors"
+                            >
+                                Track another order
+                            </button>
+                        </div>
+                    )}
+                </motion.div>
+            </div>
+        </AnimatePresence>
+    );
+}
+
+function TrackingStep({ label, active, completed }: { label: string, active: boolean, completed: boolean }) {
+    return (
+        <div className={`flex items-center gap-4 ${active ? 'opacity-100' : 'opacity-40'}`}>
+            <div className={`w-3 h-3 rounded-full ${completed ? 'bg-green-500' : active ? 'bg-orange-500 animate-pulse' : 'bg-gray-300'}`} />
+            <span className={`text-sm font-bold ${active ? 'text-blue-900 dark:text-white' : 'text-gray-400'}`}>{label}</span>
+        </div>
     );
 }
 

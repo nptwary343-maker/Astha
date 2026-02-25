@@ -9,6 +9,7 @@ import { useCart } from '@/context/CartContext';
 import SmartSearch from './SmartSearch';
 import NotificationDropdown from './NotificationDropdown';
 import CartPreview from './CartPreview';
+import VipDealsModal from './VipDealsModal';
 
 import { CATEGORIES } from '@/data/static-content';
 
@@ -23,6 +24,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const [isCartAnimating, setIsCartAnimating] = useState(false);
     const [isSearchCategoryOpen, setIsSearchCategoryOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [isVipModalOpen, setIsVipModalOpen] = useState(false);
 
     const notificationRef = useRef<HTMLDivElement>(null);
     const searchCategoryRef = useRef<HTMLDivElement>(null);
@@ -63,7 +65,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
+        <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 shadow-sm transition-colors duration-300">
             {/* Main Header Container */}
             <div className="max-w-[1600px] mx-auto flex items-center h-16 md:h-20 px-4 gap-4 md:gap-8">
 
@@ -76,7 +78,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                         <Menu size={24} />
                     </button>
                     <Link href="/" className="flex items-center gap-1 group">
-                        <span className="text-xl md:text-2xl font-black tracking-tighter text-blue-900 group-hover:text-orange-600 transition-colors">
+                        <span className="text-xl md:text-2xl font-black tracking-tighter text-blue-900 dark:text-white group-hover:text-orange-600 transition-colors">
                             ASTHAR<span className="text-orange-500">HAT</span>
                         </span>
                     </Link>
@@ -84,33 +86,33 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
                 {/* Deliver To - Responsive Hidden */}
                 <div className="hidden lg:flex flex-col items-start leading-tight shrink-0">
-                    <span className="text-[11px] text-gray-500 font-medium ml-4">Deliver to</span>
-                    <div className="flex items-center gap-1 text-blue-900 font-bold group">
+                    <span className="text-[11px] text-gray-500 dark:text-gray-400 font-medium ml-4">Deliver to</span>
+                    <div className="flex items-center gap-1 text-blue-900 dark:text-gray-300 font-bold group">
                         <MapPin size={14} className="text-orange-500" />
                         <input
                             type="text"
                             placeholder="Set Address..."
-                            className="text-sm bg-transparent border-none outline-none focus:ring-0 placeholder:text-gray-400 font-bold w-32 focus:w-48 transition-all"
+                            className="text-sm bg-transparent border-none outline-none focus:ring-0 placeholder:text-gray-400 dark:placeholder:text-gray-600 font-bold w-32 focus:w-48 transition-all dark:text-white"
                         />
                     </div>
                 </div>
 
                 {/* Search Bar - Center (Flexible) */}
                 <div className="flex-1 hidden md:block">
-                    <div className="flex items-center bg-gray-100 rounded-lg group focus-within:ring-2 focus-within:ring-orange-500 transition-all overflow-hidden border border-transparent focus-within:border-orange-500">
+                    <div className="flex items-center bg-gray-100 dark:bg-slate-900 rounded-lg group focus-within:ring-2 focus-within:ring-orange-500 transition-all overflow-hidden border border-transparent dark:border-slate-800 focus-within:border-orange-500">
                         <div className="relative shrink-0" ref={searchCategoryRef}>
                             <button
                                 onClick={() => setIsSearchCategoryOpen(!isSearchCategoryOpen)}
-                                className="bg-gray-200 px-4 h-12 flex items-center gap-2 text-[10px] font-black text-gray-600 hover:bg-gray-300 transition-colors border-r border-gray-300 min-w-[70px] justify-between uppercase"
+                                className="bg-gray-200 dark:bg-slate-800 px-4 h-12 flex items-center gap-2 text-[10px] font-black text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-slate-700 transition-colors border-r border-gray-300 dark:border-slate-700 min-w-[70px] justify-between uppercase"
                             >
                                 {selectedCategory} <ChevronDown size={14} className={`transition-transform ${isSearchCategoryOpen ? 'rotate-180' : ''}`} />
                             </button>
 
                             {isSearchCategoryOpen && (
-                                <div className="absolute top-full left-0 mt-1 w-48 bg-white shadow-xl rounded-lg border border-gray-200 py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+                                <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-900 shadow-xl rounded-lg border border-gray-200 dark:border-slate-800 py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
                                     <button
                                         onClick={() => { setSelectedCategory('All'); setIsSearchCategoryOpen(false); }}
-                                        className="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors border-b border-gray-50"
+                                        className="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-slate-800 hover:text-orange-600 transition-colors border-b border-gray-50 dark:border-slate-800"
                                     >
                                         All Departments
                                     </button>
@@ -119,7 +121,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                                             <button
                                                 key={cat.id}
                                                 onClick={() => { setSelectedCategory(cat.name); setIsSearchCategoryOpen(false); }}
-                                                className="w-full text-left px-4 py-2 text-xs font-medium text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                                                className="w-full text-left px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-orange-50 dark:hover:bg-slate-800 hover:text-orange-600 transition-colors"
                                             >
                                                 {cat.name}
                                             </button>
@@ -141,25 +143,25 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                     {!loading && (
                         <div className="hidden sm:flex flex-col">
                             {user ? (
-                                <div className="flex flex-col items-start">
-                                    <span className="text-[10px] text-gray-500 font-medium">Hello, {user.displayName?.split(' ')[0] || 'Member'}</span>
-                                    <button onClick={logout} className="text-sm font-bold text-blue-900 hover:text-red-600 flex items-center gap-1">
+                                <div className="flex flex-col items-start lg:min-w-[120px]">
+                                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Hello, {user.displayName?.split(' ')[0] || 'Member'}</span>
+                                    <button onClick={logout} className="text-sm font-bold text-blue-900 dark:text-orange-400 hover:text-red-600 flex items-center gap-1 transition-colors">
                                         Account & Lists <ChevronDown size={12} />
                                     </button>
                                 </div>
                             ) : (
-                                <Link href="/login" className="flex flex-col items-start group">
-                                    <span className="text-[10px] text-gray-500 font-medium">Hello, sign in</span>
-                                    <span className="text-sm font-bold text-blue-900 group-hover:text-orange-600 transition-colors">Account & Lists</span>
+                                <Link href="/login" className="flex flex-col items-start group lg:min-w-[100px]">
+                                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Hello, sign in</span>
+                                    <span className="text-sm font-bold text-blue-900 dark:text-orange-400 group-hover:text-orange-600 dark:group-hover:text-white transition-colors">Account & Lists</span>
                                 </Link>
                             )}
                         </div>
                     )}
 
-                    {/* Orders/Returns - Amazon Style Placeholder */}
+                    {/* Orders/Returns */}
                     <div className="hidden xl:flex flex-col">
-                        <span className="text-[10px] text-gray-500 font-medium">Returns</span>
-                        <Link href="/account" className="text-sm font-bold text-blue-900 hover:text-orange-600 transition-colors">& Orders</Link>
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Returns</span>
+                        <Link href="/account" className="text-sm font-bold text-blue-900 dark:text-orange-400 hover:text-orange-600 dark:hover:text-white transition-colors">& Orders</Link>
                     </div>
 
                     {/* Cart with Counter */}
@@ -168,29 +170,69 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                         onMouseEnter={handleCartEnter}
                         onMouseLeave={handleCartLeave}
                     >
-                        <Link href="/cart" className={`flex items-end gap-1 p-2 rounded-lg hover:bg-gray-100 transition-all ${isCartAnimating ? 'scale-110' : ''}`}>
+                        <Link href="/cart" className={`flex items-end gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all ${isCartAnimating ? 'scale-110' : ''}`}>
                             <div className="relative">
-                                <ShoppingCart size={28} className="text-blue-900" />
-                                <span className="absolute -top-1 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-[11px] font-black min-w-[18px] h-[18px] flex items-center justify-center rounded-full border-2 border-white">
+                                <ShoppingCart size={28} className="text-blue-900 dark:text-white" />
+                                <span className="absolute -top-1 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-[11px] font-black min-w-[18px] h-[18px] flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900">
                                     {cartCount}
                                 </span>
                             </div>
-                            <span className="hidden lg:block text-sm font-bold text-blue-900 mb-0.5">Cart</span>
+                            <span className="hidden lg:block text-sm font-bold text-blue-900 dark:text-white mb-0.5">Cart</span>
                         </Link>
-                        {isCartOpen && <div className="absolute right-0 top-full pt-2 w-72"><CartPreview onClose={() => setIsCartOpen(false)} /></div>}
+                        {isCartOpen && <div className="absolute right-0 top-full pt-2 w-72 h-auto z-[100]"><CartPreview onClose={() => setIsCartOpen(false)} /></div>}
                     </div>
 
-                    {/* Theme & Notifications - Compact */}
+                    {/* Theme Toggle & Premium Icons */}
                     <div className="flex items-center gap-1">
-                        <button onClick={toggleTheme} className="p-2 text-gray-500 hover:text-blue-900 transition-colors">
-                            {mounted && theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        {/* PREMIUM THEME TOGGLE: 180° Rotate + Scale */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 text-gray-500 hover:text-blue-900 dark:hover:text-orange-400 transition-all duration-500 relative group active:scale-95"
+                            title="Toggle Theme"
+                        >
+                            <div className={`transition-all duration-700 transform ${theme === 'dark' ? 'rotate-180 scale-110' : 'rotate-0 scale-100'}`}>
+                                {mounted && theme === 'dark' ? (
+                                    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 stroke-yellow-400 stroke-2 fill-yellow-100/20">
+                                        <circle cx="12" cy="12" r="5" className="animate-pulse" />
+                                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                                    </svg>
+                                ) : (
+                                    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 stroke-slate-700 stroke-2 fill-slate-100">
+                                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                                    </svg>
+                                )}
+                            </div>
+                            <div className="absolute inset-0 bg-blue-500/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300" />
                         </button>
+
+                        {/* PREMIUM TRENDING FLAME (Animated pulse) */}
+                        <div className="hidden md:block">
+                            <Link href="/shop?filter=trending" className="p-2 text-red-500 hover:scale-110 transition-transform relative group">
+                                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-red-500 animate-bounce">
+                                    <path d="M12 21c-3.14 0-5.46-2.11-6.16-4.8-.12-.46.33-.87.77-.7l.86.33c1.01.39 2.1-.14 2.44-1.18.27-.85-.15-1.77-.96-2.15l-1.1-.53c-.45-.22-.61-.77-.35-1.19.79-1.23 2.05-2.22 3.6-2.82C10.6 6.37 10 4.67 10 3c1.01-.39 2.1.14 2.44 1.18.27.85-.15 1.77-.96 2.15l-1.1.53c.12-.46.33-.87.77-.7l.86.33C14.1 7.23 16 9.4 16 12c0 4.97-4.03 9-9 9l5-1.5L12 21z" />
+                                </svg>
+                                <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                </span>
+                            </Link>
+                        </div>
+
+                        {/* PREMIUM BEST SELLER CROWN (Gold Leaf) */}
+                        <div className="hidden lg:block">
+                            <Link href="/best-sellers" className="p-2 text-yellow-500 hover:scale-110 transition-transform">
+                                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-yellow-500 drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]">
+                                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z" />
+                                </svg>
+                            </Link>
+                        </div>
+
                         <div className="relative" ref={notificationRef}>
-                            <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className="p-2 text-gray-500 hover:text-blue-900 transition-colors relative">
-                                <Bell size={20} />
-                                <div className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
+                            <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className="p-2 text-gray-500 hover:text-blue-900 dark:hover:text-white transition-colors relative active:scale-95">
+                                <Bell size={22} className="dark:text-white" />
+                                <div className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900"></div>
                             </button>
-                            {isNotificationsOpen && <div className="absolute right-0 top-full mt-2 w-[300px]"><NotificationDropdown onClose={() => setIsNotificationsOpen(false)} /></div>}
+                            {isNotificationsOpen && <div className="absolute right-0 top-full mt-2 w-[300px] z-[110]"><NotificationDropdown onClose={() => setIsNotificationsOpen(false)} /></div>}
                         </div>
                     </div>
                 </div>
@@ -212,11 +254,16 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                     <Link href="/shop?category=grocery" className="text-xs font-semibold hover:text-orange-400 shrink-0">Bazar Daily</Link>
                     <Link href="/shop?category=furniture" className="text-xs font-semibold hover:text-orange-400 shrink-0">Furniture</Link>
                     <Link href="/shop?category=natural" className="text-xs font-semibold hover:text-orange-400 shrink-0">Natural Products</Link>
-                    <Link href="/login" className="ml-auto text-xs font-black uppercase tracking-widest text-orange-400 hover:text-white transition-colors shrink-0">
-                        Member Deals VIP
-                    </Link>
+                    <button
+                        onClick={() => setIsVipModalOpen(true)}
+                        className="ml-auto text-[10px] md:text-xs font-black uppercase tracking-widest text-orange-400 hover:text-white transition-colors shrink-0 flex items-center gap-1"
+                    >
+                        <Zap size={14} className="fill-current animate-pulse" /> Member Deals VIP
+                    </button>
                 </div>
             </div>
+
+            <VipDealsModal isOpen={isVipModalOpen} onClose={() => setIsVipModalOpen(false)} />
         </header>
     );
 };
