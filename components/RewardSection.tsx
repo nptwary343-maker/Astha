@@ -94,14 +94,22 @@ const RewardSection = () => {
                                     className="flex items-center justify-between bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl p-4 cursor-pointer hover:bg-blue-100 transition-colors group/btn"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <Ticket className="text-blue-600" size={24} />
+                                        <div className="relative">
+                                            <Ticket className="text-blue-600" size={24} />
+                                            <div className="absolute -top-1 -right-1 bg-red-500 rounded-full p-0.5">
+                                                <Zap className="text-white fill-white" size={8} />
+                                            </div>
+                                        </div>
                                         <span className="text-2xl font-black text-blue-900 tracking-wider">
-                                            {coupon.code}
+                                            {coupon.code.slice(0, 3)}****
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-black uppercase text-red-500 bg-red-50 px-2 py-1 rounded-full flex items-center gap-1">
+                                            <ShieldCheck size={10} /> Secret
+                                        </span>
                                         <span className="text-[10px] font-black uppercase text-blue-400 group-hover/btn:text-blue-600">
-                                            {copiedCode === coupon.code ? 'Copied' : 'Copy Code'}
+                                            {copiedCode === coupon.code ? 'Unlocked' : 'Reveal & Copy'}
                                         </span>
                                         {copiedCode === coupon.code ? <Check className="text-green-500" size={20} /> : <Copy className="text-blue-300" size={20} />}
                                     </div>

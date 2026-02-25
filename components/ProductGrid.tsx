@@ -131,6 +131,7 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
 };
 
 import { m } from 'framer-motion';
+import { PerspectiveCard } from './motion/MotionGraphics';
 
 const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect: (p: Product) => void, index: number }) => {
     const [isAdded, setIsAdded] = useState(false);
@@ -179,54 +180,56 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: (index % 10) * 0.1 }}
-            className="group flex flex-col bg-white transition-all hover:shadow-[0_2px_15px_-3px_rgba(0,0,0,0.1)] cursor-pointer h-full border border-transparent overflow-hidden"
+            className="group flex flex-col bg-white transition-all hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] cursor-pointer h-full border border-transparent overflow-hidden rounded-sm"
         >
-            {/* Image Container */}
-            <div className="relative aspect-square overflow-hidden bg-[#fafafa] flex items-center justify-center p-2">
-                {product.images?.[0] ? (
-                    <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                    />
-                ) : (
-                    <ImageIcon size={32} className="text-gray-200" />
-                )}
+            <PerspectiveCard>
+                {/* Image Container */}
+                <div className="relative aspect-square overflow-hidden bg-[#fafafa] flex items-center justify-center p-2">
+                    {product.images?.[0] ? (
+                        <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                        />
+                    ) : (
+                        <ImageIcon size={32} className="text-gray-200" />
+                    )}
 
-                {hasDiscount && (
-                    <div className="absolute top-2 left-2 bg-[#f57224] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
-                        -{product.discountValue || product.discount?.value}%
-                    </div>
-                )}
-            </div>
-
-            {/* Info Container */}
-            <div className="flex flex-col flex-1 p-3">
-                <h3 className="text-sm text-[#212121] transition-colors line-clamp-2 mb-2 leading-relaxed min-h-[2.5rem] font-normal">
-                    {product.name}
-                </h3>
-
-                <div className="mt-auto">
-                    <div className="flex flex-col gap-0.5 mb-2">
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-lg font-normal text-[#f57224]">৳{finalPrice.toFixed(0)}</span>
+                    {hasDiscount && (
+                        <div className="absolute top-2 left-2 bg-[#f57224] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
+                            -{product.discountValue || product.discount?.value}%
                         </div>
-                        {hasDiscount && (
-                            <div className="flex items-center gap-1.5 text-xs">
-                                <span className="text-gray-400 line-through font-light">৳{product.price}</span>
-                                <span className="text-[#212121] font-light">-{product.discountValue || product.discount?.value}%</span>
+                    )}
+                </div>
+
+                {/* Info Container */}
+                <div className="flex flex-col flex-1 p-3">
+                    <h3 className="text-sm text-[#212121] transition-colors line-clamp-2 mb-2 leading-relaxed min-h-[2.5rem] font-normal">
+                        {product.name}
+                    </h3>
+
+                    <div className="mt-auto">
+                        <div className="flex flex-col gap-0.5 mb-2">
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-lg font-normal text-[#f57224]">৳{finalPrice.toFixed(0)}</span>
                             </div>
-                        )}
-                    </div>
-
-                    <div className="flex items-center gap-1 group-hover:opacity-100 transition-opacity">
-                        <div className="flex text-[#faca51]">
-                            {[...Array(5)].map((_, i) => <span key={i} className="text-[10px]">★</span>)}
+                            {hasDiscount && (
+                                <div className="flex items-center gap-1.5 text-xs">
+                                    <span className="text-gray-400 line-through font-light">৳{product.price}</span>
+                                    <span className="text-[#212121] font-light">-{product.discountValue || product.discount?.value}%</span>
+                                </div>
+                            )}
                         </div>
-                        <span className="text-[10px] text-gray-400">(24)</span>
+
+                        <div className="flex items-center gap-1 group-hover:opacity-100 transition-opacity">
+                            <div className="flex text-[#faca51]">
+                                {[...Array(5)].map((_, i) => <span key={i} className="text-[10px]">★</span>)}
+                            </div>
+                            <span className="text-[10px] text-gray-400">(24)</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </PerspectiveCard>
 
             {/* Hover Action (Daraz Style Slide Up) */}
             <button

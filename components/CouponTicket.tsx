@@ -81,7 +81,7 @@ export default function CouponTicket({ uid, coupon, isSaved: initialSaved = fals
                         <div>
                             <div className="flex justify-between items-start">
                                 <h3 className="font-black text-gray-900 dark:text-white tracking-tight">
-                                    {coupon.code.slice(0, 4)}****
+                                    {coupon.code.slice(0, 2)}****
                                 </h3>
                                 {coupon.isPublic && (
                                     <span className="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full uppercase tracking-tighter">Verified</span>
@@ -105,8 +105,8 @@ export default function CouponTicket({ uid, coupon, isSaved: initialSaved = fals
                                 onClick={handleClaim}
                                 disabled={saved || loading || !uid}
                                 className={`flex-1 text-xs font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 ${saved
-                                        ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
-                                        : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20'
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
+                                    : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20'
                                     }`}
                             >
                                 {saved ? <Check size={14} /> : loading ? <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Star size={14} />}

@@ -188,7 +188,9 @@ export const getActiveCoupons = async () => {
     try {
         const q = query(collection(db, 'coupons'), where('active', '==', true));
         const snap = await getDocs(q);
-        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const data = snap.docs.map(d => ({ id: d.id, ...d.data() })) as any[];
+        // Filter in-memory to avoid composite index requirement
+        return data.filter(c => c.isPublic === true);
     } catch (e) {
         console.error("Coupons fetch failed:", e);
         return [];

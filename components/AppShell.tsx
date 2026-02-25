@@ -9,6 +9,7 @@ import DynamicFooter from "./DynamicFooter";
 import BottomNav from "./BottomNav";
 
 import { m, AnimatePresence } from 'framer-motion';
+import MotionGraphics from './motion/MotionGraphics';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -21,6 +22,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
     return (
         <>
+            <MotionGraphics />
             <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <BottomNav />

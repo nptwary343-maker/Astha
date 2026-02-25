@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
-import { Ticket, Copy, Check, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Ticket, Copy, Check, Zap, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Magnet } from './motion/MotionGraphics';
 
 const CouponCard = ({ code }: { code: string }) => {
     const [copied, setCopied] = useState(false);
@@ -18,11 +19,18 @@ const CouponCard = ({ code }: { code: string }) => {
 
     return (
         <div onClick={handleCopy} className="relative cursor-pointer group">
-            <div className="bg-white/90 backdrop-blur-sm border-2 border-dashed border-orange-500 rounded-xl p-3 flex items-center gap-3 transition-all hover:bg-white shadow-lg">
-                <Ticket className="text-orange-600" size={18} />
+            <div className="bg-white/90 backdrop-blur-sm border-2 border-dashed border-red-500 rounded-xl p-3 flex items-center gap-3 transition-all hover:bg-white shadow-lg">
+                <div className="relative">
+                    <Ticket className="text-red-500" size={18} />
+                    <ShieldCheck className="absolute -bottom-1 -right-1 text-red-600 fill-white" size={10} />
+                </div>
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-gray-500 uppercase leading-none">Coupon Code</span>
-                    <span className="text-lg font-black text-blue-900 leading-tight">{code}</span>
+                    <span className="text-[10px] font-bold text-red-600 uppercase leading-none flex items-center gap-1">
+                        <Zap size={8} className="fill-red-600" /> Secret Code
+                    </span>
+                    <span className="text-lg font-black text-blue-900 leading-tight uppercase tracking-tighter">
+                        {code.slice(0, 3)}****
+                    </span>
                 </div>
                 <div className="ml-2 pl-3 border-l border-gray-200">
                     {copied ? <Check className="text-green-500" size={18} /> : <Copy className="text-gray-400 group-hover:text-orange-500" size={18} />}
@@ -33,6 +41,11 @@ const CouponCard = ({ code }: { code: string }) => {
 };
 
 import { m, AnimatePresence } from 'framer-motion';
+
+interface HeroBannerProps {
+    hasSpecialCoupon?: boolean;
+    customBanners?: any[];
+}
 
 const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBannerProps) => {
     const [bannerData, setBannerData] = useState<any>(null);
@@ -118,12 +131,14 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                                     {currentBanner.subtitle}
                                 </p>
                                 <div className="pt-4">
-                                    <Link
-                                        href={currentBanner.buttonLink || "/shop"}
-                                        className="bg-[#f57224] text-white px-8 py-3 rounded-none font-medium text-sm md:text-base hover:bg-[#d0611e] transition-colors shadow-lg active:scale-95 inline-block"
-                                    >
-                                        {currentBanner.buttonText || "SHOP NOW"}
-                                    </Link>
+                                    <Magnet distance={25}>
+                                        <Link
+                                            href={currentBanner.buttonLink || "/shop"}
+                                            className="bg-[#f57224] text-white px-8 py-4 rounded-none font-bold text-sm md:text-lg hover:bg-[#d0611e] transition-all shadow-xl active:scale-95 inline-block uppercase tracking-widest"
+                                        >
+                                            {currentBanner.buttonText || "SHOP NOW"}
+                                        </Link>
+                                    </Magnet>
                                 </div>
                             </m.div>
                         </div>

@@ -9,8 +9,10 @@ import { useCart } from '@/context/CartContext';
 import SmartSearch from './SmartSearch';
 import NotificationDropdown from './NotificationDropdown';
 import CartPreview from './CartPreview';
+import confetti from 'canvas-confetti';
 
 import { CATEGORIES } from '@/data/static-content';
+import { Magnet } from './motion/MotionGraphics';
 
 const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const { user, loading, logout } = useAuth();
@@ -32,6 +34,25 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
         if (cartCount > 0) {
             setIsCartAnimating(true);
             const timer = setTimeout(() => setIsCartAnimating(false), 800);
+
+            // PREMIUM MOTION: Confetti burst from cart position
+            const rect = document.getElementById('cart-icon-container')?.getBoundingClientRect();
+            if (rect) {
+                confetti({
+                    particleCount: 40,
+                    spread: 70,
+                    origin: {
+                        x: (rect.left + rect.width / 2) / window.innerWidth,
+                        y: (rect.top + rect.height / 2) / window.innerHeight
+                    },
+                    colors: ['#f57224', '#2ebaee', '#ffffff'],
+                    ticks: 200,
+                    gravity: 1.2,
+                    scalar: 0.7,
+                    zIndex: 1000,
+                });
+            }
+
             return () => clearTimeout(timer);
         }
     }, [cartCount]);
@@ -168,40 +189,44 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                         onMouseEnter={handleCartEnter}
                         onMouseLeave={handleCartLeave}
                     >
-                        <Link href="/cart" className={`flex items-end gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all ${isCartAnimating ? 'scale-110' : ''}`}>
-                            <div className="relative">
-                                <ShoppingCart size={28} className="text-blue-900 dark:text-white" />
-                                <span className="absolute -top-1 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-[11px] font-black min-w-[18px] h-[18px] flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900">
-                                    {cartCount}
-                                </span>
-                            </div>
-                            <span className="hidden lg:block text-sm font-bold text-blue-900 dark:text-white mb-0.5">Cart</span>
-                        </Link>
+                        <Magnet distance={20}>
+                            <Link href="/cart" id="cart-icon-container" className={`flex items-end gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all ${isCartAnimating ? 'scale-110' : ''}`}>
+                                <div className="relative">
+                                    <ShoppingCart size={28} className="text-blue-900 dark:text-white" />
+                                    <span className="absolute -top-1 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-[11px] font-black min-w-[18px] h-[18px] flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900">
+                                        {cartCount}
+                                    </span>
+                                </div>
+                                <span className="hidden lg:block text-sm font-bold text-blue-900 dark:text-white mb-0.5">Cart</span>
+                            </Link>
+                        </Magnet>
                         {isCartOpen && <div className="absolute right-0 top-full pt-2 w-72 h-auto z-[100]"><CartPreview onClose={() => setIsCartOpen(false)} /></div>}
                     </div>
 
                     {/* Theme Toggle & Premium Icons */}
                     <div className="flex items-center gap-1">
                         {/* PREMIUM THEME TOGGLE: 180° Rotate + Scale */}
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 text-gray-500 hover:text-blue-900 dark:hover:text-orange-400 transition-all duration-500 relative group active:scale-95"
-                            title="Toggle Theme"
-                        >
-                            <div className={`transition-all duration-700 transform ${theme === 'dark' ? 'rotate-180 scale-110' : 'rotate-0 scale-100'}`}>
-                                {mounted && theme === 'dark' ? (
-                                    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 stroke-yellow-400 stroke-2 fill-yellow-100/20">
-                                        <circle cx="12" cy="12" r="5" className="animate-pulse" />
-                                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-                                    </svg>
-                                ) : (
-                                    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 stroke-slate-700 stroke-2 fill-slate-100">
-                                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                                    </svg>
-                                )}
-                            </div>
-                            <div className="absolute inset-0 bg-blue-500/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300" />
-                        </button>
+                        <Magnet distance={15}>
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 text-gray-500 hover:text-blue-900 dark:hover:text-orange-400 transition-all duration-500 relative group active:scale-95"
+                                title="Toggle Theme"
+                            >
+                                <div className={`transition-all duration-700 transform ${theme === 'dark' ? 'rotate-180 scale-110' : 'rotate-0 scale-100'}`}>
+                                    {mounted && theme === 'dark' ? (
+                                        <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 stroke-yellow-400 stroke-2 fill-yellow-100/20">
+                                            <circle cx="12" cy="12" r="5" className="animate-pulse" />
+                                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                                        </svg>
+                                    ) : (
+                                        <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 stroke-slate-700 stroke-2 fill-slate-100">
+                                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                                        </svg>
+                                    )}
+                                </div>
+                                <div className="absolute inset-0 bg-blue-500/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300" />
+                            </button>
+                        </Magnet>
 
                         {/* PREMIUM TRENDING FLAME (Animated pulse) */}
                         <div className="hidden md:block">
