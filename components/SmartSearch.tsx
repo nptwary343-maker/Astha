@@ -27,7 +27,7 @@ const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || '';
 const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY || '';
 const algoliaClient = (appId && apiKey && !appId.includes('YOUR_')) ? algoliasearch(appId, apiKey) : null;
 
-const SmartSearch = () => {
+const SmartSearch = ({ selectedCategory = 'All' }: { selectedCategory?: string }) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -92,12 +92,16 @@ const SmartSearch = () => {
                 optionalFilters.push('tags:handloom<score=3>', 'tags:heritage<score=2>', 'tags:ethnic<score=2>');
             }
 
+            // Category Restriction
+            const categoryFilter = selectedCategory !== 'All' ? `category:"${selectedCategory.toLowerCase()}" OR category:"${selectedCategory}"` : undefined;
+
             const { results: algoliaResults } = await algoliaClient.search({
                 requests: [{
                     indexName: 'asthar_products',
                     query: searchTerm,
                     hitsPerPage: 8,
-                    optionalFilters: optionalFilters.length > 0 ? optionalFilters : undefined
+                    optionalFilters: optionalFilters.length > 0 ? optionalFilters : undefined,
+                    filters: categoryFilter
                 }]
             });
 
@@ -124,10 +128,13 @@ const SmartSearch = () => {
 
     // --- 3. Local Filter Logic (For Odd Lengths) ---
     const runLocalFilter = (searchTerm: string) => {
-        const filtered = lastSuccessfulResults.current.filter(p =>
-            p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.category?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const filtered = lastSuccessfulResults.current.filter(p => {
+            const matchesQuery = p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                p.category?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesCategory = selectedCategory === 'All' ||
+                p.category?.toLowerCase() === selectedCategory.toLowerCase();
+            return matchesQuery && matchesCategory;
+        });
         setResults(filtered);
     };
 
@@ -138,7 +145,7 @@ const SmartSearch = () => {
                 fetchAlgolia(q);
             }
         }, 500),
-        []
+        [selectedCategory] // Recreate on category change
     );
 
     // --- 5. Main Search Orchestrator ---
@@ -159,7 +166,7 @@ const SmartSearch = () => {
         debouncedSync(query);
 
         return () => debouncedSync.cancel();
-    }, [query]);
+    }, [query, selectedCategory]);
 
     return (
         <div className="relative w-full max-w-xl mx-auto z-50">

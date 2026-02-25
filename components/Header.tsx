@@ -10,6 +10,8 @@ import SmartSearch from './SmartSearch';
 import NotificationDropdown from './NotificationDropdown';
 import CartPreview from './CartPreview';
 
+import { CATEGORIES } from '@/data/static-content';
+
 const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const { user, loading, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
@@ -19,7 +21,11 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const [mounted, setMounted] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isCartAnimating, setIsCartAnimating] = useState(false);
+    const [isSearchCategoryOpen, setIsSearchCategoryOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
     const notificationRef = useRef<HTMLDivElement>(null);
+    const searchCategoryRef = useRef<HTMLDivElement>(null);
     const cartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -38,6 +44,9 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
         const handleClickOutside = (event: MouseEvent) => {
             if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
                 setIsNotificationsOpen(false);
+            }
+            if (searchCategoryRef.current && !searchCategoryRef.current.contains(event.target as Node)) {
+                setIsSearchCategoryOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -85,11 +94,38 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 {/* Search Bar - Center (Flexible) */}
                 <div className="flex-1 hidden md:block">
                     <div className="flex items-center bg-gray-100 rounded-lg group focus-within:ring-2 focus-within:ring-orange-500 transition-all overflow-hidden border border-transparent focus-within:border-orange-500">
-                        <button className="bg-gray-200 px-4 h-12 flex items-center gap-2 text-xs font-bold text-gray-600 hover:bg-gray-300 transition-colors border-r border-gray-300">
-                            All <ChevronDown size={14} />
-                        </button>
+                        <div className="relative shrink-0" ref={searchCategoryRef}>
+                            <button
+                                onClick={() => setIsSearchCategoryOpen(!isSearchCategoryOpen)}
+                                className="bg-gray-200 px-4 h-12 flex items-center gap-2 text-[10px] font-black text-gray-600 hover:bg-gray-300 transition-colors border-r border-gray-300 min-w-[70px] justify-between uppercase"
+                            >
+                                {selectedCategory} <ChevronDown size={14} className={`transition-transform ${isSearchCategoryOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {isSearchCategoryOpen && (
+                                <div className="absolute top-full left-0 mt-1 w-48 bg-white shadow-xl rounded-lg border border-gray-200 py-2 z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <button
+                                        onClick={() => { setSelectedCategory('All'); setIsSearchCategoryOpen(false); }}
+                                        className="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors border-b border-gray-50"
+                                    >
+                                        All Departments
+                                    </button>
+                                    <div className="max-h-[300px] overflow-y-auto no-scrollbar">
+                                        {CATEGORIES.map((cat) => (
+                                            <button
+                                                key={cat.id}
+                                                onClick={() => { setSelectedCategory(cat.name); setIsSearchCategoryOpen(false); }}
+                                                className="w-full text-left px-4 py-2 text-xs font-medium text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                                            >
+                                                {cat.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                         <div className="flex-1">
-                            <SmartSearch />
+                            <SmartSearch selectedCategory={selectedCategory} />
                         </div>
                     </div>
                 </div>
@@ -158,7 +194,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
             {/* Mobile Search Row */}
             <div className="md:hidden px-4 pb-3">
-                <SmartSearch />
+                <SmartSearch selectedCategory={selectedCategory} />
             </div>
 
             {/* Sub-header Navigation (Pills) */}
