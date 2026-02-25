@@ -130,7 +130,9 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
     );
 };
 
-const ProductCard = ({ product, onSelect }: { product: Product, onSelect: (p: Product) => void }) => {
+import { m } from 'framer-motion';
+
+const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect: (p: Product) => void, index: number }) => {
     const [isAdded, setIsAdded] = useState(false);
     const { user } = useAuth();
     const router = useRouter();
@@ -171,8 +173,12 @@ const ProductCard = ({ product, onSelect }: { product: Product, onSelect: (p: Pr
     };
 
     return (
-        <div
+        <m.div
             onClick={() => onSelect(product)}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: (index % 10) * 0.1 }}
             className="group flex flex-col bg-white transition-all hover:shadow-[0_2px_15px_-3px_rgba(0,0,0,0.1)] cursor-pointer h-full border border-transparent overflow-hidden"
         >
             {/* Image Container */}
@@ -231,7 +237,7 @@ const ProductCard = ({ product, onSelect }: { product: Product, onSelect: (p: Pr
             >
                 {isAdded ? 'ADDED TO CART' : 'ADD TO CART'}
             </button>
-        </div>
+        </m.div>
     );
 };
 
@@ -269,11 +275,14 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
 
     return (
         <section className="relative">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-3">
-                {products.map((product) => (
-                    <ProductCard key={product.id} product={product} onSelect={setSelectedProduct} />
+            <m.div
+                layout
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-3"
+            >
+                {products.map((product, index) => (
+                    <ProductCard key={product.id} product={product} onSelect={setSelectedProduct} index={index} />
                 ))}
-            </div>
+            </m.div>
 
             {selectedProduct && (
                 <ProductDetailModal

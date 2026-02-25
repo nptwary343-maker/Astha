@@ -8,9 +8,10 @@ import FloatingActionButtons from "./FloatingActionButtons";
 import DynamicFooter from "./DynamicFooter";
 import BottomNav from "./BottomNav";
 
+import { m, AnimatePresence } from 'framer-motion';
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    // Hide AppShell on admin routes and login page
     const isStandalone = pathname?.startsWith('/admin') || pathname === '/login';
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -23,8 +24,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <BottomNav />
-            <main className="pt-52 md:pt-48 min-h-screen transition-all duration-300">
-                {children}
+            <main className="pt-24 md:pt-32 min-h-screen transition-all duration-300 bg-[#f4f4f4] dark:bg-slate-950">
+                <AnimatePresence mode="wait">
+                    <m.div
+                        key={pathname}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -15 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        {children}
+                    </m.div>
+                </AnimatePresence>
             </main>
             <FloatingActionButtons />
         </>
