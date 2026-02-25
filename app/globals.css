@@ -1,10 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans);
+  --font-inter: "Inter", var(--font-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
-  /* Asthar Hat Premium Palette */
+  /* Amazon Inspired Palette */
+  --color-amazon-blue: #0A2540;
+  --color-amazon-orange: #FF9900;
+  --color-amazon-orange-hover: #E68A00;
+  --color-amazon-gray: #F9FAFB;
+  --color-amazon-text: #0A2540;
+  
+  /* Asthar Hat Premium Palette (Keeping some for legacy/utility) */
   --color-maroon: #4A0404;
   --color-gold: #D4AF37;
   --color-gold-light: #F9E79F;
@@ -12,31 +20,21 @@
 
   --animate-rotate-border: rotate-border 4s linear infinite;
   --animate-premium-pulse: premium-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce-subtle: bounce-subtle 0.5s ease-out;
 
   @keyframes rotate-border {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
   @keyframes premium-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+    50% { opacity: 0.8; transform: scale(1.05); box-shadow: 0 0 15px 5px rgba(212, 175, 55, 0.2); }
+  }
 
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
-    }
-
-    50% {
-      opacity: 0.8;
-      transform: scale(1.05);
-      box-shadow: 0 0 15px 5px rgba(212, 175, 55, 0.2);
-    }
+  @keyframes bounce-subtle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
   }
 }
 

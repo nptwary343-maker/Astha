@@ -9,50 +9,48 @@ const TRUST_ITEMS = [
         title: '100% Authentic',
         desc: 'Verified Quality Products',
         color: 'text-emerald-600',
-        bgColor: 'bg-emerald-50'
     },
     {
         icon: Truck,
-        title: 'Delivery Discount',
-        desc: 'Save on shipping today',
+        title: 'Fast Delivery',
+        desc: 'Quick & Reliable Shipping',
         color: 'text-blue-600',
-        bgColor: 'bg-blue-50'
     },
     {
         icon: Award,
-        title: 'Digital Cert',
-        desc: 'Verified product badges',
+        title: 'Expert Verified',
+        desc: '100% Satisfaction Guarantee',
         color: 'text-orange-600',
-        bgColor: 'bg-orange-50'
     },
     {
         icon: Sparkles,
-        title: 'Expert Verified',
-        desc: 'Quality check passed',
+        title: 'Premium Quality',
+        desc: 'Top-tier curated items',
         color: 'text-purple-600',
-        bgColor: 'bg-purple-50'
     }
 ];
 
 export default function TrustBar() {
     return (
-        <section className="px-4 md:px-8 max-w-7xl mx-auto py-10">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                {TRUST_ITEMS.map((item, idx) => (
-                    <div
-                        key={idx}
-                        className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4 p-4 rounded-3xl bg-white dark:bg-white/[0.02] border border-gray-100 dark:border-white/5 hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-none transition-all duration-500 group"
-                    >
-                        <div className={`w-12 h-12 shrink-0 rounded-2xl ${item.bgColor} dark:bg-white/5 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm`}>
-                            <item.icon className={item.color} size={24} />
-                        </div>
-                        <div>
-                            <h4 className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">{item.title}</h4>
-                            <p className="text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-400 mt-1">{item.desc}</p>
-                        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {TRUST_ITEMS.map((item, idx) => (
+                <div
+                    key={idx}
+                    className="flex items-center gap-4 p-5 bg-white shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 group"
+                >
+                    <div className={`${item.color} group-hover:scale-110 transition-transform duration-300`}>
+                        <item.icon size={32} strokeWidth={1.5} />
                     </div>
-                ))}
-            </div>
-        </section>
+                    <div className="flex flex-col">
+                        <h4 className="text-sm font-bold text-blue-900 uppercase tracking-tight leading-none mb-1">
+                            {item.title}
+                        </h4>
+                        <p className="text-[11px] font-medium text-gray-500 leading-none">
+                            {item.desc}
+                        </p>
+                    </div>
+                </div>
+            ))}
+        </div>
     );
 }
