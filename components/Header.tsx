@@ -9,7 +9,6 @@ import { useCart } from '@/context/CartContext';
 import SmartSearch from './SmartSearch';
 import NotificationDropdown from './NotificationDropdown';
 import CartPreview from './CartPreview';
-import VipDealsModal from './VipDealsModal';
 
 import { CATEGORIES } from '@/data/static-content';
 
@@ -24,7 +23,6 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const [isCartAnimating, setIsCartAnimating] = useState(false);
     const [isSearchCategoryOpen, setIsSearchCategoryOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [isVipModalOpen, setIsVipModalOpen] = useState(false);
 
     const notificationRef = useRef<HTMLDivElement>(null);
     const searchCategoryRef = useRef<HTMLDivElement>(null);
@@ -99,11 +97,11 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
                 {/* Search Bar - Center (Flexible) */}
                 <div className="flex-1 hidden md:block">
-                    <div className="flex items-center bg-gray-100 dark:bg-slate-900 rounded-lg group focus-within:ring-2 focus-within:ring-orange-500 transition-all overflow-hidden border border-transparent dark:border-slate-800 focus-within:border-orange-500">
+                    <div className="flex items-center bg-[#eff0f5] dark:bg-slate-900 rounded-lg group focus-within:ring-1 focus-within:ring-orange-500 transition-all overflow-hidden border border-transparent">
                         <div className="relative shrink-0" ref={searchCategoryRef}>
                             <button
                                 onClick={() => setIsSearchCategoryOpen(!isSearchCategoryOpen)}
-                                className="bg-gray-200 dark:bg-slate-800 px-4 h-12 flex items-center gap-2 text-[10px] font-black text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-slate-700 transition-colors border-r border-gray-300 dark:border-slate-700 min-w-[70px] justify-between uppercase"
+                                className="bg-transparent px-4 h-11 flex items-center gap-2 text-[10px] font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors border-r border-gray-300 dark:border-slate-700 min-w-[70px] justify-between uppercase"
                             >
                                 {selectedCategory} <ChevronDown size={14} className={`transition-transform ${isSearchCategoryOpen ? 'rotate-180' : ''}`} />
                             </button>
@@ -244,26 +242,22 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
             </div>
 
             {/* Sub-header Navigation (Pills) */}
-            <div className="bg-blue-900 text-white h-10 flex items-center">
-                <div className="max-w-[1600px] mx-auto w-full px-4 flex items-center gap-6 overflow-x-auto no-scrollbar scroll-smooth">
-                    <button className="flex items-center gap-1 text-sm font-bold hover:text-orange-400 shrink-0" onClick={onMenuClick}>
-                        <Menu size={18} /> All
+            <div className="bg-[#f5f5f5] dark:bg-slate-900 h-9 flex items-center border-b border-gray-200 dark:border-slate-800">
+                <div className="max-w-[1600px] mx-auto w-full px-4 flex items-center gap-8 overflow-x-auto no-scrollbar scroll-smooth">
+                    <button className="flex items-center gap-1 text-[11px] font-bold text-gray-700 dark:text-gray-300 hover:text-orange-500 shrink-0 uppercase tracking-tight" onClick={onMenuClick}>
+                        <Menu size={16} /> Categories
                     </button>
-                    <Link href="/shop" className="text-xs font-semibold hover:text-orange-400 shrink-0">Today's Deals</Link>
-                    <Link href="/shop?category=electronics" className="text-xs font-semibold hover:text-orange-400 shrink-0">Electronics</Link>
-                    <Link href="/shop?category=grocery" className="text-xs font-semibold hover:text-orange-400 shrink-0">Bazar Daily</Link>
-                    <Link href="/shop?category=furniture" className="text-xs font-semibold hover:text-orange-400 shrink-0">Furniture</Link>
-                    <Link href="/shop?category=natural" className="text-xs font-semibold hover:text-orange-400 shrink-0">Natural Products</Link>
-                    <button
-                        onClick={() => setIsVipModalOpen(true)}
-                        className="ml-auto text-[10px] md:text-xs font-black uppercase tracking-widest text-orange-400 hover:text-white transition-colors shrink-0 flex items-center gap-1"
-                    >
-                        <Zap size={14} className="fill-current animate-pulse" /> Member Deals VIP
-                    </button>
+                    <Link href="/shop" className="text-[11px] font-medium text-gray-600 dark:text-gray-400 hover:text-orange-500 shrink-0 uppercase tracking-tight">Today's Deals</Link>
+                    <Link href="/shop?category=electronics" className="text-[11px] font-medium text-gray-600 dark:text-gray-400 hover:text-orange-500 shrink-0 uppercase tracking-tight">Electronics</Link>
+                    <Link href="/shop?category=grocery" className="text-[11px] font-medium text-gray-600 dark:text-gray-400 hover:text-orange-500 shrink-0 uppercase tracking-tight">Bazar Daily</Link>
+                    <Link href="/shop?category=furniture" className="text-[11px] font-medium text-gray-600 dark:text-gray-400 hover:text-orange-500 shrink-0 uppercase tracking-tight">Furniture</Link>
+                    <Link href="/shop?category=natural" className="text-[11px] font-medium text-gray-600 dark:text-gray-400 hover:text-orange-500 shrink-0 uppercase tracking-tight">Natural Products</Link>
+
+                    <div className="ml-auto hidden md:flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-orange-500 animate-pulse">FLASH SALE ENDS IN: 04:12:05</span>
+                    </div>
                 </div>
             </div>
-
-            <VipDealsModal isOpen={isVipModalOpen} onClose={() => setIsVipModalOpen(false)} />
         </header>
     );
 };
