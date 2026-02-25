@@ -403,7 +403,10 @@ export default function SeederPage() {
                 setCount(current);
             }
             setDone(true);
+            // 🧹 Clear Cache after seeding
+            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error(e));
         } catch (error) {
+
             console.error(error);
             alert('Failed to seed data');
         } finally {

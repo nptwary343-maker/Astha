@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Package, Plus, Search, Trash2, Edit, Filter, LayoutGrid, List, UploadCloud, Image as ImageIcon, X, Check, Link as LinkIcon, DollarSign, Percent, Zap, Lock as LockIcon, Loader2, FileText } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { clearProductCache } from '@/lib/db-utils';
 import { useAuth } from '@/context/AuthContext';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { deleteImagesFromCloudinary } from '@/actions/cloudinary';
@@ -141,6 +142,7 @@ export default function ProductsPage() {
                 }
 
                 await deleteDoc(doc(db, "products", id));
+                clearProductCache(); // Clear local module cache
                 setProducts(products.filter(p => p.id !== id));
             } catch (error) {
                 console.error("Error deleting product: ", error);
@@ -265,11 +267,11 @@ export default function ProductsPage() {
             if (editingId) {
                 const productRef = doc(db, "products", editingId);
                 await updateDoc(productRef, productData);
-
+                clearProductCache(); // Clear local module cache
                 setProducts(products.map(p => p.id === editingId ? { ...productData, id: editingId } as Product : p));
             } else {
                 const docRef = await addDoc(collection(db, "products"), productData);
-
+                clearProductCache(); // Clear local module cache
                 setProducts([{ ...productData, id: docRef.id } as unknown as Product, ...products]);
 
                 // 🎉 Coolness: Confetti!
@@ -296,7 +298,12 @@ export default function ProductsPage() {
                 }());
             }
             setIsModalOpen(false);
+
+            // 🧹 Trigger Revalidation to clear Frontend Cache (Optional background call)
+            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
+
         } catch (error) {
+
             console.error("Error saving product: ", error);
             alert("Failed to save product!");
         }
@@ -408,9 +415,10 @@ export default function ProductsPage() {
                     <button
                         onClick={async () => {
                             try {
+                                clearProductCache(); // Clear local module cache in browser
                                 const res = await fetch('/api/revalidate?secret=asthar_secret_123&tag=homepage-products', { method: 'POST' });
-                                if (res.ok) alert("Homepage Cache Updated Successfully! (3-Hour ISR Reset)");
-                                else alert("Failed to update cache.");
+                                if (res.ok) alert("✅ Storefront Cache Purged! Changes should now be visible on Homepage and Shop.");
+                                else alert("❌ Failed to clear cache.");
                             } catch (err) {
                                 alert("Error triggering revalidation.");
                             }

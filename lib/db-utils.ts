@@ -9,7 +9,17 @@ import { FALLBACK_PRODUCTS, FALLBACK_SETTINGS } from './fallback-data';
  */
 let _productCache: any[] | null = null;
 let _cacheTime = 0;
-const CACHE_TTL = 3600 * 1000; // 1 hour in ms
+const CACHE_TTL = 5 * 60 * 1000; // 🛠️ Updated: 5 minutes instead of 1 hour
+
+/**
+ * 🧹 CLEAR CACHE (Call this after Admin updates)
+ */
+export const clearProductCache = () => {
+    console.log("🧹 [CACHE_CLEAR] Purging in-memory product cache.");
+    _productCache = null;
+    _cacheTime = 0;
+};
+
 
 export const getCachedProducts = async () => {
     const now = Date.now();
