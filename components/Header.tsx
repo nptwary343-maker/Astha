@@ -85,9 +85,13 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 {/* Deliver To - Responsive Hidden */}
                 <div className="hidden lg:flex flex-col items-start leading-tight shrink-0">
                     <span className="text-[11px] text-gray-500 font-medium ml-4">Deliver to</span>
-                    <div className="flex items-center gap-1 text-blue-900 font-bold">
+                    <div className="flex items-center gap-1 text-blue-900 font-bold group">
                         <MapPin size={14} className="text-orange-500" />
-                        <span className="text-sm">Dhaka, Bangladesh</span>
+                        <input
+                            type="text"
+                            placeholder="Set Address..."
+                            className="text-sm bg-transparent border-none outline-none focus:ring-0 placeholder:text-gray-400 font-bold w-32 focus:w-48 transition-all"
+                        />
                     </div>
                 </div>
 

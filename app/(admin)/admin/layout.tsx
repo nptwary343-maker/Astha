@@ -56,10 +56,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans selection:bg-blue-500/20">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 font-sans selection:bg-blue-500/20 transition-colors duration-300">
             <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <AdminHeader onMenuClick={() => setIsSidebarOpen(true)} />
-            <main className="p-4 md:p-8 md:ml-64 transition-all duration-300">
+            <main className="p-4 md:p-8 md:ml-64 transition-all duration-300 text-gray-900 dark:text-gray-100">
                 {children}
             </main>
         </div>

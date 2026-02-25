@@ -5,8 +5,10 @@ import { getActiveCoupons } from '@/lib/db-utils';
 import { Coupon } from '@/types/admin';
 import { Ticket, Copy, Check, Zap, Gift } from 'lucide-react';
 import { useToast } from '@/components/ToastProvider';
+import { useAuth } from '@/context/AuthContext';
 
 const RewardSection = () => {
+    const { user } = useAuth();
     const [coupons, setCoupons] = useState<Coupon[]>([]);
     const [copiedCode, setCopiedCode] = useState<string | null>(null);
     const { showToast } = useToast();
@@ -41,7 +43,7 @@ const RewardSection = () => {
         setTimeout(() => setCopiedCode(null), 3000);
     };
 
-    if (coupons.length === 0) return null;
+    if (!user || coupons.length === 0) return null;
 
     return (
         <section className="py-16 bg-gray-50">

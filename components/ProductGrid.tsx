@@ -223,14 +223,22 @@ const ProductCard = ({ product, onSelect }: { product: Product, onSelect: (p: Pr
 
                     <p className="text-[10px] text-gray-500 mt-1 mb-4">Eligible for FREE Shipping</p>
 
-                    <button
-                        onClick={handleAddToCart}
-                        className={`w-full py-2 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm
-                        ${isAdded ? 'bg-green-600 text-white' : 'bg-orange-400 hover:bg-orange-500 text-blue-900 hover:scale-[1.02] active:scale-95 animate-bounce-subtle'}
-                        `}
-                    >
-                        {isAdded ? <><CheckCircle size={14} /> Added</> : <><ShoppingCart size={14} /> Add to Cart</>}
-                    </button>
+                    <div className="grid grid-cols-2 gap-2 mt-auto">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onSelect(product); }}
+                            className="py-2 rounded-full text-[10px] font-bold transition-all flex items-center justify-center gap-1 border border-gray-200 hover:bg-gray-50 text-gray-700"
+                        >
+                            View Details
+                        </button>
+                        <button
+                            onClick={handleAddToCart}
+                            className={`py-2 rounded-full text-[10px] font-bold transition-all flex items-center justify-center gap-1 shadow-sm
+                            ${isAdded ? 'bg-green-600 text-white' : 'bg-orange-400 hover:bg-orange-500 text-blue-900'}
+                            `}
+                        >
+                            {isAdded ? <><CheckCircle size={12} /> Added</> : <><ShoppingCart size={12} /> Add</>}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
