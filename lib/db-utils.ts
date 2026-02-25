@@ -156,3 +156,79 @@ export const getUserProfile = async (email: string) => {
         return null;
     }
 };
+
+/**
+ * 🤝 PARTNERS (Dynamic Marquee)
+ */
+export const getActivePartners = async () => {
+    try {
+        const q = query(collection(db, 'partners'), where('active', '==', true));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+    } catch (e) {
+        console.error("Partners fetch failed:", e);
+        return [];
+    }
+};
+
+/**
+ * 🎫 COUPONS (Dynamic Rewards)
+ */
+export const getActiveCoupons = async () => {
+    try {
+        const q = query(collection(db, 'coupons'), where('active', '==', true));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch (e) {
+        console.error("Coupons fetch failed:", e);
+        return [];
+    }
+};
+
+/**
+ * 📍 BUSINESS LOCATIONS
+ */
+export const getBusinessLocations = async () => {
+    try {
+        const q = query(collection(db, 'businessLocations'), where('active', '==', true));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch (e) {
+        console.error("Locations fetch failed:", e);
+        return [];
+    }
+};
+
+/**
+ * 🖼️ HOME BANNERS (Dynamic Carousel)
+ */
+export const getHomeBanners = async () => {
+    try {
+        const q = query(collection(db, 'homeBanners'), where('active', '==', true));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+    } catch (e) {
+        console.error("Home Banners fetch failed:", e);
+        return [];
+    }
+};
+
+/**
+ * 🧩 PRODUCT BLOCKS (Location-aware)
+ */
+export const getProductBlocks = async (locationId: string = 'all') => {
+    try {
+        const q = query(collection(db, 'productBlocks'), where('active', '==', true));
+        const snap = await getDocs(q);
+        const allBlocks = snap.docs.map(d => ({ id: d.id, ...d.data() })) as any[];
+
+        // Filter by location if specified
+        if (locationId !== 'all') {
+            return allBlocks.filter(b => b.locationIds?.includes(locationId) || b.locationIds?.includes('all'));
+        }
+        return allBlocks;
+    } catch (e) {
+        console.error("Product Blocks fetch failed:", e);
+        return [];
+    }
+};

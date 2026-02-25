@@ -13,6 +13,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/components/ToastProvider";
 import { I18nProvider } from "@/context/I18nContext";
+import { LocationProvider } from "@/context/LocationContext";
 import { LazyMotion, domAnimation } from "framer-motion"
 
 export const runtime = 'edge';
@@ -99,17 +100,19 @@ export default function RootLayout({
             <I18nProvider>
               <ToastProvider>
                 <CartProvider>
-                  <SoundProvider>
-                    <LazyMotion features={domAnimation} strict>
-                      <AppShell>
-                        <Suspense fallback={null}>
-                          {children}
-                        </Suspense>
-                      </AppShell>
-                    </LazyMotion>
-                    <DynamicFooter />
-                    <LanguageSwitcher />
-                  </SoundProvider>
+                  <LocationProvider>
+                    <SoundProvider>
+                      <LazyMotion features={domAnimation} strict>
+                        <AppShell>
+                          <Suspense fallback={null}>
+                            {children}
+                          </Suspense>
+                        </AppShell>
+                      </LazyMotion>
+                      <DynamicFooter />
+                      <LanguageSwitcher />
+                    </SoundProvider>
+                  </LocationProvider>
                 </CartProvider>
               </ToastProvider>
             </I18nProvider>

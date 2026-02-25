@@ -34,30 +34,26 @@ const CouponCard = ({ code }: { code: string }) => {
 
 interface HeroBannerProps {
     hasSpecialCoupon?: boolean;
+    customBanners?: any[];
 }
 
-const HeroBanner = ({ hasSpecialCoupon = false }: HeroBannerProps) => {
-    const [bannerData, setBannerData] = useState({
-        title: 'AstharHat Biggest Sale',
-        subtitle: "Up to 30% off on premium electronics and lifestyle gadgets. Don't miss out!",
-        backgroundImage: null as string | null,
-        bgOpacity: 0.5,
-        showTimer: false,
-        timerEndTime: '',
-        showQr: false,
-        qrValue: '',
-        gradientFrom: 'blue-900',
-        gradientTo: 'blue-800'
-    });
+const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBannerProps) => {
+    const [bannerData, setBannerData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
         const fetchBanner = async () => {
+            if (customBanners.length > 0) {
+                setBannerData(customBanners);
+                setLoading(false);
+                return;
+            }
             try {
                 const docRef = doc(db, 'settings', 'hero-banner');
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    setBannerData(prev => ({ ...prev, ...(docSnap.data() as any) }));
+                    setBannerData([docSnap.data()]);
                 }
             } catch (error) {
                 console.error("Error loading banner:", error);
@@ -66,7 +62,7 @@ const HeroBanner = ({ hasSpecialCoupon = false }: HeroBannerProps) => {
             }
         };
         fetchBanner();
-    }, []);
+    }, [customBanners]);
 
     if (loading) {
         return (
@@ -74,64 +70,103 @@ const HeroBanner = ({ hasSpecialCoupon = false }: HeroBannerProps) => {
         );
     }
 
-    if ((bannerData as any).isActive === false) return null;
+    const currentBanners = Array.isArray(bannerData) ? bannerData : [];
+    if (currentBanners.length === 0) return null;
+
+    const currentBanner = currentBanners[activeIndex];
+
+    const nextBanner = () => setActiveIndex((prev) => (prev + 1) % currentBanners.length);
+    const prevBanner = () => setActiveIndex((prev) => (prev - 1 + currentBanners.length) % currentBanners.length);
 
     return (
         <section className="relative w-full overflow-hidden bg-gray-50 group">
-            <div className="relative h-[250px] md:h-[500px] w-full max-w-[1600px] mx-auto overflow-hidden shadow-sm">
+            <div className="relative h-[300px] md:h-[550px] w-full max-w-[1600px] mx-auto overflow-hidden shadow-sm">
 
                 {/* Background Image Layer */}
-                {bannerData.backgroundImage ? (
-                    <div className="absolute inset-0">
-                        <img
-                            src={bannerData.backgroundImage}
-                            alt="Banner"
-                            className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/60 via-transparent to-transparent" />
-                    </div>
-                ) : (
-                    <div className="absolute inset-0 bg-blue-900" />
-                )
-                }
+                <div key={activeIndex} className="absolute inset-0 animate-in fade-in zoom-in-95 duration-700">
+                    {currentBanner.backgroundImage || currentBanner.imageUrl ? (
+                        <div className="absolute inset-0">
+                            <img
+                                src={currentBanner.backgroundImage || currentBanner.imageUrl}
+                                alt="Banner"
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-900/20 to-transparent" />
+                        </div>
+                    ) : (
+                        <div className="absolute inset-0 bg-blue-900" />
+                    )
+                    }
 
-                {/* Content Layer (Amazon Logic: Text left, Image right/bg) */}
-                <div className="relative z-10 flex flex-col justify-center h-full px-8 md:px-16 max-w-3xl">
-                    <h1 className="text-white text-3xl md:text-6xl font-black mb-4 tracking-tight drop-shadow-md leading-tight">
-                        {bannerData.title}
-                    </h1>
-                    <p className="text-white/90 text-sm md:text-xl mb-8 font-medium max-w-lg">
-                        {bannerData.subtitle}
-                    </p>
+                    {/* Content Layer (Amazon Logic: Text left, Image right/bg) */}
+                    <div className="relative z-10 flex flex-col justify-center h-full px-8 md:px-20 max-w-4xl">
+                        <div className="space-y-4 md:space-y-6">
+                            <div className="inline-block px-4 py-1.5 bg-orange-500 text-white text-[10px] md:text-xs font-black uppercase tracking-widest rounded-full shadow-lg">
+                                Exclusive Offer
+                            </div>
+                            <h1 className="text-white text-3xl md:text-7xl font-black tracking-tighter drop-shadow-2xl leading-none">
+                                {currentBanner.title}
+                            </h1>
+                            <p className="text-white/90 text-sm md:text-2xl font-bold max-w-xl leading-relaxed drop-shadow-lg">
+                                {currentBanner.subtitle}
+                            </p>
 
-                    <div className="flex flex-wrap items-center gap-4">
-                        <Link href="/shop" className="bg-orange-500 text-white px-8 py-3 rounded-lg font-bold text-sm md:text-base hover:bg-orange-600 shadow-xl transition-all active:scale-95 uppercase tracking-wide">
-                            Shop Now
-                        </Link>
-                        {hasSpecialCoupon && <CouponCard code="ASTHAR30" />}
+                            <div className="flex flex-wrap items-center gap-6 pt-4">
+                                <Link
+                                    href={currentBanner.buttonLink || "/shop"}
+                                    className="bg-white text-blue-900 px-10 py-4 rounded-2xl font-black text-sm md:text-lg hover:bg-orange-500 hover:text-white shadow-2xl transition-all active:scale-95 uppercase tracking-wide border-2 border-transparent hover:border-white"
+                                >
+                                    {currentBanner.buttonText || "Shop Now"}
+                                </Link>
+                                {hasSpecialCoupon && (activeIndex === 0) && <CouponCard code="ASTHAR30" />}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Navigation Controls (Mock) */}
-                <button className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 hover:bg-white/40 text-white rounded-lg transition-all opacity-0 group-hover:opacity-100">
-                    <ChevronLeft size={24} />
-                </button>
-                <button className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 hover:bg-white/40 text-white rounded-lg transition-all opacity-0 group-hover:opacity-100">
-                    <ChevronRight size={24} />
-                </button>
+                {/* Navigation Controls */}
+                {currentBanners.length > 1 && (
+                    <>
+                        <button
+                            onClick={prevBanner}
+                            className="absolute left-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 backdrop-blur-md hover:bg-white/30 text-white rounded-2xl transition-all opacity-0 group-hover:opacity-100 z-20 border border-white/20"
+                        >
+                            <ChevronLeft size={32} />
+                        </button>
+                        <button
+                            onClick={nextBanner}
+                            className="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 backdrop-blur-md hover:bg-white/30 text-white rounded-2xl transition-all opacity-0 group-hover:opacity-100 z-20 border border-white/20"
+                        >
+                            <ChevronRight size={32} />
+                        </button>
+
+                        {/* Indicators */}
+                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+                            {currentBanners.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setActiveIndex(i)}
+                                    className={`h-2.5 rounded-full transition-all duration-300 ${activeIndex === i ? 'w-10 bg-orange-500' : 'w-2.5 bg-white/30 hover:bg-white/50'}`}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
 
                 {/* QR Section (Amazon Style Slide-in) */}
-                {bannerData.showQr && bannerData.qrValue && (
-                    <div className="absolute bottom-6 right-6 hidden lg:block">
-                        <div className="bg-white p-3 rounded-xl shadow-2xl flex items-center gap-4 border border-gray-100">
-                            <img
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(bannerData.qrValue)}`}
-                                alt="QR"
-                                className="w-20 h-20"
-                            />
+                {currentBanner.showQr && currentBanner.qrValue && (
+                    <div className="absolute bottom-12 right-12 hidden lg:block z-20 animate-in slide-in-from-right-10 duration-1000">
+                        <div className="bg-white/95 backdrop-blur-md p-5 rounded-[2rem] shadow-2xl flex items-center gap-6 border border-white/20 transform hover:scale-105 transition-transform cursor-pointer">
+                            <div className="bg-gray-50 p-2 rounded-2xl">
+                                <img
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(currentBanner.qrValue)}`}
+                                    alt="QR"
+                                    className="w-24 h-24"
+                                />
+                            </div>
                             <div className="flex flex-col pr-4">
-                                <span className="text-[10px] font-black text-gray-400 uppercase">App Exclusive</span>
-                                <span className="text-sm font-bold text-blue-900">Scan for Deals</span>
+                                <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-1">App Exclusive</span>
+                                <span className="text-xl font-black text-blue-900 leading-tight">Scan & Save<br />Flash Deal</span>
                             </div>
                         </div>
                     </div>
@@ -139,9 +174,10 @@ const HeroBanner = ({ hasSpecialCoupon = false }: HeroBannerProps) => {
             </div>
 
             {/* Background Blur Gradient (Fades into content) */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-gray-50 via-gray-50/80 to-transparent z-0" />
         </section>
     );
 };
+
 
 export default HeroBanner;

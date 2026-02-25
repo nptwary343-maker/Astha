@@ -54,8 +54,8 @@ export default function HomepageActionBar() {
                             <Ticket className="text-white" size={40} strokeWidth={2.5} />
                         </div>
                         <div className="text-center md:text-left">
-                            <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-2 group-hover:translate-x-1 transition-transform">Grab Your Savings</h3>
-                            <p className="text-white/80 text-xs font-bold tracking-widest uppercase">Click to view & claim exclusive coupons</p>
+                            <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-2 group-hover:translate-x-1 transition-transform">Coupons & Rewards</h3>
+                            <p className="text-white/80 text-xs font-bold tracking-widest uppercase">Click to view & claim exclusive member rewards</p>
                         </div>
                     </div>
                 </Link>
