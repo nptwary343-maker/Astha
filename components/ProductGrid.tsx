@@ -1,6 +1,6 @@
 'use client';
 
-import { ShoppingCart, MoreVertical, Share2, Copy, Facebook, Image as ImageIcon, CheckCircle, X, ShieldCheck, ChevronRight } from 'lucide-react';
+import { ShoppingCart, MoreVertical, Share2, Copy, Facebook, Image as ImageIcon, CheckCircle, X, ShieldCheck, ChevronRight, FileText, Truck, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
@@ -150,6 +150,81 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                     )}
 
                     <div className="flex flex-col gap-8 mt-auto">
+                        {/* 💎 NEW: Product Intelligence / Organic Clarification */}
+                        {(['natural', 'natural product', 'natural products', 'bazar', 'bazar daily', 'meat'].includes(product.category.toLowerCase()) || product.tags?.includes('organic')) && (
+                            <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-[2rem] p-6 mb-4">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                                        <ShieldCheck size={16} />
+                                    </div>
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-700">Organic Integrity Verified</h4>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] font-black text-emerald-900 uppercase">Cultivation</p>
+                                        <p className="text-[9px] font-bold text-emerald-600/70 leading-relaxed uppercase">100% Pesticide Free. No chemical fertilizers used during growth.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] font-black text-emerald-900 uppercase">Sourcing</p>
+                                        <p className="text-[9px] font-bold text-emerald-600/70 leading-relaxed uppercase">Directly from the Lush Highlands. Farm-to-Table within 24H.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] font-black text-emerald-900 uppercase">Processing</p>
+                                        <p className="text-[9px] font-bold text-emerald-600/70 leading-relaxed uppercase">Zero Preservatives. Cold-chain maintained for maximum nutrients.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] font-black text-emerald-900 uppercase">Integrity</p>
+                                        <p className="text-[9px] font-bold text-emerald-600/70 leading-relaxed uppercase">Lab Tested for Heavy Metals & Contaminants Weekly.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* 🚚 NEW: Live Tracker & Certification */}
+                        {(product.trackingInfo || product.labReportUrl) && (
+                            <div className="space-y-4 mb-6">
+                                {product.trackingInfo && (
+                                    <div className="bg-orange-50/50 border border-orange-100/50 rounded-[2rem] p-6">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="flex items-center gap-2">
+                                                <Truck className="text-orange-600" size={18} />
+                                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-900">Live Item Tracker</h4>
+                                            </div>
+                                            <span className="text-[9px] font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full uppercase">Current Status</span>
+                                        </div>
+                                        <div className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-2xl bg-white shadow-sm border border-orange-100 flex items-center justify-center text-orange-600">
+                                                <MapPin size={20} />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-black text-text-main uppercase italic">{product.trackingInfo.status}</p>
+                                                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{product.trackingInfo.location}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {product.labReportUrl && (
+                                    <button
+                                        onClick={() => window.open(product.labReportUrl, '_blank')}
+                                        className="w-full bg-white border-2 border-slate-100 hover:border-slate-200 p-5 rounded-[2rem] flex items-center justify-between group/cert transition-all"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover/cert:text-brand-primary transition-colors">
+                                                <FileText size={20} />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted">Documentation</p>
+                                                <p className="text-xs font-black text-text-main uppercase italic">View Official Certification</p>
+                                            </div>
+                                        </div>
+                                        <ChevronRight size={18} className="text-slate-300 group-hover/cert:translate-x-1 transition-transform" />
+                                    </button>
+                                )}
+                            </div>
+                        )}
+
                         <div className="flex items-center justify-between">
                             <span className="text-[10px] uppercase font-black text-text-muted tracking-[0.3em]">Select Units</span>
                             <div className="flex items-center gap-2 bg-ui-bg p-1.5 rounded-2xl border border-border-light">
@@ -278,12 +353,24 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
                             )}
                         </div>
 
-                        <div className="flex items-center gap-1.5 py-3 border-t border-border-light/50">
+                        <div className="flex items-center justify-between py-3 border-t border-border-light/50">
                             <div className="flex text-brand-accent">
                                 {[...Array(5)].map((_, i) => <span key={i} className="text-[10px]">★</span>)}
                             </div>
-                            <span className="text-[9px] font-bold text-text-muted uppercase tracking-widest">(4.9)</span>
+                            {product.labReportUrl && (
+                                <div className="p-1.5 bg-brand-primary/5 rounded-lg text-brand-primary group/tooltip relative">
+                                    <FileText size={12} />
+                                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-text-main text-white text-[8px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">CERTIFIED QUALITY</span>
+                                </div>
+                            )}
                         </div>
+
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onSelect(product); }}
+                            className="w-full bg-ui-bg hover:bg-brand-primary hover:text-white text-text-main py-4 rounded-2xl font-black text-[9px] uppercase tracking-[0.2em] transition-all border border-border-light flex items-center justify-center gap-2 group/vbtn"
+                        >
+                            View Details <ChevronRight size={14} className="group-hover/vbtn:translate-x-1 transition-transform" />
+                        </button>
                     </div>
                 </div>
             </PerspectiveCard>

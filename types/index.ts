@@ -80,4 +80,11 @@ export interface Product {
     wholesalePrice?: number;
     warrantyPeriod?: string;
     guaranteePeriod?: string;
+    labReportUrl?: string;
+    trackingInfo?: {
+        status: 'Pickup Pending' | 'Picked Up' | 'In Quality Check' | 'Verified' | 'Shipped';
+        location: string;
+        updatedAt: string;
+        pickupIcon?: string;
+    };
 }

@@ -40,6 +40,11 @@ interface Product {
     labReportUrl?: string;
     descriptionBn?: string;
     weightOptions?: { label: string, price: number }[];
+    trackingInfo?: {
+        status: string;
+        location: string;
+        updatedAt: string;
+    };
 }
 
 const initialProducts: Product[] = []; // Empty, will load from Firebase
@@ -104,11 +109,14 @@ export default function ProductsPage() {
         labReportUrl: string;
         descriptionBn: string;
         weightOptions: { label: string, price: number }[];
+        trackingStatus: string;
+        trackingLocation: string;
     }>({
         name: '', slug: '', category: 'Electronics', price: '', tax: '0', stock: '', status: 'Active', brand: '', description: '',
         images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
         isExpertVerified: false, originDetails: '', labReportUrl: '',
-        descriptionBn: '', weightOptions: [] as { label: string, price: number }[]
+        descriptionBn: '', weightOptions: [] as { label: string, price: number }[],
+        trackingStatus: 'Pickup Pending', trackingLocation: 'Main Warehouse'
     });
 
     // Image Input Mode State (true = URL, false = Upload) for each slot
@@ -175,7 +183,9 @@ export default function ProductsPage() {
             originDetails: product.originDetails || '',
             labReportUrl: product.labReportUrl || '',
             descriptionBn: product.descriptionBn || '',
-            weightOptions: product.weightOptions || []
+            weightOptions: product.weightOptions || [],
+            trackingStatus: product.trackingInfo?.status || 'Pickup Pending',
+            trackingLocation: product.trackingInfo?.location || 'Main Warehouse'
         });
         // Determine input mode: if it looks like a blob/base64 (very long) or empty, maybe upload mode?
         // Actually, for editing, we usually want to show the current image. 
@@ -193,7 +203,8 @@ export default function ProductsPage() {
             name: '', slug: '', category: categories[0], price: '', tax: '0', stock: '', status: 'Active', brand: '', description: '',
             images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
             isExpertVerified: false, originDetails: '', labReportUrl: '',
-            descriptionBn: '', weightOptions: []
+            descriptionBn: '', weightOptions: [],
+            trackingStatus: 'Pickup Pending', trackingLocation: 'Main Warehouse'
         });
         setImgInputMode([false, false]);
         setIsModalOpen(true);
@@ -256,6 +267,11 @@ export default function ProductsPage() {
             labReportUrl: formData.labReportUrl,
             descriptionBn: formData.descriptionBn,
             weightOptions: formData.weightOptions,
+            trackingInfo: {
+                status: formData.trackingStatus,
+                location: formData.trackingLocation,
+                updatedAt: new Date().toISOString()
+            },
             createdAt: new Date().toISOString(), // 🛡️ Fix: Add timestamp for sorting
             updatedAt: new Date().toISOString()
         };
@@ -1030,6 +1046,44 @@ export default function ProductsPage() {
                                                 </div>
                                                 <p className="text-[10px] text-gray-400">
                                                     Add a link to the official Lab Analysis or Quality Certificate for this product.
+                                                </p>
+                                            </div>
+
+                                            <div className="mt-8 space-y-4 pt-6 border-t border-blue-100">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <div className="p-2 bg-orange-100 rounded-lg text-orange-600">
+                                                        <Plus size={18} />
+                                                    </div>
+                                                    <h4 className="font-bold text-orange-900">Live Item Tracker (Pickup Phase)</h4>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-sm font-bold text-gray-700 mb-1">Status</label>
+                                                        <select
+                                                            value={formData.trackingStatus}
+                                                            onChange={(e) => setFormData({ ...formData, trackingStatus: e.target.value })}
+                                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                                        >
+                                                            <option>Pickup Pending</option>
+                                                            <option>Picked Up</option>
+                                                            <option>In Quality Check</option>
+                                                            <option>Verified</option>
+                                                            <option>Shipped</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-bold text-gray-700 mb-1">Current Location</label>
+                                                        <input
+                                                            type="text"
+                                                            value={formData.trackingLocation}
+                                                            onChange={(e) => setFormData({ ...formData, trackingLocation: e.target.value })}
+                                                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                                            placeholder="e.g. Dhaka Warehouse"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <p className="text-[10px] text-gray-400">
+                                                    Updating this will show a "Live Tracker" with a pickup icon on the customer's product view.
                                                 </p>
                                             </div>
                                         </div>
