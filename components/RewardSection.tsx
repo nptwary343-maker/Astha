@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getActiveCoupons } from '@/lib/db-utils';
 import { Coupon } from '@/types/admin';
-import { Ticket, Copy, Check, Zap, Gift } from 'lucide-react';
+import { Ticket, Copy, Check, Zap, Gift, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/components/ToastProvider';
 import { useAuth } from '@/context/AuthContext';
 
