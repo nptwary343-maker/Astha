@@ -2,85 +2,70 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Award, Ticket, Users, TrendingUp } from 'lucide-react';
+import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
-const ACTION_BUTTONS = [
+const ACTIONS = [
     {
-        label: 'Best Seller',
-        icon: Award,
-        href: '/shop?sort=best-seller',
-        color: 'bg-orange-500',
-        textColor: 'text-orange-500'
-    },
-    {
-        label: 'Coupons',
+        label: 'Exclusive Coupons',
         icon: Ticket,
         href: '/coupons',
-        color: 'bg-blue-500',
-        textColor: 'text-blue-500'
+        desc: 'Claim Member Rewards',
+        accent: 'text-brand-primary bg-brand-primary/5'
     },
     {
-        label: 'Referral',
-        icon: Users,
-        href: '/account/referral',
-        color: 'bg-purple-500',
-        textColor: 'text-purple-500'
-    },
-    {
-        label: 'Weekly Trending',
+        label: 'Top Trending',
         icon: TrendingUp,
         href: '/shop?sort=trending',
-        color: 'bg-green-500',
-        textColor: 'text-green-500'
+        desc: 'Most Popular Choices',
+        accent: 'text-slate-600 bg-slate-100'
+    },
+    {
+        label: 'Refer & Earn',
+        icon: Users,
+        href: '/account/referral',
+        desc: 'Invite your Network',
+        accent: 'text-brand-accent bg-brand-accent/10'
+    },
+    {
+        label: 'Certified Quality',
+        icon: Award,
+        href: '/shop?sort=best-seller',
+        desc: 'Bazaar Choice 2024',
+        accent: 'text-indigo-600 bg-indigo-50'
     }
 ];
 
 export default function HomepageActionBar() {
     return (
-        <div className="px-4 md:px-8 max-w-7xl mx-auto py-12">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {/* 🎟️ Premium Coupon Bar (Enjoy People Design) */}
-                <Link
-                    href="/coupons"
-                    className="md:col-span-2 group relative flex flex-col items-center justify-center p-8 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] active:scale-95"
-                >
-                    {/* Animated background element */}
-                    <div className="absolute inset-0 opacity-20 pointer-events-none">
-                        <div className="absolute top-0 left-0 w-full h-full animate-gradient-x bg-gradient-to-r from-transparent via-white to-transparent opacity-30 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-                    </div>
+        <div className="max-w-[1600px] mx-auto py-8 px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {ACTIONS.map((item, idx) => (
+                    <Link
+                        key={idx}
+                        href={item.href}
+                        className="group flex items-center gap-6 p-6 bg-white border border-border-light rounded-[2.5rem] hover:ring-4 hover:ring-brand-primary/5 hover:border-brand-primary/30 transition-all duration-500 shadow-sm hover:shadow-xl relative overflow-hidden active:scale-95"
+                    >
+                        {/* Interactive Background Element */}
+                        <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-ui-bg rounded-full opacity-50 group-hover:scale-150 group-hover:bg-brand-primary/5 transition-all duration-700" />
 
-                    <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
-                        <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:rotate-12 transition-transform">
-                            <Ticket className="text-white" size={40} strokeWidth={2.5} />
+                        <div className={`${item.accent} w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 group-hover:rotate-12 transition-transform duration-500 relative z-10 shadow-sm`}>
+                            <item.icon size={24} strokeWidth={2.5} />
                         </div>
-                        <div className="text-center md:text-left">
-                            <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-2 group-hover:translate-x-1 transition-transform">Coupons & Rewards</h3>
-                            <p className="text-white/80 text-xs font-bold tracking-widest uppercase">Click to view & claim exclusive member rewards</p>
+
+                        <div className="flex flex-col relative z-10">
+                            <h3 className="text-xs font-black text-text-main uppercase tracking-widest leading-none mb-1 group-hover:text-brand-primary transition-colors italic">
+                                {item.label}
+                            </h3>
+                            <p className="text-[10px] font-bold text-text-muted opacity-60 uppercase">
+                                {item.desc}
+                            </p>
                         </div>
-                    </div>
-                </Link>
 
-                {/* Best Seller */}
-                <Link
-                    href="/shop?sort=best-seller"
-                    className="group flex flex-col items-center justify-center p-8 bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-xl hover:border-orange-400 dark:hover:border-orange-500/50 transition-all duration-500 hover:-translate-y-2"
-                >
-                    <div className="w-16 h-16 rounded-3xl bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                        <Award className="text-orange-500" size={32} />
-                    </div>
-                    <span className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">Best Seller</span>
-                </Link>
-
-                {/* Trending */}
-                <Link
-                    href="/shop?sort=trending"
-                    className="group flex flex-col items-center justify-center p-8 bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-xl hover:border-green-400 dark:hover:border-green-500/50 transition-all duration-500 hover:-translate-y-2"
-                >
-                    <div className="w-16 h-16 rounded-3xl bg-green-50 dark:bg-green-500/10 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
-                        <TrendingUp className="text-green-500" size={32} />
-                    </div>
-                    <span className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">Trending</span>
-                </Link>
+                        <div className="ml-auto opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-brand-primary">
+                            <ChevronRight size={16} />
+                        </div>
+                    </Link>
+                ))}
             </div>
         </div>
     );

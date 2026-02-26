@@ -16,6 +16,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { useLocation } from '@/context/LocationContext';
 import { useState, useEffect } from 'react';
 import ParticleHeroBanners from '@/components/home/ParticleHeroBanners';
+import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
@@ -46,7 +47,7 @@ export default function Home() {
   }, [selectedLocationId]);
 
   return (
-    <div className="min-h-screen bg-gray-50 text-blue-900 selection:bg-orange-500/30">
+    <div className="min-h-screen bg-slate-50 text-text-main selection:bg-brand-primary/10">
 
       {/* NEW: Separate Particle Feature – Zero DB hits */}
       <ParticleHeroBanners />
@@ -57,70 +58,85 @@ export default function Home() {
         <HeroBanner hasSpecialCoupon={true} customBanners={banners} />
       </div>
 
-      <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-12 pb-24">
+      <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-20 pb-24 -mt-10">
 
         {/* 🛡️ Trust Signals Section */}
-        <section className="mt-[-2rem] md:mt-[-4.5rem] relative z-20">
+        <section className="relative z-20">
           <TrustBar />
         </section>
 
-        <div className="space-y-12">
+        <div className="space-y-24">
           {/* 🧩 Quick Action Bar */}
           <HomepageActionBar />
 
-          {/* Categories Section - Amazon Style Square Cards */}
+          {/* Categories Section - Modern High-End Architecture */}
           <section className="relative z-20">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-blue-900">
-                Shop by Category
-              </h2>
-              <div className="flex-1 h-px bg-gray-200" />
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+              <div className="space-y-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">Curated Collections</span>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-text-main italic uppercase">
+                  Shop by <span className="text-brand-primary">Category</span>
+                </h2>
+              </div>
+              <div className="flex-1 h-px bg-border-light hidden md:block mb-4 mx-8" />
+              <Link href="/shop" className="text-xs font-black uppercase tracking-widest text-text-muted hover:text-brand-primary transition-colors flex items-center gap-2">
+                Explore All <ChevronRight size={14} />
+              </Link>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {CATEGORIES.slice(0, 6).map((cat, idx) => {
                 const menuItem = MENU_ITEMS.find(m => m.name.toLowerCase().includes(cat.name.split(' ')[0].toLowerCase()));
                 const subs = menuItem?.subItems?.slice(0, 4) || [];
 
                 return (
-                  <div key={cat.id} className="group bg-white p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full border border-gray-100 rounded-3xl">
-                    <h3 className="text-xl font-bold mb-4 group-hover:text-orange-600 transition-colors uppercase tracking-tight">{cat.name}</h3>
+                  <div key={cat.id} className="group bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col h-full border border-border-light rounded-[3rem] relative overflow-hidden active:scale-[0.98]">
+                    {/* Abstract Grid background */}
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
 
-                    <div className="relative aspect-square mb-6 overflow-hidden bg-gray-50 flex items-center justify-center p-4 rounded-2xl">
+                    <h3 className="text-2xl font-black mb-6 group-hover:text-brand-primary transition-colors uppercase italic tracking-tighter relative z-10">
+                      {cat.name}
+                    </h3>
+
+                    <div className="relative aspect-[16/10] mb-8 overflow-hidden bg-ui-bg rounded-[2rem] border border-border-light flex items-center justify-center p-6 sm:p-10 shadow-inner group/img">
                       {cat.image ? (
                         <img
                           src={cat.image}
                           alt={cat.name}
-                          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
                         />
                       ) : (
-                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                        <div className="w-20 h-20 bg-brand-primary/5 rounded-full flex items-center justify-center text-brand-primary font-black text-2xl">
                           {cat.name.charAt(0)}
                         </div>
                       )}
                     </div>
 
-                    <div className="mt-auto space-y-2">
+                    <div className="mt-auto space-y-4 relative z-10">
                       {subs.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-2 mb-4">
+                        <div className="grid grid-cols-2 gap-3">
                           {subs.map((sub) => (
                             <Link
                               key={sub.name}
                               href={sub.href}
-                              className="text-xs font-semibold text-blue-600 hover:text-orange-600 hover:underline"
+                              className="text-[10px] font-black text-text-muted hover:text-brand-primary uppercase tracking-widest bg-ui-bg px-3 py-2 rounded-xl border border-border-light/50 transition-all hover:border-brand-primary/30"
                             >
                               {sub.name}
                             </Link>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-xs text-gray-500 mb-4 italic">Discover premium {cat.name} products</p>
+                        <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest opacity-60">Discover the curated {cat.name} line</p>
                       )}
+
                       <Link
                         href={`/shop?category=${cat.id}`}
-                        className="block text-sm font-bold text-blue-600 hover:text-orange-600 mt-2"
+                        className="flex items-center justify-between group/link py-2 mt-4"
                       >
-                        Shop All {cat.name} →
+                        <span className="text-[11px] font-black uppercase tracking-widest text-text-main group-hover/link:text-brand-primary transition-colors">Shop Selection</span>
+                        <div className="w-8 h-8 rounded-full bg-ui-bg flex items-center justify-center group-hover/link:bg-brand-primary group-hover/link:text-white transition-all">
+                          <ChevronRight size={14} />
+                        </div>
                       </Link>
                     </div>
                   </div>
@@ -131,16 +147,16 @@ export default function Home() {
 
           {/* 📍 Dynamic Product Blocks based on Location */}
           {blocks.map(block => (
-            <section key={block.id} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-blue-900 uppercase italic">{block.title}</h2>
+            <section key={block.id} className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+              <div className="flex items-baseline justify-between mb-12">
+                <div className="flex items-center gap-6">
+                  <h2 className="text-3xl md:text-5xl font-black tracking-tight text-text-main uppercase italic">{block.title}</h2>
                   {block.blockType === 'deals' && (
-                    <div className="px-3 py-1 bg-red-600 text-white text-[10px] font-black rounded uppercase animate-pulse">Hot Deal</div>
+                    <div className="px-4 py-1.5 bg-brand-accent text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg shadow-brand-accent/20 animate-pulse">Exclusive</div>
                   )}
                 </div>
-                <Link href="/shop" className="text-sm font-bold text-blue-600 hover:text-orange-600 hover:underline">
-                  See More →
+                <Link href="/shop" className="text-xs font-black text-text-muted hover:text-brand-primary uppercase tracking-widest flex items-center gap-1 group">
+                  Explore <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
               <ProductGrid initialProducts={products.filter(p => block.productIds?.includes(p.id))} />
@@ -148,20 +164,21 @@ export default function Home() {
           ))}
 
           {/* Feature Section - QR Scanner */}
-          <section className="bg-white p-8 md:p-12 shadow-2xl border border-gray-100 rounded-[3rem] relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -translate-y-1/2 translate-x-1/2 opacity-50" />
+          <section className="bg-text-main p-8 md:p-20 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] rounded-[4rem] relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-brand-primary/20 transition-colors duration-1000" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-accent/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl group-hover:bg-brand-accent/10 transition-colors duration-1000" />
             <HomeScanSection />
           </section>
 
           {/* Standard Featured Grid (Fallback/Main) */}
-          <section>
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-blue-900 uppercase">Featured for You</h2>
-                <div className="px-3 py-1 bg-blue-100 text-blue-600 text-[10px] font-black rounded uppercase">Verified</div>
+          <section className="pb-12">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 border-b border-border-light pb-8">
+              <div className="space-y-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">Curated Spotlight</span>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight text-text-main uppercase italic">Featured <span className="text-brand-primary">Assets</span></h2>
               </div>
-              <Link href="/shop" className="text-sm font-bold text-blue-600 hover:text-orange-600 hover:underline">
-                Explore All Products →
+              <Link href="/shop" className="text-xs font-black text-text-muted hover:text-brand-primary uppercase tracking-widest flex items-center gap-1 group">
+                Full Catalog <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
             <ProductGrid initialProducts={products} />
@@ -173,7 +190,9 @@ export default function Home() {
       <RewardSection />
 
       {/* NEW: Partner Marquee */}
-      <PartnerMarquee />
+      <div className="py-20 bg-white border-y border-border-light">
+        <PartnerMarquee />
+      </div>
 
     </div>
   );

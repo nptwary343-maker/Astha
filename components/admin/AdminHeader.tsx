@@ -1,10 +1,9 @@
 'use client';
 
-import { Search, Bell, Menu, Terminal, AlertTriangle, Sun, Moon } from 'lucide-react';
+import { Search, Bell, Menu, Terminal, AlertTriangle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, limit, query } from 'firebase/firestore';
-import { useTheme } from '@/context/ThemeContext';
 
 interface AdminHeaderProps {
     onMenuClick?: () => void;
@@ -12,7 +11,6 @@ interface AdminHeaderProps {
 }
 
 export default function AdminHeader({ onMenuClick = () => { }, title }: AdminHeaderProps) {
-    const { theme, toggleTheme } = useTheme();
     const [isQuotaExceeded, setIsQuotaExceeded] = useState(false);
     const [mounted, setMounted] = useState(false);
 
@@ -38,7 +36,7 @@ export default function AdminHeader({ onMenuClick = () => { }, title }: AdminHea
     if (!mounted) return <header className="h-20 bg-white/80 border-b border-gray-100 w-full md:ml-64 md:w-[calc(100%-16rem)]" />;
 
     return (
-        <header className={`h-20 ${theme === 'dark' ? 'bg-slate-900/80 border-slate-800 text-white' : 'bg-white/80 border-gray-100 text-gray-900'} backdrop-blur-md border-b flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 w-full md:ml-64 md:w-[calc(100%-16rem)] transition-all duration-300`}>
+        <header className="h-20 bg-white/80 border-gray-100 text-gray-900 backdrop-blur-md border-b flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 w-full md:ml-64 md:w-[calc(100%-16rem)] transition-all duration-300">
             <div className="flex items-center gap-4">
                 <button
                     onClick={onMenuClick}
@@ -52,7 +50,7 @@ export default function AdminHeader({ onMenuClick = () => { }, title }: AdminHea
                     <input
                         type="text"
                         placeholder="Search..."
-                        className={`w-full ${theme === 'dark' ? 'bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 focus:bg-slate-700' : 'bg-gray-50 border-gray-200 text-gray-900 focus:bg-white'} pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all`}
+                        className="w-full bg-gray-50 border-gray-200 text-gray-900 focus:bg-white pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     />
                 </div>
                 {title && (
@@ -74,13 +72,6 @@ export default function AdminHeader({ onMenuClick = () => { }, title }: AdminHea
                         <span className="text-[10px] font-bold sm:hidden">QUOTA HIT</span>
                     </div>
                 )}
-
-                <button
-                    onClick={toggleTheme}
-                    className="p-2 text-gray-500 hover:text-blue-600 transition-colors"
-                >
-                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                </button>
 
                 <button className="relative text-gray-500 hover:text-blue-600 transition-colors">
                     <Bell size={20} />

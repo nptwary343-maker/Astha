@@ -5,16 +5,21 @@
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
-  /* Daraz Inspired Premium Palette (60-30-10 Ratio) */
-  --color-daraz-orange: #f57224;
-  /* 10% - Accent & CTA */
-  --color-daraz-blue: #1a9cb7;
-  /* Secondary Accent/Links */
-  --color-daraz-bg: #eff0f5;
-  /* 30% - UI Sections & Backgrounds */
-  --color-daraz-text: #212121;
-  /* 60% Component - Primary Text */
-  --color-daraz-text-secondary: #757575;
+  /* Modern Professional Premium Palette */
+  --color-brand-primary: #4338ca;
+  /* Deep Indigo for Trust */
+  --color-brand-accent: #f59e0b;
+  /* Sophisticated Amber for CTAs */
+  --color-ui-bg: #f8fafc;
+  /* Clean Slate Background */
+  --color-ui-surface: #ffffff;
+  /* Pure White Surface */
+  --color-text-main: #0f172a;
+  /* Slate 900 - Deep Professional Text */
+  --color-text-muted: #64748b;
+  /* Slate 500 - Refined Muted Text */
+  --color-border-light: #f1f5f9;
+  /* Ultra Subtle UI Lines */
 
   --animate-shimmer-fast: shimmer-fast 1.5s infinite linear;
 
@@ -30,22 +35,17 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #212121;
-  --accent: #f57224;
-  --secondary: #eff0f5;
-  --link: #1a9cb7;
-}
-
-.dark {
-  --background: #050505;
-  --foreground: #ffffff;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --accent: #4338ca;
+  --secondary: #f1f5f9;
+  --link: #6366f1;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-text-main);
+  background: var(--color-ui-bg);
+  font-family: var(--font-inter);
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
 }

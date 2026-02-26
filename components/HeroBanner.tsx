@@ -19,21 +19,28 @@ const CouponCard = ({ code }: { code: string }) => {
 
     return (
         <div onClick={handleCopy} className="relative cursor-pointer group">
-            <div className="bg-white/90 backdrop-blur-sm border-2 border-dashed border-red-500 rounded-xl p-3 flex items-center gap-3 transition-all hover:bg-white shadow-lg">
+            <div className="bg-white/95 backdrop-blur-md border-2 border-dashed border-brand-primary/30 rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-white shadow-xl hover:border-brand-primary/50">
                 <div className="relative">
-                    <Ticket className="text-red-500" size={18} />
-                    <ShieldCheck className="absolute -bottom-1 -right-1 text-red-600 fill-white" size={10} />
+                    <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                        <Ticket className="text-brand-primary" size={20} />
+                    </div>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-red-600 uppercase leading-none flex items-center gap-1">
-                        <Zap size={8} className="fill-red-600" /> Secret Code
+                    <span className="text-[9px] font-black text-brand-primary uppercase tracking-[0.2em] leading-none mb-1">
+                        Locked Asset
                     </span>
-                    <span className="text-lg font-black text-blue-900 leading-tight uppercase tracking-tighter">
+                    <span className="text-xl font-black text-text-main leading-tight tracking-tighter uppercase italic">
                         {code.slice(0, 3)}****
                     </span>
                 </div>
-                <div className="ml-2 pl-3 border-l border-gray-200">
-                    {copied ? <Check className="text-green-500" size={18} /> : <Copy className="text-gray-400 group-hover:text-orange-500" size={18} />}
+                <div className="ml-auto pl-4 border-l border-border-light">
+                    {copied ? (
+                        <Check className="text-emerald-500" size={20} />
+                    ) : (
+                        <div className="w-10 h-10 rounded-xl hover:bg-ui-bg flex items-center justify-center transition-colors">
+                            <Copy className="text-text-muted group-hover:text-brand-primary" size={18} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -76,7 +83,7 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
 
     if (loading) {
         return (
-            <section className="w-full bg-[#eff0f5] h-[300px] md:h-[500px] animate-pulse rounded-sm" />
+            <section className="w-full bg-ui-bg h-[300px] md:h-[500px] animate-pulse rounded-[3rem]" />
         );
     }
 
@@ -89,8 +96,8 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
     const prevBanner = () => setActiveIndex((prev) => (prev - 1 + currentBanners.length) % currentBanners.length);
 
     return (
-        <section className="relative w-full overflow-hidden bg-white mb-6">
-            <div className="relative h-[320px] md:h-[450px] w-full max-w-[1188px] mx-auto overflow-hidden shadow-sm rounded-sm">
+        <section className="relative w-full overflow-hidden bg-slate-50 py-4 px-4">
+            <div className="relative h-[400px] md:h-[550px] w-full max-w-[1600px] mx-auto overflow-hidden shadow-2xl rounded-[3rem] border border-white/20">
 
                 <AnimatePresence mode="wait">
                     <m.div
@@ -106,39 +113,43 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                                 <m.img
                                     initial={{ scale: 1.1 }}
                                     animate={{ scale: 1 }}
-                                    transition={{ duration: 1.5, ease: "easeOut" }}
+                                    transition={{ duration: 2, ease: "easeOut" }}
                                     src={currentBanner.backgroundImage || currentBanner.imageUrl}
                                     alt="Banner"
                                     className="w-full h-full object-cover"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-text-main/80 via-text-main/40 to-transparent" />
                             </div>
                         ) : (
-                            <div className="absolute inset-0 bg-[#212121]" />
+                            <div className="absolute inset-0 bg-text-main" />
                         )}
 
-                        <div className="relative z-10 flex flex-col justify-center h-full px-6 md:px-12 max-w-2xl">
+                        <div className="relative z-10 flex flex-col justify-center h-full px-8 md:px-20 max-w-3xl">
                             <m.div
-                                initial={{ y: 30, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.3, duration: 0.5 }}
-                                className="space-y-3 md:space-y-4"
+                                initial={{ x: -40, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.3, duration: 0.7 }}
+                                className="space-y-6"
                             >
-                                <h1 className="text-white text-3xl md:text-5xl font-normal leading-tight">
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-accent bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 w-fit">
+                                    Limited Edition 2024
+                                </span>
+                                <h1 className="text-white text-4xl md:text-7xl font-black leading-[0.9] tracking-tighter uppercase italic">
                                     {currentBanner.title}
                                 </h1>
-                                <p className="text-white/90 text-sm md:text-lg font-light max-w-lg leading-relaxed">
+                                <p className="text-white/70 text-sm md:text-xl font-medium max-w-lg leading-relaxed uppercase tracking-wide">
                                     {currentBanner.subtitle}
                                 </p>
-                                <div className="pt-4">
+                                <div className="pt-8 flex flex-wrap items-center gap-6">
                                     <Magnet distance={25}>
                                         <Link
                                             href={currentBanner.buttonLink || "/shop"}
-                                            className="bg-[#f57224] text-white px-8 py-4 rounded-none font-bold text-sm md:text-lg hover:bg-[#d0611e] transition-all shadow-xl active:scale-95 inline-block uppercase tracking-widest"
+                                            className="bg-brand-primary text-white px-10 py-5 rounded-full font-black text-xs md:text-sm hover:bg-indigo-600 transition-all shadow-2xl shadow-brand-primary/30 active:scale-95 inline-block uppercase tracking-[0.2em] border border-white/10"
                                         >
-                                            {currentBanner.buttonText || "SHOP NOW"}
+                                            {currentBanner.buttonText || "Begin Exploration"}
                                         </Link>
                                     </Magnet>
+                                    {hasSpecialCoupon && <CouponCard code="ASTHAR70" />}
                                 </div>
                             </m.div>
                         </div>
@@ -150,23 +161,23 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                     <>
                         <button
                             onClick={prevBanner}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/10 hover:bg-black/30 text-white rounded-full transition-all z-20"
+                            className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md text-white rounded-full transition-all z-20 border border-white/20 group"
                         >
-                            <ChevronLeft size={24} />
+                            <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
                         </button>
                         <button
                             onClick={nextBanner}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/10 hover:bg-black/30 text-white rounded-full transition-all z-20"
+                            className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md text-white rounded-full transition-all z-20 border border-white/20 group"
                         >
-                            <ChevronRight size={24} />
+                            <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
                         </button>
 
-                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                        <div className="absolute bottom-10 left-20 flex gap-3 z-20">
                             {currentBanners.map((_, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setActiveIndex(i)}
-                                    className={`h-2 rounded-full transition-all duration-300 ${activeIndex === i ? 'w-6 bg-[#f57224]' : 'w-2 bg-white/50 hover:bg-white'}`}
+                                    className={`h-1.5 rounded-full transition-all duration-500 ${activeIndex === i ? 'w-12 bg-brand-primary' : 'w-4 bg-white/30 hover:bg-white/50'}`}
                                 />
                             ))}
                         </div>

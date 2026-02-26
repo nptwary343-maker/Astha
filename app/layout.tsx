@@ -9,7 +9,6 @@ import { CartProvider } from "@/context/CartContext";
 import { SoundProvider } from "@/context/SoundContext";
 import DynamicFooter from "@/components/DynamicFooter";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { ThemeProvider } from "@/context/ThemeContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/components/ToastProvider";
 import { I18nProvider } from "@/context/I18nContext";
@@ -64,24 +63,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
-        className={`${inter.variable} font-sans antialiased bg-gray-50 text-blue-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100`}
+        className={`${inter.variable} font-sans antialiased bg-gray-50 text-blue-900`}
       >
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-                  if (!theme && supportDarkMode) theme = 'dark';
-                  if (theme === 'dark') document.documentElement.classList.add('dark');
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

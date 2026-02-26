@@ -17,6 +17,8 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
     const { user } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
+    const [qty, setQty] = useState(1);
+    const [selectedUnit, setSelectedUnit] = useState({ label: '1kg', multiplier: 1 });
 
     if (!product) return null;
 
@@ -28,109 +30,163 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
         action();
     };
 
-    let finalPrice = product.price;
+    let basePrice = product.price;
     const hasDiscount = (product.discountValue && product.discountValue > 0) || (product.discount && product.discount.value > 0);
 
     if (product.discountType && product.discountValue) {
         if (product.discountType === 'PERCENT') {
-            finalPrice = product.price - (product.price * (product.discountValue / 100));
+            basePrice = product.price - (product.price * (product.discountValue / 100));
         } else if (product.discountType === 'FIXED') {
-            finalPrice = product.price - product.discountValue;
+            basePrice = product.price - product.discountValue;
         }
     } else if (product.discount && product.discount.value > 0) {
         if (product.discount.type === 'percent') {
-            finalPrice = product.price - (product.price * (product.discount.value / 100));
+            basePrice = product.price - (product.price * (product.discount.value / 100));
         } else {
-            finalPrice = product.price - product.discount.value;
+            basePrice = product.price - product.discount.value;
         }
     }
 
+    const finalPrice = basePrice * selectedUnit.multiplier * qty;
+    const isWeightBased = ['grocery', 'meat', 'bazar daily', 'natural', 'natural products'].includes(product.category.toLowerCase());
+
+    const WEIGHT_UNITS = [
+        { label: '250g', multiplier: 0.25 },
+        { label: '500g', multiplier: 0.5 },
+        { label: '1kg', multiplier: 1 },
+    ];
+
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+            <m.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 bg-text-main/60 backdrop-blur-md"
                 onClick={onClose}
-            ></div>
-            <div className="bg-white w-full max-w-4xl rounded-sm overflow-hidden shadow-2xl relative z-10 animate-in zoom-in-95 duration-300 flex flex-col md:flex-row max-h-[90vh]">
+            ></m.div>
+
+            <m.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="bg-white w-full max-w-5xl rounded-[2.5rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] relative z-10 flex flex-col md:flex-row max-h-[90vh] border border-white/20"
+            >
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 p-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition-all z-20"
+                    className="absolute top-6 right-6 p-2.5 bg-ui-bg hover:bg-slate-200 rounded-full text-text-main transition-all z-20 shadow-sm border border-border-light"
                 >
-                    <X size={18} />
+                    <X size={20} />
                 </button>
 
-                {/* Left: Image Selection */}
-                <div className="w-full md:w-1/2 bg-white flex flex-col items-center justify-center p-4 md:p-8">
-                    <div className="relative w-full aspect-square flex items-center justify-center mb-4">
+                {/* Left: Premium Image Showcase */}
+                <div className="w-full md:w-1/2 bg-ui-bg flex items-center justify-center p-8 md:p-12">
+                    <div className="relative w-full aspect-square bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 flex items-center justify-center p-8 border border-white overflow-hidden group/img">
                         {product.images?.[0] ? (
                             <img
                                 src={product.images[0]}
                                 alt={product.name}
-                                className="max-w-full max-h-full object-contain"
+                                className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover/img:scale-110"
                             />
                         ) : (
-                            <ImageIcon size={64} className="text-gray-200" />
+                            <ImageIcon size={80} className="text-slate-100" />
                         )}
+                        <div className="absolute top-4 left-4 bg-brand-primary/10 text-brand-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-brand-primary/20">
+                            Premium Choice
+                        </div>
                     </div>
                 </div>
 
-                {/* Right: Product Details */}
-                <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col bg-white overflow-y-auto">
-                    <h2 className="text-xl font-normal text-gray-800 leading-snug mb-4">{product.name}</h2>
-
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="flex text-[#faca51]">
-                            {[...Array(5)].map((_, i) => <span key={i} className="text-sm">★</span>)}
+                {/* Right: Refined Data & Actions */}
+                <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col bg-white overflow-y-auto">
+                    <div className="mb-8">
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary bg-brand-primary/5 px-2 py-1 rounded-md">{product.category}</span>
+                            <div className="flex items-center gap-1 text-brand-accent ml-2">
+                                <ShieldCheck size={14} className="fill-current" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest">Verified Merchant</span>
+                            </div>
                         </div>
-                        <span className="text-xs text-[#1a9cb7] hover:underline cursor-pointer">155 Ratings</span>
-                        <div className="w-[1px] h-3 bg-gray-300 mx-2" />
-                        <span className="text-xs text-[#1a9cb7]">Answered Questions</span>
+                        <h2 className="text-2xl md:text-4xl font-black text-text-main leading-none mb-4 tracking-tight uppercase italic">{product.name}</h2>
+
+                        <div className="flex items-center gap-4 py-4 border-y border-border-light">
+                            <div className="flex items-center gap-0.5 text-brand-accent">
+                                {[...Array(5)].map((_, i) => <span key={i} className="text-lg">★</span>)}
+                            </div>
+                            <span className="text-xs font-bold text-text-muted">4.9 (155 REVIEWS)</span>
+                        </div>
                     </div>
 
-                    <div className="bg-[#fafafa] p-4 border-y border-gray-100 mb-6">
-                        <div className="flex items-baseline gap-2 mb-1">
-                            <span className="text-3xl font-normal text-[#f57224]">৳ {finalPrice.toFixed(0)}</span>
+                    <div className="bg-ui-bg p-8 rounded-[2rem] mb-10 border border-border-light relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 rounded-full translate-x-1/2 -translate-y-1/2" />
+                        <div className="flex items-baseline gap-3 mb-2 relative z-10">
+                            <span className="text-5xl font-black text-brand-primary tracking-tighter uppercase italic">৳{finalPrice.toFixed(0)}</span>
+                            {isWeightBased && <span className="text-lg font-bold text-text-muted">/{selectedUnit.label}</span>}
                         </div>
                         {hasDiscount && (
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-400 line-through">৳ {product.price}</span>
-                                <span className="text-sm text-gray-800">-{product.discountValue || product.discount?.value}%</span>
+                            <div className="flex items-center gap-3 relative z-10">
+                                <span className="text-lg text-text-muted line-through opacity-50">৳ {(product.price * selectedUnit.multiplier * qty).toFixed(0)}</span>
+                                <span className="text-sm font-black text-white bg-brand-accent px-3 py-1 rounded-full shadow-lg shadow-brand-accent/20">-{product.discountValue || product.discount?.value}% OFF</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="flex flex-col gap-4 mb-8">
-                        <div className="flex items-center gap-4">
-                            <span className="text-sm text-gray-500 w-16">Quantity</span>
-                            <div className="flex items-center border border-gray-300 rounded-sm">
-                                <button className="px-3 py-1 hover:bg-gray-100 border-r border-gray-300">-</button>
-                                <span className="px-4 py-1 text-sm">1</span>
-                                <button className="px-3 py-1 hover:bg-gray-100 border-l border-gray-300">+</button>
+                    {isWeightBased && (
+                        <div className="mb-10">
+                            <label className="text-[10px] uppercase font-black text-text-muted tracking-[0.3em] block mb-4">Quantity Scaling</label>
+                            <div className="grid grid-cols-3 gap-3">
+                                {WEIGHT_UNITS.map(unit => (
+                                    <button
+                                        key={unit.label}
+                                        onClick={() => setSelectedUnit(unit)}
+                                        className={`py-4 px-2 rounded-2xl text-xs font-black transition-all border-2 uppercase tracking-widest ${selectedUnit.label === unit.label
+                                            ? 'border-brand-primary bg-brand-primary text-white shadow-xl shadow-brand-primary/20 scale-105'
+                                            : 'border-border-light bg-ui-bg text-text-muted hover:border-text-muted/30'
+                                            }`}
+                                    >
+                                        {unit.label}
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                    </div>
+                    )}
 
-                    <div className="flex gap-2 mt-auto">
-                        <button
-                            onClick={() => handleAuthAction(() => { addToCart(product.id, 1); router.push('/checkout'); })}
-                            className="flex-1 bg-[#2ebaee] hover:bg-[#1a9cb7] text-white py-3 font-medium transition-colors"
-                        >
-                            Buy Now
-                        </button>
-                        <button
-                            onClick={() => handleAuthAction(() => addToCart(product.id, 1))}
-                            className="flex-1 bg-[#f57224] hover:bg-[#d0611e] text-white py-3 font-medium transition-colors"
-                        >
-                            Add to Cart
-                        </button>
+                    <div className="flex flex-col gap-8 mt-auto">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] uppercase font-black text-text-muted tracking-[0.3em]">Select Units</span>
+                            <div className="flex items-center gap-2 bg-ui-bg p-1.5 rounded-2xl border border-border-light">
+                                <button
+                                    onClick={() => setQty(Math.max(1, qty - 1))}
+                                    className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm text-text-main hover:text-brand-primary transition-all font-black border border-border-light"
+                                >-</button>
+                                <span className="w-12 text-center text-base font-black text-text-main">{qty}</span>
+                                <button
+                                    onClick={() => setQty(qty + 1)}
+                                    className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm text-text-main hover:text-brand-primary transition-all font-black border border-border-light"
+                                >+</button>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); router.push('/cart'); })}
+                                className="flex-[1.5] bg-text-main hover:bg-brand-primary text-white py-5 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/btn"
+                            >
+                                Secure Buy Now <ChevronRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                            </button>
+                            <button
+                                onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); onClose(); })}
+                                className="flex-1 bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary py-5 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] transition-all border-2 border-brand-primary/10"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </m.div>
         </div>
     );
 };
 
-import { m } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { PerspectiveCard } from './motion/MotionGraphics';
 
 const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect: (p: Product) => void, index: number }) => {
@@ -178,67 +234,68 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
             onClick={() => onSelect(product)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true, margin: "-10px" }}
             transition={{ duration: 0.5, delay: (index % 10) * 0.1 }}
-            className="group flex flex-col bg-white transition-all hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] cursor-pointer h-full border border-transparent overflow-hidden rounded-sm"
+            className="group flex flex-col bg-white transition-all hover:shadow-[0_45px_100px_-20px_rgba(0,0,0,0.15)] cursor-pointer h-full border border-border-light rounded-[2.5rem] overflow-hidden relative"
         >
             <PerspectiveCard>
-                {/* Image Container */}
-                <div className="relative aspect-square overflow-hidden bg-[#fafafa] flex items-center justify-center p-2">
+                {/* Image Architecture */}
+                <div className="relative aspect-[4/5] overflow-hidden bg-ui-bg flex items-center justify-center p-6 sm:p-8 m-2 rounded-[2rem]">
                     {product.images?.[0] ? (
                         <img
                             src={product.images[0]}
                             alt={product.name}
-                            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
                         />
                     ) : (
-                        <ImageIcon size={32} className="text-gray-200" />
+                        <ImageIcon size={32} className="text-slate-200" />
                     )}
 
                     {hasDiscount && (
-                        <div className="absolute top-2 left-2 bg-[#f57224] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm">
-                            -{product.discountValue || product.discount?.value}%
+                        <div className="absolute top-4 left-4 bg-brand-accent text-white text-[9px] font-black px-2.5 py-1 rounded-full shadow-lg shadow-brand-accent/30 tracking-widest uppercase">
+                            {product.discountValue || product.discount?.value}% OFF
                         </div>
                     )}
                 </div>
 
-                {/* Info Container */}
-                <div className="flex flex-col flex-1 p-3">
-                    <h3 className="text-sm text-[#212121] transition-colors line-clamp-2 mb-2 leading-relaxed min-h-[2.5rem] font-normal">
+                {/* Data Architecture */}
+                <div className="flex flex-col flex-1 p-6 pt-2">
+                    <span className="text-[8px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">{product.category}</span>
+                    <h3 className="text-sm font-bold text-text-main transition-colors line-clamp-2 mb-4 leading-tight min-h-[2.5rem] group-hover:text-brand-primary uppercase">
                         {product.name}
                     </h3>
 
                     <div className="mt-auto">
-                        <div className="flex flex-col gap-0.5 mb-2">
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-lg font-normal text-[#f57224]">৳{finalPrice.toFixed(0)}</span>
+                        <div className="flex flex-col gap-0.5 mb-4">
+                            <div className="flex items-baseline gap-1.5">
+                                <span className="text-xl font-black text-brand-primary tracking-tighter uppercase italic">৳{finalPrice.toFixed(0)}</span>
                             </div>
                             {hasDiscount && (
-                                <div className="flex items-center gap-1.5 text-xs">
-                                    <span className="text-gray-400 line-through font-light">৳{product.price}</span>
-                                    <span className="text-[#212121] font-light">-{product.discountValue || product.discount?.value}%</span>
+                                <div className="flex items-center gap-2 text-[10px] text-text-muted">
+                                    <span className="line-through opacity-40">৳{product.price}</span>
+                                    <span className="font-bold text-brand-accent">-{product.discountValue || product.discount?.value}%</span>
                                 </div>
                             )}
                         </div>
 
-                        <div className="flex items-center gap-1 group-hover:opacity-100 transition-opacity">
-                            <div className="flex text-[#faca51]">
+                        <div className="flex items-center gap-1.5 py-3 border-t border-border-light/50">
+                            <div className="flex text-brand-accent">
                                 {[...Array(5)].map((_, i) => <span key={i} className="text-[10px]">★</span>)}
                             </div>
-                            <span className="text-[10px] text-gray-400">(24)</span>
+                            <span className="text-[9px] font-bold text-text-muted uppercase tracking-widest">(4.9)</span>
                         </div>
                     </div>
                 </div>
             </PerspectiveCard>
 
-            {/* Hover Action (Daraz Style Slide Up) */}
+            {/* Premium Interactive Overlay */}
             <button
                 onClick={handleAddToCart}
-                className={`w-full py-2 text-[11px] font-bold text-white transition-all transform translate-y-full group-hover:translate-y-0
-                    ${isAdded ? 'bg-green-600' : 'bg-[#f57224] hover:bg-[#d0611e]'}
+                className={`w-full py-4 text-[10px] font-black transition-all transform translate-y-full group-hover:translate-y-0 uppercase tracking-widest absolute bottom-0
+                    ${isAdded ? 'bg-green-500 text-white' : 'bg-brand-primary text-white shadow-[0_-10px_30px_rgba(67,56,202,0.3)]'}
                 `}
             >
-                {isAdded ? 'ADDED TO CART' : 'ADD TO CART'}
+                {isAdded ? 'Success!' : 'Add to Collection'}
             </button>
         </m.div>
     );
@@ -255,20 +312,19 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
     }, [initialProducts, cachedProducts]);
 
     if (loading) return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-8">
             {[...Array(12)].map((_, i) => (
-                <div key={i} className="bg-white rounded-sm overflow-hidden border border-gray-100 shadow-sm animate-pulse">
-                    {/* Image Tray Animation */}
-                    <div className="relative aspect-square bg-gray-200 overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+                <div key={i} className="bg-white rounded-[2.5rem] overflow-hidden border border-border-light p-2 shadow-sm animate-pulse">
+                    <div className="relative aspect-[4/5] bg-ui-bg rounded-[2rem] overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
                     </div>
-                    {/* Text Skeletons */}
-                    <div className="p-3 space-y-2">
-                        <div className="h-4 bg-gray-200 w-3/4 rounded-sm" />
-                        <div className="h-3 bg-gray-200 w-1/2 rounded-sm" />
-                        <div className="mt-4 flex flex-col gap-1">
-                            <div className="h-5 bg-gray-200 w-1/3 rounded-sm" />
-                            <div className="h-3 bg-gray-200 w-1/4 rounded-sm" />
+                    <div className="p-6 space-y-3">
+                        <div className="h-2 bg-slate-100 w-1/4 rounded-full" />
+                        <div className="h-4 bg-slate-100 w-full rounded-full" />
+                        <div className="h-4 bg-slate-100 w-2/3 rounded-full" />
+                        <div className="mt-8 space-y-2">
+                            <div className="h-6 bg-slate-100 w-1/3 rounded-full" />
+                            <div className="h-10 bg-slate-100 w-full rounded-[2rem]" />
                         </div>
                     </div>
                 </div>
@@ -280,19 +336,21 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
         <section className="relative">
             <m.div
                 layout
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-3"
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-8"
             >
                 {products.map((product, index) => (
                     <ProductCard key={product.id} product={product} onSelect={setSelectedProduct} index={index} />
                 ))}
             </m.div>
 
-            {selectedProduct && (
-                <ProductDetailModal
-                    product={selectedProduct}
-                    onClose={() => setSelectedProduct(null)}
-                />
-            )}
+            <AnimatePresence>
+                {selectedProduct && (
+                    <ProductDetailModal
+                        product={selectedProduct}
+                        onClose={() => setSelectedProduct(null)}
+                    />
+                )}
+            </AnimatePresence>
         </section>
     );
 };
