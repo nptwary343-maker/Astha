@@ -6,6 +6,8 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy,
 import { Plus, Trash2, Edit2, Save, X, Image as ImageIcon, ExternalLink, MapPin, Ticket, Award, Check, Database, Zap } from 'lucide-react';
 import { useToast } from '@/components/ToastProvider';
 import { seedMockData } from '@/lib/seeder-utils';
+import { uploadToCloudinary } from '@/lib/cloudinary';
+import { Loader2, UploadCloud } from 'lucide-react';
 
 type Section = 'banners' | 'partners' | 'coupons' | 'locations' | 'blocks';
 
@@ -16,6 +18,7 @@ export default function ContentManager() {
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [formData, setFormData] = useState<any>({});
     const [settings, setSettings] = useState<any>(null);
+    const [uploadingField, setUploadingField] = useState<string | null>(null);
     const { showToast } = useToast();
 
     // Listen to global settings
@@ -27,7 +30,10 @@ export default function ContentManager() {
 
     // Real-time listener for current section
     useEffect(() => {
-        setLoading(true);
+        // Reset edit state when switching tabs
+        setIsEditing(null);
+        setFormData({});
+
         const colMap: Record<Section, string> = {
             banners: 'homeBanners',
             partners: 'partners',
@@ -91,6 +97,58 @@ export default function ContentManager() {
         }
     };
 
+    const ImageUploadField = ({ field, placeholder }: { field: string, placeholder: string }) => {
+        const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            setUploadingField(field);
+            try {
+                const url = await uploadToCloudinary(file);
+                setFormData({ ...formData, [field]: url });
+                showToast('success', 'Image uploaded successfully');
+            } catch (err) {
+                showToast('error', 'Upload failed');
+            } finally {
+                setUploadingField(null);
+            }
+        };
+
+        return (
+            <div className="relative">
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        placeholder={placeholder}
+                        value={formData[field] || ''}
+                        onChange={e => setFormData({ ...formData, [field]: e.target.value })}
+                        className="flex-1 p-3 bg-gray-50 border rounded-xl text-sm"
+                    />
+                    <div className="relative w-12 h-12 shrink-0">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                        />
+                        <div className={`w-full h-full rounded-xl border-2 border-dashed flex items-center justify-center transition-all ${uploadingField === field ? 'bg-blue-50 border-blue-400' : 'bg-gray-50 border-gray-200 hover:border-orange-400'}`}>
+                            {uploadingField === field ? <Loader2 size={16} className="animate-spin text-blue-500" /> : <UploadCloud size={16} className="text-gray-400" />}
+                        </div>
+                    </div>
+                </div>
+                {formData[field] && (
+                    <div className="mt-2 w-full h-24 rounded-xl overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center relative group">
+                        <img src={formData[field]} alt="Preview" className="w-full h-full object-contain" />
+                        <button
+                            onClick={() => setFormData({ ...formData, [field]: '' })}
+                            className="absolute inset-0 bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center font-bold text-[10px] uppercase tracking-widest"
+                        > Clear Image </button>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     const renderForm = () => {
         switch (activeSection) {
             case 'banners':
@@ -98,7 +156,7 @@ export default function ContentManager() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" placeholder="Title" value={formData.title || ''} onChange={e => setFormData({ ...formData, title: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                         <input type="text" placeholder="Subtitle" value={formData.subtitle || ''} onChange={e => setFormData({ ...formData, subtitle: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <input type="text" placeholder="Image URL" value={formData.imageUrl || ''} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
+                        <ImageUploadField field="imageUrl" placeholder="Banner Image URL" />
                         <input type="text" placeholder="Button Text" value={formData.buttonText || ''} onChange={e => setFormData({ ...formData, buttonText: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                         <input type="text" placeholder="Button Link" value={formData.buttonLink || ''} onChange={e => setFormData({ ...formData, buttonLink: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                         <select
@@ -115,7 +173,7 @@ export default function ContentManager() {
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" placeholder="Partner Name" value={formData.name || ''} onChange={e => setFormData({ ...formData, name: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <input type="text" placeholder="Logo URL" value={formData.logoUrl || ''} onChange={e => setFormData({ ...formData, logoUrl: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
+                        <ImageUploadField field="logoUrl" placeholder="Partner Logo URL" />
                         <input type="text" placeholder="Website" value={formData.website || ''} onChange={e => setFormData({ ...formData, website: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                     </div>
                 );
@@ -126,7 +184,7 @@ export default function ContentManager() {
                         <input type="text" placeholder="Title" value={formData.title || ''} onChange={e => setFormData({ ...formData, title: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                         <input type="text" placeholder="Description" value={formData.description || ''} onChange={e => setFormData({ ...formData, description: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                         <input type="number" placeholder="Discount %" value={formData.discount || ''} onChange={e => setFormData({ ...formData, discount: Number(e.target.value) })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <input type="text" placeholder="Image URL" value={formData.imageUrl || ''} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
+                        <ImageUploadField field="imageUrl" placeholder="Coupon Image URL" />
                     </div>
                 );
             case 'locations':
@@ -136,7 +194,7 @@ export default function ContentManager() {
                         <input type="text" placeholder="Address" value={formData.address || ''} onChange={e => setFormData({ ...formData, address: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                         <input type="text" placeholder="City" value={formData.city || ''} onChange={e => setFormData({ ...formData, city: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                         <input type="text" placeholder="Area" value={formData.area || ''} onChange={e => setFormData({ ...formData, area: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <input type="text" placeholder="Image URL" value={formData.imageUrl || ''} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
+                        <ImageUploadField field="imageUrl" placeholder="Location Image URL" />
                     </div>
                 );
             default:

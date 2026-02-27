@@ -79,45 +79,6 @@ export default function DynamicFooter() {
                 transition={{ duration: 0.6, ease: "easeOut" }}
             >
                 {/* Sri Mongolian Familian Tree - Associated Partners Section */}
-                {config.partners && config.partners.length > 0 && (
-                    <div className="w-full border-b border-gray-200 dark:border-white/10 py-8 mb-12 relative overflow-hidden bg-gradient-to-r from-transparent via-orange-50/20 dark:via-orange-900/5 to-transparent">
-                        <div className="text-center mb-6">
-                            <h3 className="text-sm font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase mb-2">
-                                {t('footer.associates')}
-                            </h3>
-                            <p className="text-xs text-gray-400 dark:text-gray-500 italic">Sri Mongolian Familian Tree</p>
-                        </div>
-                        <div className="flex overflow-hidden group">
-                            <motion.div
-                                className="flex gap-12 items-center whitespace-nowrap"
-                                animate={{
-                                    x: [0, -1000]
-                                }}
-                                transition={{
-                                    repeat: Infinity,
-                                    duration: 35,
-                                    ease: "linear"
-                                }}
-                            >
-                                {(config.partners || []).length > 0 && [...config.partners, ...config.partners, ...config.partners].map((partner, idx) => (
-                                    <div key={`${partner.id}-${idx}`} className="flex items-center gap-4 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer group/partner">
-                                        <div className="w-10 h-10 flex items-center justify-center p-2 transition-all rounded-lg border border-transparent group-hover/partner:border-orange-400 group-hover/partner:shadow-lg group-hover/partner:shadow-orange-500/20">
-                                            <img
-                                                src={partner.logo || "/logo.jpg"}
-                                                alt={partner.title}
-                                                className="max-w-full max-h-full object-contain"
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="text-[11px] font-bold tracking-tight text-gray-600 dark:text-gray-400 group-hover/partner:text-orange-600 transition-colors uppercase">{partner.title}</span>
-                                            {partner.subtitle && <span className="text-[9px] text-gray-400 dark:text-gray-500">{partner.subtitle}</span>}
-                                        </div>
-                                    </div>
-                                ))}
-                            </motion.div>
-                        </div>
-                    </div>
-                )}
 
                 {/* Main Footer Container */}
                 <div className="max-w-7xl mx-auto px-4">
@@ -126,15 +87,6 @@ export default function DynamicFooter() {
                         {/* Column 1: Brand & Social */}
                         <div className="space-y-6">
                             <div className="flex items-center gap-3">
-                                {config.logoUrl ? (
-                                    <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-white/10">
-                                        <img src={config.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                                    </div>
-                                ) : (
-                                    <div className="w-10 h-10 bg-gradient-to-br from-orange-600 to-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-900/20">
-                                        <Zap className="text-white" fill="currentColor" size={20} />
-                                    </div>
-                                )}
                                 <div>
                                     <h2 className="text-xl font-black italic tracking-tighter uppercase leading-none">ASTHAR HAT</h2>
                                     <p className="text-[9px] tracking-widest text-orange-500 font-bold mt-0.5">

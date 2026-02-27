@@ -746,27 +746,32 @@ export default function ProductsPage() {
 
                                                     return (
                                                         <div key={slotIdx} className="flex-1">
-                                                            <div className="flex justify-center gap-2 mb-2">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setImgInputMode(prev => {
-                                                                            const newModes = [...prev] as [boolean, boolean];
-                                                                            newModes[index] = false;
-                                                                            return newModes;
-                                                                        });
-                                                                    }}
-                                                                    className={`p-1 rounded text-[10px] font-bold ${!isUrlMode ? 'bg-blue-100 text-blue-700' : 'text-gray-400 hover:text-gray-600'}`}
-                                                                > Upload</button>
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setImgInputMode(prev => {
-                                                                            const newModes = [...prev] as [boolean, boolean];
-                                                                            newModes[index] = true;
-                                                                            return newModes;
-                                                                        });
-                                                                    }}
-                                                                    className={`p-1 rounded text-[10px] font-bold ${isUrlMode ? 'bg-blue-100 text-blue-700' : 'text-gray-400 hover:text-gray-600'}`}
-                                                                >Link URL</button>
+                                                            <div className="flex flex-col items-center mb-2">
+                                                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full mb-2 ${index === 0 ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-500'}`}>
+                                                                    {index === 0 ? '🏆 Main Thumbnail' : '🖼️ Secondary View'}
+                                                                </span>
+                                                                <div className="flex justify-center gap-2">
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setImgInputMode(prev => {
+                                                                                const newModes = [...prev] as [boolean, boolean];
+                                                                                newModes[index] = false;
+                                                                                return newModes;
+                                                                            });
+                                                                        }}
+                                                                        className={`p-1 rounded text-[10px] font-bold ${!isUrlMode ? 'bg-blue-100 text-blue-700' : 'text-gray-400 hover:text-gray-600'}`}
+                                                                    > Upload</button>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setImgInputMode(prev => {
+                                                                                const newModes = [...prev] as [boolean, boolean];
+                                                                                newModes[index] = true;
+                                                                                return newModes;
+                                                                            });
+                                                                        }}
+                                                                        className={`p-1 rounded text-[10px] font-bold ${isUrlMode ? 'bg-blue-100 text-blue-700' : 'text-gray-400 hover:text-gray-600'}`}
+                                                                    >Link URL</button>
+                                                                </div>
                                                             </div>
 
                                                             {isUrlMode ? (

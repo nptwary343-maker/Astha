@@ -27,6 +27,36 @@ export async function GET(req: NextRequest) {
         checks: {}
     };
 
+    // 🧪 MOCK SCENARIO INJECTION (Dev Only)
+    const { searchParams } = new URL(req.url);
+    const mockId = searchParams.get('mock');
+    if (isLocal && mockId) {
+        if (mockId === 'critical_failure') {
+            return NextResponse.json({
+                ...results,
+                checks: {
+                    firebase: { status: "🔴 OFFLINE", error: "Connection timeout" },
+                    cart_analysis: { status: "🔴 CRITICAL_FAILURE", error: "Logic error" },
+                    search: { status: "🔴 ERROR" }
+                },
+                hosting_readiness: { status: "🟡 MISSING_CONFIG", missing_vars: ["SECRET"] },
+                overall_status: "DEGRADED"
+            });
+        }
+        if (mockId === 'all_healthy') {
+            return NextResponse.json({
+                ...results,
+                checks: {
+                    firebase: { status: "🟢 ONLINE", latency: "5ms" },
+                    cart_analysis: { status: "🟢 VERIFIED", latency: "0.1ms" },
+                    search: { status: "🟢 INDEXED", count: 100 }
+                },
+                hosting_readiness: { status: "🟢 READY_TO_HOST", missing_vars: [] },
+                overall_status: "HEALTHY"
+            });
+        }
+    }
+
     // 1. FIREBASE PING
     try {
         const start = Date.now();

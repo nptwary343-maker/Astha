@@ -10,7 +10,6 @@ import { CATEGORIES } from '@/data/static-content';
 import Link from 'next/link';
 import { MENU_ITEMS } from '@/components/navigation-config';
 import TrustBar from '@/components/TrustBar';
-import PartnerMarquee from '@/components/PartnerMarquee';
 import RewardSection from '@/components/RewardSection';
 import { m, AnimatePresence } from "framer-motion";
 import { useLocation } from '@/context/LocationContext';
@@ -189,10 +188,6 @@ export default function Home() {
       {/* NEW: Coupons & Rewards Section */}
       <RewardSection />
 
-      {/* NEW: Partner Marquee */}
-      <div className="py-20 bg-white border-y border-border-light">
-        <PartnerMarquee />
-      </div>
 
     </div>
   );

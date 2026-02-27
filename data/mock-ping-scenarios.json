@@ -1,0 +1,130 @@
+{
+    "scenarios": [
+        {
+            "id": "all_healthy",
+            "name": "All Systems Healthy (Normal Operation)",
+            "description": "Everything is functioning correctly. All check marks should be green.",
+            "data": {
+                "timestamp": "2026-02-28T00:45:00.000Z",
+                "service": "ASTHAR HAT - CORE",
+                "environment": "production",
+                "checks": {
+                    "firebase": {
+                        "status": "🟢 ONLINE",
+                        "latency": "12ms"
+                    },
+                    "cart_analysis": {
+                        "status": "🟢 VERIFIED",
+                        "latency": "0.4500ms",
+                        "summary": {
+                            "finalTotal": 2000,
+                            "itemCount": 2
+                        }
+                    },
+                    "search": {
+                        "status": "🟢 INDEXED",
+                        "count": 850
+                    }
+                },
+                "hosting_readiness": {
+                    "status": "🟢 READY_TO_HOST",
+                    "missing_vars": []
+                },
+                "overall_status": "HEALTHY"
+            }
+        },
+        {
+            "id": "critical_failure",
+            "name": "All Gone (Total System Outage)",
+            "description": "Simulates a complete loss of service across all components.",
+            "data": {
+                "timestamp": "2026-02-28T00:46:00.000Z",
+                "service": "ASTHAR HAT - CORE",
+                "environment": "production",
+                "checks": {
+                    "firebase": {
+                        "status": "🔴 OFFLINE",
+                        "error": "Connection timeout: Failed to reach Firestore"
+                    },
+                    "cart_analysis": {
+                        "status": "🔴 CRITICAL_FAILURE",
+                        "error": "Cart logic module not initialized"
+                    },
+                    "search": {
+                        "status": "🔴 ERROR"
+                    }
+                },
+                "hosting_readiness": {
+                    "status": "🟡 MISSING_CONFIG",
+                    "missing_vars": [
+                        "NEXT_PUBLIC_FIREBASE_API_KEY",
+                        "INTERNAL_API_SECRET"
+                    ]
+                },
+                "overall_status": "DEGRADED"
+            }
+        },
+        {
+            "id": "firebase_down",
+            "name": "Database Down (Partial Outage)",
+            "description": "Firebase is unreachable, but logic and hosting check out.",
+            "data": {
+                "timestamp": "2026-02-28T00:47:00.000Z",
+                "service": "ASTHAR HAT - CORE",
+                "environment": "production",
+                "checks": {
+                    "firebase": {
+                        "status": "🔴 OFFLINE",
+                        "error": "Firebase project is disabled"
+                    },
+                    "cart_analysis": {
+                        "status": "🟢 VERIFIED",
+                        "latency": "0.4200ms"
+                    },
+                    "search": {
+                        "status": "🟡 EMPTY",
+                        "count": 0
+                    }
+                },
+                "hosting_readiness": {
+                    "status": "🟢 READY_TO_HOST",
+                    "missing_vars": []
+                },
+                "overall_status": "DEGRADED"
+            }
+        },
+        {
+            "id": "logic_error",
+            "name": "Logic Corruption (Calculation Error)",
+            "description": "Systems are online, but business logic is returning incorrect results.",
+            "data": {
+                "timestamp": "2026-02-28T00:48:00.000Z",
+                "service": "ASTHAR HAT - CORE",
+                "environment": "production",
+                "checks": {
+                    "firebase": {
+                        "status": "🟢 ONLINE",
+                        "latency": "15ms"
+                    },
+                    "cart_analysis": {
+                        "status": "🔴 CALCULATION_ERROR",
+                        "latency": "0.1200ms",
+                        "summary": {
+                            "finalTotal": 1500,
+                            "itemCount": 2
+                        }
+                    },
+                    "search": {
+                        "status": "🟢 INDEXED",
+                        "count": 850
+                    }
+                },
+                "hosting_readiness": {
+                    "status": "🟢 READY_TO_HOST",
+                    "missing_vars": []
+                },
+                "overall_status": "DEGRADED"
+            }
+        }
+    ]
+}

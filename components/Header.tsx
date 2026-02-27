@@ -104,9 +104,6 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                         <Menu size={22} />
                     </button>
                     <Link href="/" className="flex items-center gap-2 group">
-                        <div className="w-8 h-8 md:w-10 md:h-10 bg-brand-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-primary/20 transition-transform group-hover:scale-110">
-                            <Zap size={20} className="fill-current" />
-                        </div>
                         <span className="text-xl md:text-2xl font-black tracking-tight text-text-main group-hover:text-brand-primary transition-colors uppercase">
                             ASTHAR<span className="text-brand-primary">HAT</span>
                         </span>

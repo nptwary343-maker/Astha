@@ -83,7 +83,7 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
 
     if (loading) {
         return (
-            <section className="w-full bg-ui-bg h-[300px] md:h-[500px] animate-pulse rounded-[3rem]" />
+            <section className="w-full h-[400px] md:h-[600px] bg-slate-100 animate-pulse rounded-[2.5rem] mt-4" />
         );
     }
 
@@ -96,8 +96,8 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
     const prevBanner = () => setActiveIndex((prev) => (prev - 1 + currentBanners.length) % currentBanners.length);
 
     return (
-        <section className="relative w-full overflow-hidden bg-slate-50 py-4 px-4">
-            <div className="relative h-[400px] md:h-[550px] w-full max-w-[1600px] mx-auto overflow-hidden shadow-2xl rounded-[3rem] border border-white/20">
+        <section className="relative w-full py-4 px-4 md:px-8">
+            <div className="relative h-[450px] md:h-[650px] w-full max-w-[1600px] mx-auto overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] rounded-[2.5rem] border border-white/40 bg-slate-900 group">
 
                 <AnimatePresence mode="wait">
                     <m.div
@@ -105,88 +105,109 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                         className="absolute inset-0"
                     >
-                        {currentBanner.backgroundImage || currentBanner.imageUrl ? (
-                            <div className="absolute inset-0">
-                                <m.img
-                                    initial={{ scale: 1.1 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ duration: 2, ease: "easeOut" }}
-                                    src={currentBanner.backgroundImage || currentBanner.imageUrl}
-                                    alt="Banner"
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-r from-text-main/80 via-text-main/40 to-transparent" />
-                            </div>
-                        ) : (
-                            <div className="absolute inset-0 bg-text-main" />
-                        )}
+                        {/* Background with Parallel Effect */}
+                        <m.div
+                            initial={{ scale: 1.15 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{ backgroundImage: `url(${currentBanner.backgroundImage || currentBanner.imageUrl})` }}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
+                        </m.div>
 
-                        <div className="relative z-10 flex flex-col justify-center h-full px-8 md:px-20 max-w-3xl">
+                        {/* Content Area */}
+                        <div className="relative z-10 flex flex-col justify-center h-full px-8 md:px-24">
                             <m.div
-                                initial={{ x: -40, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.3, duration: 0.7 }}
-                                className="space-y-6"
+                                initial={{ y: 30, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.4, duration: 0.8 }}
+                                className="max-w-3xl space-y-6"
                             >
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-accent bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 w-fit">
-                                    Limited Edition 2024
-                                </span>
-                                <h1 className="text-white text-4xl md:text-7xl font-black leading-[0.9] tracking-tighter uppercase italic">
+                                <div className="inline-flex items-center gap-2 bg-indigo-600/20 backdrop-blur-xl px-4 py-2 rounded-full border border-indigo-400/30">
+                                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-100">Premium Collection</span>
+                                </div>
+
+                                <h1 className="text-white text-5xl md:text-8xl font-black leading-[0.85] tracking-tighter uppercase italic drop-shadow-2xl">
                                     {currentBanner.title}
                                 </h1>
-                                <p className="text-white/70 text-sm md:text-xl font-medium max-w-lg leading-relaxed uppercase tracking-wide">
+
+                                <p className="text-slate-300 text-sm md:text-lg font-bold max-w-xl leading-relaxed uppercase tracking-wide opacity-80 border-l-4 border-indigo-600 pl-6">
                                     {currentBanner.subtitle}
                                 </p>
+
                                 <div className="pt-8 flex flex-wrap items-center gap-6">
-                                    <Magnet distance={25}>
-                                        <Link
-                                            href={currentBanner.buttonLink || "/shop"}
-                                            className="bg-brand-primary text-white px-10 py-5 rounded-full font-black text-xs md:text-sm hover:bg-indigo-600 transition-all shadow-2xl shadow-brand-primary/30 active:scale-95 inline-block uppercase tracking-[0.2em] border border-white/10"
-                                        >
-                                            {currentBanner.buttonText || "Begin Exploration"}
-                                        </Link>
-                                    </Magnet>
+                                    <Link
+                                        href={currentBanner.buttonLink || "/shop"}
+                                        className="bg-white text-slate-950 px-12 py-5 rounded-2xl font-black text-xs md:text-sm hover:bg-indigo-600 hover:text-white transition-all shadow-2xl active:scale-95 flex items-center gap-3 uppercase tracking-widest group/btn"
+                                    >
+                                        {currentBanner.buttonText || "এখনই কিনুন"}
+                                        <Zap size={18} className="fill-current group-hover:scale-125 transition-transform" />
+                                    </Link>
+
                                     {hasSpecialCoupon && <CouponCard code="ASTHAR70" />}
                                 </div>
+
+                                {/* Trust Signal Badges */}
+                                <m.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 1, duration: 1 }}
+                                    className="pt-10 flex flex-wrap gap-8"
+                                >
+                                    <div className="flex items-center gap-3 text-white/50 group/item">
+                                        <div className="p-2 bg-white/5 rounded-xl border border-white/10 group-hover/item:bg-indigo-600/20 group-hover/item:border-indigo-500/50 transition-all">
+                                            <ShieldCheck size={20} className="text-indigo-400" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">১০০% ক্যাশ ব্যাক</span>
+                                            <span className="text-[8px] font-bold text-white/30 uppercase">সন্তুষ্টি নিশ্চিত</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3 text-white/50 group/item">
+                                        <div className="p-2 bg-white/5 rounded-xl border border-white/10 group-hover/item:bg-indigo-600/20 group-hover/item:border-indigo-500/50 transition-all">
+                                            <Zap size={20} className="text-indigo-400" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">দ্রুত ডেলিভারি</span>
+                                            <span className="text-[8px] font-bold text-white/30 uppercase">৫-৭ দিনের মধ্যে</span>
+                                        </div>
+                                    </div>
+                                </m.div>
                             </m.div>
                         </div>
                     </m.div>
                 </AnimatePresence>
 
-                {/* Navigation Controls */}
+                {/* Modern Navigation */}
                 {currentBanners.length > 1 && (
-                    <>
-                        <button
-                            onClick={prevBanner}
-                            className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md text-white rounded-full transition-all z-20 border border-white/20 group"
-                        >
-                            <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
-                        </button>
-                        <button
-                            onClick={nextBanner}
-                            className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md text-white rounded-full transition-all z-20 border border-white/20 group"
-                        >
-                            <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
-                        </button>
-
-                        <div className="absolute bottom-10 left-20 flex gap-3 z-20">
+                    <div className="absolute right-12 bottom-12 flex items-center gap-6 z-20">
+                        <div className="flex gap-2">
                             {currentBanners.map((_, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setActiveIndex(i)}
-                                    className={`h-1.5 rounded-full transition-all duration-500 ${activeIndex === i ? 'w-12 bg-brand-primary' : 'w-4 bg-white/30 hover:bg-white/50'}`}
+                                    className={`h-1.5 rounded-full transition-all duration-700 ${activeIndex === i ? 'w-16 bg-white' : 'w-4 bg-white/20'}`}
                                 />
                             ))}
                         </div>
-                    </>
+                        <div className="flex gap-2">
+                            <button onClick={prevBanner} className="w-12 h-12 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all active:scale-90">
+                                <ChevronLeft size={20} />
+                            </button>
+                            <button onClick={nextBanner} className="w-12 h-12 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all active:scale-90">
+                                <ChevronRight size={20} />
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
         </section>
     );
 };
-
 
 export default HeroBanner;
