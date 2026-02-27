@@ -53,6 +53,12 @@ export default function GlobalSignalWatcher() {
                     case 'ORDER_PLACED_SIGNAL':
                         success(`New Order: System has successfully registered a new transaction.`);
                         break;
+                    case 'FLASH_SALE_STARTED':
+                        success(`🔥 FLASH SALE IS LIVE: ${data.data.title || 'Limited Time Deals!'}`, 10000);
+                        break;
+                    case 'FLASH_SALE_STOPPED':
+                        warning(`Flash Sale Ended: The promotional event is now closed.`);
+                        break;
                     case 'SYSTEM_ALERT':
                         warning(`System Alert: ${data.message}`);
                         break;

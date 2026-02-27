@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { Save, Trash2, Zap, Clock, AlertTriangle, CheckCircle, Loader } from 'lucide-react';
+import { sendSystemPing } from '@/actions/system';
 
 export default function FlashSaleManager() {
     const [title, setTitle] = useState('');
@@ -48,6 +49,15 @@ export default function FlashSaleManager() {
                 updatedAt: serverTimestamp()
             });
             setIsActive(activeStatus);
+
+            // 📡 Broadcast Signal for GlobalWatcher
+            if (activeStatus) {
+                await sendSystemPing('FLASH_SALE_STARTED', { title, targetDate });
+            }
+
+            // 🧹 Trigger Revalidation to clear Frontend Cache
+            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
+
             alert(activeStatus ? "Flash Sale Started!" : "Flash Sale Progress Saved.");
         } catch (error) {
             console.error("Error saving flash sale:", error);
@@ -65,6 +75,13 @@ export default function FlashSaleManager() {
                 updatedAt: serverTimestamp()
             }, { merge: true });
             setIsActive(false);
+
+            // 📡 Broadcast Stop Signal
+            await sendSystemPing('FLASH_SALE_STOPPED', { title });
+
+            // 🧹 Trigger Revalidation
+            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
+
             alert("Flash Sale Stopped.");
         } catch (error) {
             console.error("Error stopping flash sale:", error);
