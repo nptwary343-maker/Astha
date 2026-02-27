@@ -84,7 +84,7 @@ export default function ProductsPage() {
     const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [activeTab, setActiveTab] = useState<'general' | 'description'>('general');
+    const [activeTab, setActiveTab] = useState<'general' | 'description' | 'transparency'>('general');
 
     // Form State
     const [isGenerating, setIsGenerating] = useState(false);
@@ -331,6 +331,8 @@ export default function ProductsPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        console.log(`📂 [UPLOAD_START] Slot ${slotIndex}: ${file.name}`);
+
         // Set loading state for this slot
         setIsUploading(prev => {
             const newStatus = [...prev] as [boolean, boolean];
@@ -339,10 +341,12 @@ export default function ProductsPage() {
         });
 
         try {
-            // Upload to Cloudinary (Compresses internally)
+            // 🚀 Actual Upload Execution
             const secureUrl = await uploadToCloudinary(file);
 
-            // Update Form Data with URL
+            if (!secureUrl) throw new Error("No URL returned from upload provider");
+
+            // Update Form Data
             setFormData(prev => {
                 const newImages = [...prev.images] as [string, string];
                 newImages[slotIndex] = secureUrl;
@@ -356,11 +360,12 @@ export default function ProductsPage() {
                 return newModes;
             });
 
-        } catch (error) {
-            console.error("Upload failed:", error);
-            alert("Image upload failed. Please try again.");
+            console.log(`✅ [UPLOAD_SUCCESS] Slot ${slotIndex}: ${secureUrl}`);
+        } catch (error: any) {
+            console.error(`🚨 [UPLOAD_ERROR] Slot ${slotIndex}:`, error);
+            alert(`Upload Failed: ${error.message || "Unknown Error"}`);
         } finally {
-            // Reset loading state
+            // 🧹 FORCE RESET LOADING STATE
             setIsUploading(prev => {
                 const newStatus = [...prev] as [boolean, boolean];
                 newStatus[slotIndex] = false;
@@ -666,8 +671,8 @@ export default function ProductsPage() {
                                     Description
                                 </button>
                                 <button
-                                    onClick={() => setActiveTab('transparency' as any)}
-                                    className={`pb-2 text-sm font-bold transition-all ${activeTab as any === 'transparency' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                                    onClick={() => setActiveTab('transparency')}
+                                    className={`pb-2 text-sm font-bold transition-all ${activeTab === 'transparency' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
                                 >
                                     Transparency
                                 </button>
@@ -993,7 +998,7 @@ export default function ProductsPage() {
                                             )}
                                         </div>
                                     </div>
-                                ) : (activeTab as any) === 'transparency' ? (
+                                ) : activeTab === 'transparency' ? (
                                     <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
                                         <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
                                             <div className="flex items-center justify-between mb-4">

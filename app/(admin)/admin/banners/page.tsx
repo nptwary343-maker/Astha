@@ -65,14 +65,16 @@ export default function BannersPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        console.log("📂 [BANNER_UPLOAD_START]", file.name);
         setIsUploading(true);
         try {
             // 🚀 Actual Cloudinary Upload
             const secureUrl = await uploadToCloudinary(file);
             setBackgroundImage(secureUrl);
-        } catch (error) {
-            console.error("Upload failed:", error);
-            alert("Failed to upload image to Cloudinary.");
+            console.log("✅ [BANNER_UPLOAD_SUCCESS]", secureUrl);
+        } catch (error: any) {
+            console.error("🚨 [BANNER_UPLOAD_ERROR]", error);
+            alert(`Upload Failed: ${error.message || "Unknown Error"}`);
         } finally {
             setIsUploading(false);
         }
