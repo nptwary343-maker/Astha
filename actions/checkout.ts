@@ -5,6 +5,7 @@ import { db, collection, doc, runTransaction, increment, serverTimestamp } from 
 import { headers } from 'next/headers';
 import { after } from 'next/server';
 import { sendPixelEvent } from '@/lib/capi-bridge';
+import { sendOrderToTelegram } from '@/services/telegramBot';
 
 // ----------------------------------------------------------------------
 // 1. Zod Schemas (Strict Input Validation)
@@ -238,7 +239,7 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
 
             transaction.set(orderRef, newOrder);
 
-            return { orderId, finalTotal, currency: 'BDT' };
+            return { orderId, finalTotal, currency: 'BDT', orderData: newOrder };
         });
 
         // C. Offload Post-Transaction Tasks (Next.js 15 Background Execution)
@@ -287,6 +288,15 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                         } catch (e) {
                             console.error("📧 Email Confirmation Error:", e);
                         }
+                    }
+                })(),
+
+                // 4. Telegram Notification
+                (async () => {
+                    try {
+                        await sendOrderToTelegram(result.orderData);
+                    } catch (e) {
+                        console.error("📢 Telegram Notification Error:", e);
                     }
                 })()
             ]);

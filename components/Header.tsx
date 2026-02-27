@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import SmartSearch from './SmartSearch';
+import { useNotifications } from '@/hooks/useNotifications';
 import NotificationDropdown from './NotificationDropdown';
 import CartPreview from './CartPreview';
 import confetti from 'canvas-confetti';
@@ -15,6 +16,7 @@ import { Magnet } from './motion/MotionGraphics';
 
 const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     const { user, loading, logout } = useAuth();
+    const { notifications, unreadCount } = useNotifications();
     const { cartCount } = useCart();
 
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -195,7 +197,11 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                     <div className="relative" ref={notificationRef}>
                         <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className="p-3 text-text-muted hover:text-brand-primary hover:bg-slate-50 rounded-2xl transition-all relative">
                             <Bell size={22} />
-                            <span className="absolute top-3 right-3 w-1.5 h-1.5 bg-brand-accent rounded-full ring-2 ring-white"></span>
+                            {unreadCount > 0 && (
+                                <span className="absolute top-2.5 right-2.5 min-w-[16px] h-4 bg-red-600 text-white text-[9px] font-black rounded-full flex items-center justify-center px-1 ring-2 ring-white animate-bounce-slow">
+                                    {unreadCount}
+                                </span>
+                            )}
                         </button>
                         {isNotificationsOpen && <div className="absolute right-0 top-full mt-4 w-80 z-[110]"><NotificationDropdown onClose={() => setIsNotificationsOpen(false)} /></div>}
                     </div>
