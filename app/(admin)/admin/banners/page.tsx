@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { Save, Image as ImageIcon, Layout, Type, UploadCloud, X, Link as LinkIcon, Trash2 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { uploadToCloudinary } from '@/lib/cloudinary';
+import { Loader2 } from 'lucide-react';
 
 export default function BannersPage() {
     const [title, setTitle] = useState('AstharHat Biggest Sale');
@@ -14,6 +16,7 @@ export default function BannersPage() {
     const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
     const [bgOpacity, setBgOpacity] = useState(0.5);
     const [isSaving, setIsSaving] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -58,16 +61,21 @@ export default function BannersPage() {
         }
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            // Simple display for now, ideally upload to storage
-            setBackgroundImage(event.target?.result as string);
-        };
+        setIsUploading(true);
+        try {
+            // 🚀 Actual Cloudinary Upload
+            const secureUrl = await uploadToCloudinary(file);
+            setBackgroundImage(secureUrl);
+        } catch (error) {
+            console.error("Upload failed:", error);
+            alert("Failed to upload image to Cloudinary.");
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     return (
@@ -185,10 +193,19 @@ export default function BannersPage() {
                                 {/* File Upload */}
                                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all bg-gray-50/50">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
-                                        <p className="text-xs text-gray-500 font-medium">Click to upload image</p>
+                                        {isUploading ? (
+                                            <>
+                                                <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-2" />
+                                                <p className="text-xs text-blue-500 font-bold uppercase tracking-widest">Processing...</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
+                                                <p className="text-xs text-gray-500 font-medium">Click to upload image</p>
+                                            </>
+                                        )}
                                     </div>
-                                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading} />
                                 </label>
 
                                 {backgroundImage && (
