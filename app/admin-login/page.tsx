@@ -355,9 +355,6 @@ export default function AdminLoginPage() {
 
             <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 relative z-10 shadow-2xl">
                 <div className="text-center mb-10">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-6 border border-white/10">
-                        <ShieldCheck className="text-white h-10 w-10" />
-                    </div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">Admin Portal</h1>
                     <p className="text-gray-400 mt-2 text-sm">Secure Access Verification</p>
                 </div>

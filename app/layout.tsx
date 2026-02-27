@@ -76,7 +76,6 @@ export default function RootLayout({
               '@type': 'Organization',
               name: 'AstharHat',
               url: 'https://astharhat.com',
-              logo: 'https://astharhat.com/logo.png',
               sameAs: [
                 'https://www.facebook.com/AstharHat',
                 'https://www.youtube.com/@AstharHat',

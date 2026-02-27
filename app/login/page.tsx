@@ -170,9 +170,6 @@ export default function LoginPage() {
 
             <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 p-8 relative z-10 animate-in fade-in zoom-in-95 duration-500">
                 <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/20 mb-4 transform -rotate-6 hover:rotate-0 transition-transform duration-300">
-                        <span className="text-white font-bold text-3xl">A</span>
-                    </div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">
                         Welcome Back
                     </h1>

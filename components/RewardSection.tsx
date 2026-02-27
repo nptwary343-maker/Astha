@@ -94,12 +94,7 @@ const RewardSection = () => {
                                     className="flex items-center justify-between bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl p-4 cursor-pointer hover:bg-blue-100 transition-colors group/btn"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="relative">
-                                            <Ticket className="text-blue-600" size={24} />
-                                            <div className="absolute -top-1 -right-1 bg-red-500 rounded-full p-0.5">
-                                                <Zap className="text-white fill-white" size={8} />
-                                            </div>
-                                        </div>
+                                        <Ticket className="text-blue-600" size={24} />
                                         <span className="text-2xl font-black text-blue-900 tracking-wider">
                                             {coupon.code.slice(0, 3)}****
                                         </span>

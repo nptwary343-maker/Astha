@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MENU_ITEMS } from './navigation-config';
-import { X, LogOut, User, Zap, ChevronDown, ChevronRight, ShieldCheck } from 'lucide-react';
+import { X, LogOut, User, ChevronDown, ChevronRight, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
 
@@ -148,7 +148,6 @@ interface SidebarProps {
                                 >
                                     <span className="relative z-10 flex items-center justify-center gap-2">
                                         Sign Up Free
-                                        <Zap size={16} className="text-orange-400 group-hover:rotate-12 transition-transform" />
                                     </span>
                                     {/* Shine Effect */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
