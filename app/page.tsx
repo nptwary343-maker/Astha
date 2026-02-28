@@ -15,6 +15,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { useLocation } from '@/context/LocationContext';
 import { useState, useEffect } from 'react';
 import ParticleHeroBanners from '@/components/home/ParticleHeroBanners';
+import FlashSaleBanner from '@/components/FlashSaleBanner';
 import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
 export default function Home() {
@@ -34,7 +35,19 @@ export default function Home() {
           getProductBlocks(selectedLocationId)
         ]);
         setProducts(p);
-        setBanners(b);
+        const newHomeBanner = {
+          id: 'manual-shop-home',
+          title: 'Shop From Home & Save',
+          subtitle: 'Enjoy exclusive offers from top brands only available online today!',
+          imageUrl: '/banners/shop-from-home.png',
+          backgroundImage: '/banners/shop-from-home.png',
+          buttonText: 'Order Now',
+          buttonLink: '/shop',
+          active: true,
+          order: -1
+        };
+
+        setBanners([newHomeBanner, ...b]);
         setBlocks(bl);
       } catch (e) {
         console.error("Home Page Data Fetch Error:", e);
@@ -52,7 +65,8 @@ export default function Home() {
       <ParticleHeroBanners />
 
       {/* Hero & Banners Section */}
-      <div className="relative z-10">
+      <div className="relative z-10 space-y-4">
+        <FlashSaleBanner />
         <SafeBannerRenderer />
         <HeroBanner hasSpecialCoupon={true} customBanners={banners} />
       </div>

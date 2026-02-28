@@ -261,12 +261,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                         </Link>
                     ))}
 
-                    <div className="ml-auto hidden xl:flex items-center gap-3">
-                        <span className="text-[10px] font-bold text-brand-primary flex items-center gap-2 bg-brand-primary/5 px-3 py-1 rounded-full border border-brand-primary/10">
-                            <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-ping" />
-                            FLASH SALE: 04:12:05
-                        </span>
-                    </div>
+
                 </div>
             </div>
         </header>
