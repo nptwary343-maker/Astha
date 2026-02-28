@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, getDoc } from 'firebase/firestore';
-import { ShoppingCart, Star, Send, ArrowLeft, Minus, Plus, Check, Award, ShieldCheck, FileText, ExternalLink } from 'lucide-react';
+import { ShoppingCart, Star, Send, ArrowLeft, Minus, Plus, Check, Award, ShieldCheck, FileText, ExternalLink, Search, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -391,20 +391,24 @@ export default function ProductDetailClient({ initialProduct, productId, similar
                             )}
 
                             {/* 🔍 Transparency & Origin Section (QR System) */}
-                            <div className="mb-10 p-6 bg-gradient-to-br from-zinc-900 to-black rounded-3xl text-white shadow-2xl relative overflow-hidden group">
+                            <div className="mb-10 p-6 bg-gradient-to-br from-zinc-900 to-black rounded-3xl text-white shadow-2xl relative overflow-hidden group cursor-pointer hover:ring-4 hover:ring-orange-500/50 transition-all">
+                                <Link href={`/verify/${productId}`} className="absolute inset-0 z-20" aria-label="View Verification Details"></Link>
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-3xl rounded-full -mr-16 -mt-16" />
 
-                                <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                                    <div className="shrink-0">
-                                        <div className="w-32 h-32 bg-white p-2 rounded-2xl shadow-xl transition-transform group-hover:scale-105 duration-500">
+                                <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 pointer-events-none group-hover:scale-[1.02] transition-transform duration-500">
+                                    <div className="shrink-0 relative">
+                                        <div className="w-32 h-32 bg-white p-2 rounded-2xl shadow-xl transition-transform group-hover:rotate-3 duration-500">
                                             {/* Generated QR Mockup */}
                                             <div className="w-full h-full border-4 border-black p-1 flex items-center justify-center">
-                                                <div className="grid grid-cols-4 grid-rows-4 gap-1 w-full h-full opacity-80">
+                                                <div className="grid grid-cols-4 grid-rows-4 gap-1 w-full h-full opacity-80 backdrop-blur-md">
                                                     {[...Array(16)].map((_, i) => (
                                                         <div key={i} className={`rounded-sm ${(i % 3 === 0 || i % 7 === 0) ? 'bg-black' : 'bg-transparent'}`} />
                                                     ))}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className="absolute -bottom-4 -right-4 bg-orange-500 text-white p-2 rounded-full shadow-lg group-hover:animate-bounce">
+                                            <Search size={20} />
                                         </div>
                                         <p className="text-[10px] font-bold text-center mt-3 text-white/50 uppercase tracking-widest">Digital Twin ID: AH-{productId.slice(0, 6).toUpperCase()}</p>
                                     </div>
@@ -416,10 +420,11 @@ export default function ProductDetailClient({ initialProduct, productId, similar
                                         <p className="text-sm text-gray-300 leading-relaxed mb-4">
                                             এই পণ্যটির প্রতিটি ধাপ ট্র্যাক করা হয়েছে। পণ্যের মোড়কে থাকা <span className="text-white font-bold">QR কোড</span> স্ক্যান করে আপনি এর উৎস, উৎপাদনের তারিখ এবং গুণগত মান যাচাই করতে পারেন।
                                         </p>
-                                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/5">
-                                            <p className="text-xs italic text-orange-200">
-                                                "Sourced with integrity. Verified for purity."
-                                            </p>
+                                        <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/5 inline-flex items-center gap-2 mt-4 hover:bg-white/20 transition-all pointer-events-auto">
+                                            <span className="text-xs font-bold text-white uppercase tracking-widest pl-2">View Official Report</span>
+                                            <div className="bg-orange-500 text-white p-1 rounded-lg">
+                                                <ChevronRight size={16} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
