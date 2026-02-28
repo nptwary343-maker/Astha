@@ -105,24 +105,11 @@ const mockBot = {
                         text: `Executing ${action.toUpperCase()} for Order ${orderId}...`,
                     });
 
-                    // 2. Update Firebase
-                    const orderRef = doc(db, "orders", orderId);
-                    const newStatus = action === 'accept' ? 'Processing' : 'Cancelled';
-
-                    await updateDoc(orderRef, {
-                        status: newStatus,
-                        updatedAt: serverTimestamp(),
-                        logs: [
-                            {
-                                status: newStatus,
-                                timestamp: new Date().toISOString(),
-                                note: `Order ${newStatus} via Telegram Bot by Admin`
-                            }
-                        ] // Adding a log entry
-                    });
-
+                    // 2. We do NOT update firebase automatically anymore.
+                    // The user requested that payment status / order matching be done manually
+                    // on the admin panel. We just visually acknowledge it on Telegram.
                     // 3. Update the original message
-                    const statusText = action === 'accept' ? '✅ *ACCEPTED*' : '❌ *REJECTED*';
+                    const statusText = action === 'accept' ? '✅ *ACCEPTED (Please update manually on Website)*' : '❌ *REJECTED (Please update manually on Website)*';
                     const lines = text.split('\n');
                     const updatedText = lines.slice(0, -1).join('\n') + `\n---------------------------------------\nStatus: ${statusText} by Admin.`;
 
@@ -158,11 +145,11 @@ const mockBot = {
 
 *✅ Accept (অর্ডার গ্রহণ):*
 যদি পেমেন্ট বা কনফার্মেশন ঠিক থাকে, Accept এ ক্লিক করুন। 
-আপনার ওয়েবসাইটের ডেটাবেসে অর্ডারটি স্বয়ংক্রিয়ভাবে *'Processing'* হয়ে যাবে! 
+বট আপনাকে রিমাইন্ডার দিবে, এরপর ওয়েবসাইটের অ্যাডমিন প্যানেলে গিয়ে ম্যানুয়ালি অর্ডারটি அபডেট করে দিন।
 
 *❌ Reject (অর্ডার বাতিল):*
 যদি ভুয়া অর্ডার হয় বা স্টক না থাকে, Reject এ ক্লিক করুন। 
-ডেটাবেসে অর্ডারটি *'Cancelled'* হয়ে যাবে।
+এরপর ওয়েবসাইটের অ্যাডমিন প্যানেলে গিয়ে ম্যানুয়ালি অর্ডারটি বাতিল করে দিন।
 
 *⚠️ সতর্কতা:*
 বাটনগুলো শুধু একবার কাজ করবে! ক্লিক করার পর বাটন মুছে যাবে যাতে দ্বিতীয়বার ক্লিক না পড়ে।
