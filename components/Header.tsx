@@ -88,7 +88,8 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
             {/* Top Minimal Bar (Optional/Subtle) */}
             <div className="bg-ui-bg border-b border-border-light hidden sm:block">
                 <div className="max-w-[1600px] mx-auto flex justify-end gap-6 px-4 py-1.5 font-medium text-[10px] text-text-muted uppercase tracking-wider">
-                    <Link href="/track" className="hover:text-brand-primary transition-colors">Track Order</Link>
+                    <Link href="/tracking" className="hover:text-brand-primary transition-colors">Track Order</Link>
+
                     <Link href="/help" className="hover:text-brand-primary transition-colors">Help Center</Link>
                     <Link href="/contact" className="hover:text-brand-primary transition-colors">Contact Us</Link>
                 </div>

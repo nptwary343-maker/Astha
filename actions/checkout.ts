@@ -5,7 +5,8 @@ import { db, collection, doc, runTransaction, increment, serverTimestamp } from 
 import { headers } from 'next/headers';
 import { after } from 'next/server';
 import { sendPixelEvent } from '@/lib/capi-bridge';
-import { sendOrderToTelegram } from '@/services/telegramBot';
+// import { sendOrderToTelegram } from '@/services/telegramBot';
+
 
 // ----------------------------------------------------------------------
 // 1. Zod Schemas (Strict Input Validation)
@@ -294,10 +295,12 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                 // 4. Telegram Notification
                 (async () => {
                     try {
+                        const { sendOrderToTelegram } = await import('@/services/telegramBot');
                         await sendOrderToTelegram(result.orderData);
                     } catch (e) {
                         console.error("📢 Telegram Notification Error:", e);
                     }
+
                 })()
             ]);
 

@@ -168,9 +168,16 @@ export default function CartPage() {
             });
 
             if (result.success && result.orderId) {
+                // Save order ID for tracking
+                const existingOrders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+                if (!existingOrders.includes(result.orderId)) {
+                    localStorage.setItem('my_orders', JSON.stringify([result.orderId, ...existingOrders]));
+                }
+
                 clearCart();
                 router.push(`/order-success/${result.orderId}`);
             } else {
+
                 alert(result.error || 'অর্ডার করতে সমস্যা হয়েছে।');
             }
         } catch (e: any) {

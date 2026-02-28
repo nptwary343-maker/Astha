@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import bot from '@/services/telegramBot';
+// import bot from '@/services/telegramBot';
+
 
 export const runtime = 'edge';
 
@@ -17,8 +18,12 @@ export async function POST(req: Request) {
 
         const update = await req.json();
 
+        // Dynamic import to avoid build-time issues with telegraf
+        const { default: botInstance } = await import('@/services/telegramBot');
+
         // Let Telegraf handle the update
-        await bot.handleUpdate(update);
+        await botInstance.handleUpdate(update);
+
 
         return new NextResponse('OK', { status: 200 });
     } catch (error) {
@@ -38,10 +43,14 @@ export async function GET(req: Request) {
 
     try {
         const webhookUrl = `${domain.replace(/\/$/, '')}/api/telegram-webhook`;
+
+        const { default: botInstance } = await import('@/services/telegramBot');
+
         // Setup Webhook with secret token for extra security
-        await bot.telegram.setWebhook(webhookUrl, {
+        await botInstance.telegram.setWebhook(webhookUrl, {
             secret_token: process.env.TELEGRAM_BOT_TOKEN
         });
+
 
         return NextResponse.json({
             success: true,

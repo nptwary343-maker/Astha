@@ -8,8 +8,8 @@ import { Suspense } from "react";
 import { CartProvider } from "@/context/CartContext";
 import { SoundProvider } from "@/context/SoundContext";
 import DynamicFooter from "@/components/DynamicFooter";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ErrorBoundary from "@/components/ErrorBoundary";
+
 import { ToastProvider } from "@/components/ToastProvider";
 import { I18nProvider } from "@/context/I18nContext";
 import { LocationProvider } from "@/context/LocationContext";
@@ -110,8 +110,8 @@ export default function RootLayout({
                         </AppShell>
                       </LazyMotion>
                       <DynamicFooter />
-                      <LanguageSwitcher />
                     </SoundProvider>
+
                   </LocationProvider>
                 </CartProvider>
               </ToastProvider>

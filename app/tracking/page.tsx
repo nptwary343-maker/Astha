@@ -11,45 +11,73 @@ import { useSearchParams } from 'next/navigation';
 function TrackingContent() {
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchId, setSearchId] = useState('');
+    const [searching, setSearching] = useState(false);
+    const [searchError, setSearchError] = useState('');
+
+    const fetchOrders = async (ids: string[]) => {
+        const loadedOrders = [];
+        for (const id of ids) {
+            try {
+                const docRef = doc(db, 'orders', id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
+                }
+            } catch (err) {
+                console.error("Error fetching order:", id, err);
+            }
+        }
+        return loadedOrders;
+    };
 
     useEffect(() => {
-        const fetchMyOrders = async () => {
+        const loadInitialOrders = async () => {
             if (typeof window === 'undefined') return;
-
-            // Get IDs from Local Storage (Standard User Flow)
             const localIds = JSON.parse(localStorage.getItem('my_orders') || '[]');
-
-            if (localIds.length === 0) {
-                setLoading(false);
-                return;
+            if (localIds.length > 0) {
+                const loaded = await fetchOrders(localIds);
+                loaded.sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                setOrders(loaded);
             }
-
-            const loadedOrders = [];
-            for (const id of localIds) {
-                try {
-                    const docRef = doc(db, 'orders', id);
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                        loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
-                    }
-                } catch (err) {
-                    console.error("Error fetching order:", id, err);
-                }
-            }
-
-            // Sort by date (newest first)
-            loadedOrders.sort((a: any, b: any) => {
-                const dateA = a.createdAt?.seconds || 0;
-                const dateB = b.createdAt?.seconds || 0;
-                return dateB - dateA;
-            });
-
-            setOrders(loadedOrders);
             setLoading(false);
         };
-
-        fetchMyOrders();
+        loadInitialOrders();
     }, []);
+
+    const handleSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!searchId.trim()) return;
+
+        setSearching(true);
+        setSearchError('');
+        try {
+            const docRef = doc(db, 'orders', searchId.trim());
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const newOrder = { id: docSnap.id, ...docSnap.data() };
+                // Add to list if not already there
+                setOrders(prev => {
+                    if (prev.find(o => o.id === newOrder.id)) return prev;
+                    return [newOrder, ...prev];
+                });
+                setSearchId('');
+
+                // Save to local storage too
+                const localIds = JSON.parse(localStorage.getItem('my_orders') || '[]');
+                if (!localIds.includes(newOrder.id)) {
+                    localStorage.setItem('my_orders', JSON.stringify([newOrder.id, ...localIds]));
+                }
+            } else {
+                setSearchError('Order not found. Please check the ID.');
+            }
+        } catch (err) {
+            setSearchError('Error searching for order.');
+        } finally {
+            setSearching(false);
+        }
+    };
 
     const getStatusColor = (status: string) => {
         switch (status?.toLowerCase()) {
@@ -63,87 +91,106 @@ function TrackingContent() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-4">
-            <div className="w-full max-w-4xl">
-                <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-6">
-                    <div className="bg-gradient-to-r from-orange-600 to-pink-600 p-8 text-center text-white">
-                        <h1 className="text-3xl font-black mb-2 tracking-tight">My Orders</h1>
-                        <p className="text-orange-100 text-sm">Track your purchases & Delivery Status</p>
+        <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center py-12 px-4">
+            <div className="w-full max-w-4xl space-y-8">
+                {/* Header Card */}
+                <div className="bg-white rounded-[2rem] shadow-2xl shadow-orange-100/50 overflow-hidden border border-orange-50">
+                    <div className="bg-gradient-to-br from-orange-600 via-orange-500 to-pink-600 p-10 text-center text-white relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+                        <h1 className="text-4xl font-black mb-3 tracking-tighter uppercase italic">Track My Order</h1>
+                        <p className="text-orange-100 text-sm font-medium tracking-wide">Real-time status of your premium purchases</p>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="p-8 bg-gray-50/50 border-t border-gray-100">
+                        <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-3">
+                            <div className="flex-1 relative">
+                                <input
+                                    type="text"
+                                    value={searchId}
+                                    onChange={(e) => setSearchId(e.target.value)}
+                                    placeholder="Enter Order ID (e.g. AH-123456789)"
+                                    className="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 focus:border-orange-500 outline-none transition-all font-bold text-slate-700 bg-white shadow-sm"
+                                />
+                                {searchError && <p className="text-red-500 text-xs mt-2 ml-2 font-bold">{searchError}</p>}
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={searching || !searchId}
+                                className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl font-black transition-all shadow-xl active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 min-w-[160px] uppercase text-xs tracking-widest"
+                            >
+                                {searching ? 'Searching...' : 'Track Now'}
+                            </button>
+                        </form>
                     </div>
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center p-12">
-                        <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="flex flex-col items-center justify-center p-20 space-y-4">
+                        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.3em]">Syncing Orders...</p>
                     </div>
                 ) : orders.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100">
-                        <div className="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
-                            <Package size={40} />
+                    <div className="text-center py-24 bg-white rounded-[2rem] shadow-sm border border-slate-100">
+                        <div className="bg-slate-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
+                            <Package size={48} />
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900">No Orders Found</h3>
-                        <p className="text-gray-500 text-sm mt-2">Your recent orders will appear here automatically.</p>
+                        <h3 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">No Orders Yet</h3>
+                        <p className="text-slate-400 text-sm font-medium max-w-xs mx-auto">Use the search bar above or check your local orders to see status.</p>
                     </div>
                 ) : (
                     <div className="space-y-6">
+                        <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Recent Tracking History</h2>
                         {orders.map((order) => (
-                            <div key={order.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                                <div className="p-6">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-gray-50 pb-4">
+                            <div key={order.id} className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-xl hover:shadow-orange-100/20 transition-all duration-500 group">
+                                <div className="p-8">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 pb-6 border-b border-slate-50">
                                         <div>
-                                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Order ID</p>
-                                            <h3 className="text-2xl font-black font-mono text-gray-900">#{order.id}</h3>
+                                            <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-2">Security ID</p>
+                                            <h3 className="text-3xl font-black font-mono text-slate-900 tracking-tighter decoration-orange-500/30 underline-offset-8">#{order.id}</h3>
                                         </div>
-                                        <div className={`px-4 py-2 rounded-full border text-sm font-bold flex items-center gap-2 w-fit ${getStatusColor(order.orderStatus)}`}>
-                                            <div className="w-2 h-2 rounded-full bg-current"></div>
+                                        <div className={`px-6 py-3 rounded-2xl border-2 text-xs font-black uppercase tracking-widest flex items-center gap-3 w-fit shadow-sm ${getStatusColor(order.orderStatus)}`}>
+                                            <span className="relative flex h-2 w-2">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-current"></span>
+                                            </span>
                                             {order.orderStatus || 'Pending'}
                                         </div>
                                     </div>
 
                                     {/* Quick Info */}
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                                        <div className="bg-gray-50 p-3 rounded-xl">
-                                            <p className="text-xs text-gray-400 font-bold mb-1">Amount</p>
-                                            <p className="font-bold text-gray-900">৳{(order.totals?.total || 0).toLocaleString()}</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                        <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100">
+                                            <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-1.5 flex items-center gap-2"><Clock size={12} /> Order Date</p>
+                                            <p className="font-bold text-slate-800 text-sm">{order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB') : 'N/A'}</p>
                                         </div>
-                                        <div className="bg-gray-50 p-3 rounded-xl col-span-2 md:col-span-3">
-                                            <p className="text-xs text-gray-400 font-bold mb-1">Delivery Address</p>
-                                            <p className="font-medium text-gray-700 text-sm truncate">{order.customer?.address}</p>
+                                        <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 col-span-1 md:col-span-2">
+                                            <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-1.5 flex items-center gap-2"><Home size={12} /> Shipping Address</p>
+                                            <p className="font-bold text-slate-800 text-sm truncate">{order.customer?.address}</p>
                                         </div>
                                     </div>
 
-                                    {/* Delivery Man Section (Proof for Check) */}
-                                    {order.assignedManName ? (
-                                        <div className="bg-blue-50 rounded-xl p-4 border border-blue-100 flex items-center gap-4">
-                                            <div className="bg-white p-3 rounded-full text-blue-600 shadow-sm">
-                                                <Truck size={24} />
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-bold text-blue-500 uppercase mb-0.5">Delivery Partner</p>
-                                                <h4 className="font-bold text-gray-900">{order.assignedManName}</h4>
-                                                <p className="text-sm text-gray-600 font-mono">{order.assignedManPhone}</p>
-                                            </div>
+                                    {/* Action - Security Block */}
+                                    <div className="bg-slate-950 text-white rounded-[1.5rem] p-8 relative overflow-hidden group/card shadow-2xl">
+                                        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover/card:opacity-10 transition-opacity transform group-hover/card:scale-110 duration-700">
+                                            <Package size={120} />
                                         </div>
-                                    ) : (
-                                        <div className="flex items-center gap-2 text-gray-400 text-sm bg-gray-50 p-3 rounded-xl border border-gray-100 border-dashed">
-                                            <Clock size={16} />
-                                            <span>Waiting for delivery assignment...</span>
-                                        </div>
-                                    )}
-
-                                    {/* Action - Show Details / QR */}
-                                    <div className="mt-6 pt-6 border-t border-gray-100 text-center">
-                                        <div className="bg-gray-900 text-white rounded-xl p-4 relative overflow-hidden group">
-                                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                                <Package size={100} />
+                                        <div className="flex flex-col md:flex-row items-center gap-8 justify-between relative z-10">
+                                            <div className="space-y-4 text-center md:text-left">
+                                                <div>
+                                                    <p className="text-[10px] text-orange-400 uppercase font-black tracking-[0.3em] mb-1">Total Payable</p>
+                                                    <p className="text-4xl font-black italic tracking-tighter">৳{(order.totals?.total || 0).toLocaleString()}</p>
+                                                </div>
+                                                <div className="flex items-center gap-3 text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+                                                    <Check className="text-orange-500" size={14} /> Verified Order
+                                                </div>
                                             </div>
-                                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-[0.2em] mb-2">Show to Delivery Man</p>
-                                            <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 inline-block border border-white/10">
-                                                <h2 className="text-2xl font-black font-mono tracking-widest text-emerald-400 drop-shadow-sm select-all">
+                                            <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 text-center min-w-[200px]">
+                                                <p className="text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] mb-3">Courier Scan ID</p>
+                                                <h2 className="text-2xl font-black font-mono tracking-[0.2em] text-orange-400 drop-shadow-2xl select-all">
                                                     {order.id}
                                                 </h2>
                                             </div>
-                                            <p className="text-[10px] text-gray-500 mt-2 font-medium">Security Tracker ID</p>
                                         </div>
                                     </div>
                                 </div>
