@@ -122,7 +122,7 @@ export default function ProductsPage() {
         images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
         isExpertVerified: false, originDetails: '', labReportUrl: '',
         descriptionBn: '', weightOptions: [] as { label: string, price: number }[],
-        dimensionLength: '5.5', dimensionWidth: '5.5',
+        dimensionLength: '10', dimensionWidth: '10',
         trackingStatus: 'Pickup Pending', trackingLocation: 'Main Warehouse'
     });
 
@@ -191,8 +191,8 @@ export default function ProductsPage() {
             labReportUrl: product.labReportUrl || '',
             descriptionBn: product.descriptionBn || '',
             weightOptions: product.weightOptions || [],
-            dimensionLength: product.dimensions?.length || '5.5',
-            dimensionWidth: product.dimensions?.width || '5.5',
+            dimensionLength: product.dimensions?.length || '10',
+            dimensionWidth: product.dimensions?.width || '10',
             trackingStatus: product.trackingInfo?.status || 'Pickup Pending',
             trackingLocation: product.trackingInfo?.location || 'Main Warehouse'
         });
@@ -213,7 +213,7 @@ export default function ProductsPage() {
             images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
             isExpertVerified: false, originDetails: '', labReportUrl: '',
             descriptionBn: '', weightOptions: [],
-            dimensionLength: '5.5', dimensionWidth: '5.5',
+            dimensionLength: '10', dimensionWidth: '10',
             trackingStatus: 'Pickup Pending', trackingLocation: 'Main Warehouse'
         });
         setImgInputMode([false, false]);
@@ -983,7 +983,7 @@ export default function ProductsPage() {
                                                     />
                                                 </div>
                                             </div>
-                                            <p className="text-[10px] text-blue-500 mt-2 font-medium">Default: 5.5cm × 5.5cm. Shown to customers on the product page.</p>
+                                            <p className="text-[10px] text-blue-500 mt-2 font-medium">Default: 10cm × 10cm. Shown to customers on the product page.</p>
                                         </div>
 
                                         {/* Description */}
