@@ -108,6 +108,8 @@ const mockBot = {
                     // 2. Update Firebase automatically for Order Status
                     const orderRef = doc(db, "orders", orderId);
                     const newStatus = action === 'accept' ? 'Processing' : 'Cancelled';
+                    const adminName = callbackQuery.from?.first_name || callbackQuery.from?.username || 'Unknown Admin';
+                    const adminUsername = callbackQuery.from?.username ? `(@${callbackQuery.from.username})` : '';
 
                     await updateDoc(orderRef, {
                         orderStatus: newStatus,
@@ -117,7 +119,7 @@ const mockBot = {
                             {
                                 status: newStatus,
                                 timestamp: new Date().toISOString(),
-                                note: `Order ${newStatus} via Telegram Bot by Admin`
+                                note: `Order ${newStatus} via Telegram Bot by ${adminName} ${adminUsername}`
                             }
                         ]
                     });
@@ -125,7 +127,7 @@ const mockBot = {
                     // 3. Update the original message
                     const statusText = action === 'accept' ? '✅ *ACCEPTED*' : '❌ *REJECTED*';
                     const lines = text.split('\n');
-                    const updatedText = lines.slice(0, -1).join('\n') + `\n---------------------------------------\nStatus: ${statusText} by Admin.`;
+                    const updatedText = lines.slice(0, -1).join('\n') + `\n---------------------------------------\nStatus: ${statusText} by *${adminName}* ${adminUsername}`;
 
                     await sendTelegramApi('editMessageText', {
                         chat_id: chatId,
