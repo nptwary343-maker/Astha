@@ -9,7 +9,7 @@ import { FALLBACK_PRODUCTS, FALLBACK_SETTINGS } from './fallback-data';
  */
 let _productCache: any[] | null = null;
 let _cacheTime = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 🛠️ Updated: 5 minutes instead of 1 hour
+const CACHE_TTL = 0; // ⚡ MAXIMUM REAL-TIME: 0 minutes wait. Instant Sync for customers.
 
 /**
  * 🧹 CLEAR CACHE (Call this after Admin updates)
