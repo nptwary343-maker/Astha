@@ -9,7 +9,9 @@ import { FALLBACK_PRODUCTS, FALLBACK_SETTINGS } from './fallback-data';
  */
 let _productCache: any[] | null = null;
 let _cacheTime = 0;
-const CACHE_TTL = 0; // ⚡ MAXIMUM REAL-TIME: 0 minutes wait. Instant Sync for customers.
+// ⚡ INSTANT ADMIN SYNC: `clearProductCache()` forces an instant update when Admin edits/adds products.
+// 🕒 BACKGROUND SYNC: Every 5 minutes, it naturally auto-refreshes to save Firebase reads!
+const CACHE_TTL = 5 * 60 * 1000;
 
 /**
  * 🧹 CLEAR CACHE (Call this after Admin updates)
