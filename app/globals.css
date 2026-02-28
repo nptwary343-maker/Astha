@@ -6,10 +6,10 @@
   --font-mono: var(--font-geist-mono);
 
   /* Modern Professional Premium Palette */
-  --color-brand-primary: #4338ca;
-  /* Deep Indigo for Trust */
-  --color-brand-accent: #f59e0b;
-  /* Sophisticated Amber for CTAs */
+  --color-brand-primary: #ea580c;
+  /* Deep Vibrant Orange for Action/Conversion */
+  --color-brand-accent: #10b981;
+  /* Emerald for Success/Trust markers */
   --color-ui-bg: #f8fafc;
   /* Clean Slate Background */
   --color-ui-surface: #ffffff;
@@ -20,6 +20,19 @@
   /* Slate 500 - Refined Muted Text */
   --color-border-light: #f1f5f9;
   /* Ultra Subtle UI Lines */
+
+  /* Global Override: Remap all existing 'indigo' usage to the new Orange Brand */
+  --color-indigo-50: #fff7ed;
+  --color-indigo-100: #ffedd5;
+  --color-indigo-200: #fed7aa;
+  --color-indigo-300: #fdba74;
+  --color-indigo-400: #fb923c;
+  --color-indigo-500: #f97316;
+  --color-indigo-600: #ea580c;
+  --color-indigo-700: #c2410c;
+  --color-indigo-800: #9a3412;
+  --color-indigo-900: #7c2d12;
+  --color-indigo-950: #431407;
 
   --animate-shimmer-fast: shimmer-fast 1.5s infinite linear;
 
@@ -37,9 +50,9 @@
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
-  --accent: #4338ca;
+  --accent: #ea580c;
   --secondary: #f1f5f9;
-  --link: #6366f1;
+  --link: #f97316;
 }
 
 body {
