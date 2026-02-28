@@ -90,8 +90,8 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                         ) : (
                             <ImageIcon size={64} className="text-slate-200" />
                         )}
-                        <div className="absolute top-4 left-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-200">
-                            Premium Choice
+                        <div className="absolute top-4 left-4 bg-slate-900 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
+                            Verified Asset
                         </div>
                     </div>
                 </div>
@@ -100,31 +100,42 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                 <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col bg-white overflow-y-auto">
                     <div className="mb-6">
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">{product.category}</span>
-                            <div className="flex items-center gap-1 text-emerald-600 ml-2">
-                                <ShieldCheck size={14} className="fill-current" />
-                                <span className="text-[10px] font-bold uppercase tracking-widest">Verified Merchant</span>
-                            </div>
+                            <span className="text-xs font-semibold text-brand-primary bg-indigo-50/50 px-2 py-0.5 rounded-md">{product.category}</span>
+                            {product.labReportUrl ? (
+                                <a href={product.labReportUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-emerald-600 ml-2 hover:bg-emerald-50 px-2 py-0.5 rounded-md transition-colors cursor-pointer border border-emerald-100/50">
+                                    <FileText size={14} className="stroke-[2.5]" />
+                                    <span className="text-xs font-bold text-emerald-700">Lab Tested</span>
+                                </a>
+                            ) : (
+                                <div className="flex items-center gap-1.5 text-slate-500 ml-2 px-2 py-0.5 border border-slate-200 rounded-md bg-white shadow-sm">
+                                    <ShieldCheck size={14} className="stroke-[2]" />
+                                    <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-widest">
+                                        {['electronic', 'gadget', 'appliance', 'mobile', 'computer'].some(c => product.category.toLowerCase().includes(c))
+                                            ? 'Authentic Asset'
+                                            : 'Quality Verified'}
+                                    </span>
+                                </div>
+                            )}
                         </div>
-                        <h2 className="text-xl md:text-3xl font-black text-slate-900 leading-tight mb-4 uppercase italic tracking-tighter">{product.name}</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 leading-snug mb-3 tracking-tight">{product.name}</h2>
 
                         <div className="flex items-center gap-4 py-3 border-y border-slate-50">
-                            <div className="flex items-center gap-0.5 text-orange-400">
+                            <div className="flex items-center gap-0.5 text-amber-400">
                                 {[...Array(5)].map((_, i) => <span key={i} className="text-base">★</span>)}
                             </div>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">4.9 (155 REVIEWS)</span>
+                            <span className="text-xs font-medium text-slate-400">4.9 (155 Reviews)</span>
                         </div>
                     </div>
 
                     <div className="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 relative overflow-hidden group">
                         <div className="flex items-baseline gap-2 mb-1">
-                            <span className="text-4xl font-black text-indigo-600 tracking-tighter uppercase italic">৳{finalPrice.toFixed(0)}</span>
-                            {isWeightBased && <span className="text-sm font-bold text-slate-400">/{selectedUnit.label}</span>}
+                            <span className="text-3xl font-bold text-slate-900 tracking-tight">৳{finalPrice.toFixed(0)}</span>
+                            {isWeightBased && <span className="text-sm font-medium text-slate-400">/{selectedUnit.label}</span>}
                         </div>
                         {hasDiscount && (
                             <div className="flex items-center gap-3">
-                                <span className="text-sm text-slate-400 line-through opacity-60">৳ {(product.price * selectedUnit.multiplier * qty).toFixed(0)}</span>
-                                <span className="text-[10px] font-black text-white bg-rose-600 px-2.5 py-1 rounded-md shadow-md">আপনি বাঁচাচ্ছেন ৳{savings.toFixed(0)}</span>
+                                <span className="text-sm text-slate-400 line-through">৳ {(product.price * selectedUnit.multiplier * qty).toFixed(0)}</span>
+                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-md">Save ৳{savings.toFixed(0)}</span>
                             </div>
                         )}
                     </div>
@@ -251,7 +262,7 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
                 )}
 
                 {hasDiscount && (
-                    <div className="absolute top-2 left-2 bg-rose-600 text-white text-[9px] font-black px-2 py-1 rounded shadow-lg tracking-widest uppercase">
+                    <div className="absolute top-2 left-2 bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
                         {product.discountValue || product.discount?.value}% ছাড়
                     </div>
                 )}
@@ -259,28 +270,28 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
 
             {/* Data Architecture */}
             <div className="flex flex-col flex-1 p-4">
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">{product.category}</span>
-                <h3 className="text-xs font-bold text-slate-800 line-clamp-2 mb-3 leading-snug min-h-[2.5rem] group-hover:text-indigo-600 uppercase tracking-tighter">
+                <span className="text-[10px] font-semibold text-brand-primary mb-1">{product.category}</span>
+                <h3 className="text-sm font-semibold text-slate-800 line-clamp-2 mb-3 leading-snug min-h-[2.5rem] group-hover:text-brand-primary">
                     {product.name}
                 </h3>
 
                 <div className="mt-auto">
                     <div className="flex flex-col mb-3">
-                        <span className="text-lg font-black text-indigo-600 tracking-tighter italic uppercase">৳{finalPrice.toFixed(0)}</span>
+                        <span className="text-lg font-bold text-slate-900 tracking-tight">৳{finalPrice.toFixed(0)}</span>
                         {hasDiscount && (
-                            <span className="text-[9px] text-slate-300 line-through">৳{product.price}</span>
+                            <span className="text-xs text-slate-400 line-through">৳{product.price}</span>
                         )}
                     </div>
 
                     <button
                         onClick={handleAddToCart}
-                        className={`w-full py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all border flex items-center justify-center gap-2
+                        className={`w-full py-2.5 rounded-lg font-bold text-xs transition-all border flex items-center justify-center gap-2
                             ${isAdded
-                                ? 'bg-emerald-500 border-emerald-500 text-white'
-                                : 'bg-slate-900 border-slate-900 text-white hover:bg-indigo-600 hover:border-indigo-600'
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
                             }`}
                     >
-                        {isAdded ? 'যোগ হয়েছে!' : 'কার্টে যোগ করুন'}
+                        {isAdded ? 'যোগ হয়েছে' : 'কার্টে যোগ করুন'}
                     </button>
                 </div>
             </div>
