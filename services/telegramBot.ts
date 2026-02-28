@@ -136,6 +136,18 @@ const mockBot = {
                         parse_mode: 'Markdown'
                     });
 
+                    // 4. Send a distinct new message to notify everyone (since edits don't trigger push notifications)
+                    const actionEmoji = action === 'accept' ? '✅' : '❌';
+                    const actionWord = action === 'accept' ? 'ACCEPTED' : 'REJECTED';
+                    const notifyText = `${actionEmoji} *Order \`${orderId}\`* has been *${actionWord}* by ${adminName} ${adminUsername}`;
+
+                    await sendTelegramApi('sendMessage', {
+                        chat_id: chatId,
+                        text: notifyText,
+                        parse_mode: 'Markdown',
+                        reply_to_message_id: messageId
+                    });
+
                 }
             } catch (error) {
                 console.error("Error processing callback query:", error);
