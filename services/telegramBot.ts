@@ -1,3 +1,5 @@
+import { db } from '@/lib/firebase';
+import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
 // Mock Telegram Bot Service to bypass telegraf build issues
 export const sendOrderToTelegram = async (order: any) => {
@@ -63,12 +65,91 @@ ${order.payment.trxId ? `TxnID: \`${order.payment.trxId}\`` : 'Status: Cash on D
     }
 };
 
+const sendTelegramApi = async (method: string, payload: any) => {
+    const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    if (!BOT_TOKEN) return;
+    try {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${method}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    } catch (error) {
+        console.error(`Telegram API Error (${method}):`, error);
+    }
+};
+
 const mockBot = {
     handleUpdate: async (update: any) => {
-        console.log("Mock: Handling update", update);
+        console.log("Handling Webhook Update", JSON.stringify(update, null, 2));
+
+        if (update.callback_query) {
+            const callbackQuery = update.callback_query;
+            const data = callbackQuery.data as string;
+            const chatId = callbackQuery.message?.chat?.id;
+            const messageId = callbackQuery.message?.message_id;
+            const text = callbackQuery.message?.text || "Order Data";
+
+            if (!data || !chatId || !messageId) {
+                return;
+            }
+
+            try {
+                if (data.startsWith('accept_') || data.startsWith('reject_')) {
+                    const action = data.split('_')[0]; // 'accept' or 'reject'
+                    const orderId = data.split('_')[1];
+
+                    // 1. Acknowledge callback query
+                    await sendTelegramApi('answerCallbackQuery', {
+                        callback_query_id: callbackQuery.id,
+                        text: `Executing ${action.toUpperCase()} for Order ${orderId}...`,
+                    });
+
+                    // 2. Update Firebase
+                    const orderRef = doc(db, "orders", orderId);
+                    const newStatus = action === 'accept' ? 'Processing' : 'Cancelled';
+
+                    await updateDoc(orderRef, {
+                        status: newStatus,
+                        updatedAt: serverTimestamp(),
+                        logs: [
+                            {
+                                status: newStatus,
+                                timestamp: new Date().toISOString(),
+                                note: `Order ${newStatus} via Telegram Bot by Admin`
+                            }
+                        ] // Adding a log entry
+                    });
+
+                    // 3. Update the original message
+                    const statusText = action === 'accept' ? '✅ *ACCEPTED*' : '❌ *REJECTED*';
+                    const lines = text.split('\n');
+                    const updatedText = lines.slice(0, -1).join('\n') + `\n---------------------------------------\nStatus: ${statusText} by Admin.`;
+
+                    await sendTelegramApi('editMessageText', {
+                        chat_id: chatId,
+                        message_id: messageId,
+                        text: updatedText,
+                        parse_mode: 'Markdown'
+                    });
+
+                }
+            } catch (error) {
+                console.error("Error processing callback query:", error);
+                await sendTelegramApi('answerCallbackQuery', {
+                    callback_query_id: callbackQuery.id,
+                    text: 'Error processing request!',
+                    show_alert: true
+                });
+            }
+        }
     },
     telegram: {
         setWebhook: async (url: string, opts: any) => {
+            await sendTelegramApi('setWebhook', {
+                url,
+                secret_token: opts.secret_token
+            });
             console.log("Mock: Setting webhook", url);
         }
     }
