@@ -31,8 +31,25 @@ export async function sendPixelEvent(
     },
     eventId: string // 🛡️ ডি-ডুপ্লিকেশনের জন্য বাধ্যতামূলক
 ) {
-    const PIXEL_ID = process.env.FB_PIXEL_ID;
-    const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
+    // 🛡️ Rule 1: Dynamic Config Retrieval
+    // Prioritize ENV, but fallback to Firestore for Admin Control
+    let PIXEL_ID = process.env.FB_PIXEL_ID;
+    let ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
+
+    if (!PIXEL_ID || !ACCESS_TOKEN) {
+        try {
+            const { db } = await import('@/lib/firebase');
+            const { doc, getDoc } = await import('firebase/firestore');
+            const snap = await getDoc(doc(db, 'settings', 'fb_config'));
+            if (snap.exists()) {
+                const data = snap.data();
+                PIXEL_ID = PIXEL_ID || data.pixelId;
+                ACCESS_TOKEN = ACCESS_TOKEN || data.accessToken;
+            }
+        } catch (e) {
+            console.error("❌ CAPI_CONFIG_FETCH_ERROR:", e);
+        }
+    }
 
     if (!PIXEL_ID || !ACCESS_TOKEN) {
         console.warn("⚠️ FB_PIXEL_ID or FB_ACCESS_TOKEN missing. Skipping CAPI.");

@@ -153,59 +153,61 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                                 </div>
                             )}
                         </div>
+                        <div className="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 relative overflow-hidden group">
+                            {isWeightBased && (
+                                <div className="mb-6">
+                                    <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest block mb-3">পছন্দমতো ওজন বেছে নিন</label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {WEIGHT_UNITS.map(unit => (
+                                            <button
+                                                key={unit.label}
+                                                onClick={() => setSelectedUnit(unit as any)}
+                                                className={`py-3 px-1 rounded-xl text-[10px] font-black transition-all border-2 uppercase tracking-tighter ${selectedUnit.label === unit.label
+                                                    ? 'border-indigo-600 bg-indigo-600 text-white shadow-lg'
+                                                    : 'border-slate-100 bg-white text-slate-400 hover:border-indigo-300'
+                                                    }`}
+                                            >
+                                                {unit.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
-                        {isWeightBased && (
-                            <div className="mb-6">
-                                <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest block mb-3">পছন্দমতো ওজন বেছে নিন</label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {WEIGHT_UNITS.map(unit => (
+                            <div className="flex flex-col gap-6 mt-auto">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] uppercase font-black text-slate-400 tracking-widest">পরিমাণ (QTY)</span>
+                                    <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
                                         <button
-                                            key={unit.label}
-                                            onClick={() => setSelectedUnit(unit as any)}
-                                            className={`py-3 px-1 rounded-xl text-[10px] font-black transition-all border-2 uppercase tracking-tighter ${selectedUnit.label === unit.label
-                                                ? 'border-indigo-600 bg-indigo-600 text-white shadow-lg'
-                                                : 'border-slate-100 bg-white text-slate-400 hover:border-indigo-300'
-                                                }`}
-                                        >
-                                            {unit.label}
-                                        </button>
-                                    ))}
+                                            onClick={() => setQty(Math.max(1, qty - 1))}
+                                            className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
+                                        >-</button>
+                                        <span className="w-10 text-center text-sm font-black text-slate-800">{qty}</span>
+                                        <button
+                                            onClick={() => setQty(qty + 1)}
+                                            className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
+                                        >+</button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
 
-                        <div className="flex flex-col gap-6 mt-auto">
-                            <div className="flex items-center justify-between">
-                                <span className="text-[10px] uppercase font-black text-slate-400 tracking-widest">পরিমাণ (QTY)</span>
-                                <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
+                                <div className="flex gap-3">
                                     <button
-                                        onClick={() => setQty(Math.max(1, qty - 1))}
-                                        className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
-                                    >-</button>
-                                    <span className="w-10 text-center text-sm font-black text-slate-800">{qty}</span>
+                                        onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); router.push('/cart'); })}
+                                        className="flex-[1.5] bg-indigo-600 hover:bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/btn"
+                                    >
+                                        সরাসরি কিনুন <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                                    </button>
                                     <button
-                                        onClick={() => setQty(qty + 1)}
-                                        className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
-                                    >+</button>
+                                        onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); onClose(); })}
+                                        className="flex-1 bg-white hover:bg-slate-50 text-indigo-600 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all border-2 border-indigo-100"
+                                    >
+                                        কার্টে যোগ করুন
+                                    </button>
                                 </div>
-                            </div>
-
-                            <div className="flex gap-3">
-                                <button
-                                    onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); router.push('/cart'); })}
-                                    className="flex-[1.5] bg-indigo-600 hover:bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/btn"
-                                >
-                                    সরাসরি কিনুন <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                                </button>
-                                <button
-                                    onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); onClose(); })}
-                                    className="flex-1 bg-white hover:bg-slate-50 text-indigo-600 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all border-2 border-indigo-100"
-                                >
-                                    কার্টে যোগ করুন
-                                </button>
                             </div>
                         </div>
                     </div>
+                </div>
             </m.div>
         </div>
     );

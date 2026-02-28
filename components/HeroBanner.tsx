@@ -97,7 +97,10 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
 
     return (
         <section className="relative w-full py-4 px-4 md:px-8">
-            <div className="relative h-[450px] md:h-[650px] w-full max-w-[1600px] mx-auto overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] rounded-[2.5rem] border border-white/40 bg-slate-900 group">
+            <div
+                className={`relative w-full max-w-[1600px] mx-auto overflow-hidden shadow-sm border border-slate-200 bg-white group ${currentBanner.shape === 'square' ? 'rounded-none' : currentBanner.shape === 'pill' ? 'rounded-full' : 'rounded-[2.5rem]'}`}
+                style={{ height: currentBanner.bannerHeight ? `${currentBanner.bannerHeight}px` : '450px' }}
+            >
 
                 <AnimatePresence mode="wait">
                     <m.div
@@ -110,13 +113,27 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                     >
                         {/* Background with Parallel Effect */}
                         <m.div
-                            initial={{ scale: 1.15 }}
+                            initial={{ scale: 1.05 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 1.5, ease: "easeOut" }}
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{ backgroundImage: `url(${currentBanner.backgroundImage || currentBanner.imageUrl})` }}
+                            className="absolute inset-0"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
+                            {currentBanner.videoUrl ? (
+                                <video
+                                    src={currentBanner.videoUrl}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    className={`w-full h-full object-cover ${currentBanner.videoPosition || 'object-center'}`}
+                                />
+                            ) : (
+                                <div
+                                    className={`absolute inset-0 bg-cover ${currentBanner.videoPosition || 'object-center'}`}
+                                    style={{ backgroundImage: `url(${currentBanner.backgroundImage || currentBanner.imageUrl})` }}
+                                />
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent" />
                         </m.div>
 
                         {/* Content Area */}
@@ -124,29 +141,29 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                             <m.div
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.4, duration: 0.8 }}
-                                className="max-w-3xl space-y-6"
+                                transition={{ delay: 0.2, duration: 0.8 }}
+                                className="max-w-2xl space-y-6"
                             >
-                                <div className="inline-flex items-center gap-2 bg-indigo-600/20 backdrop-blur-xl px-4 py-2 rounded-full border border-indigo-400/30">
+                                <div className="inline-flex items-center gap-2 bg-indigo-50 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-100">
                                     <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-100">Premium Collection</span>
+                                    <span className="text-xs font-semibold uppercase tracking-wider text-indigo-700">Premium Collection</span>
                                 </div>
 
-                                <h1 className="text-white text-5xl md:text-8xl font-black leading-[0.85] tracking-tighter uppercase italic drop-shadow-2xl">
+                                <h1 className="text-slate-900 text-5xl md:text-7xl font-bold leading-tight tracking-tight drop-shadow-sm">
                                     {currentBanner.title}
                                 </h1>
 
-                                <p className="text-slate-300 text-sm md:text-lg font-bold max-w-xl leading-relaxed uppercase tracking-wide opacity-80 border-l-4 border-indigo-600 pl-6">
+                                <p className="text-slate-600 text-base md:text-lg font-medium max-w-xl leading-relaxed border-l-4 border-indigo-600 pl-6">
                                     {currentBanner.subtitle}
                                 </p>
 
                                 <div className="pt-8 flex flex-wrap items-center gap-6">
                                     <Link
                                         href={currentBanner.buttonLink || "/shop"}
-                                        className="bg-white text-slate-950 px-12 py-5 rounded-2xl font-black text-xs md:text-sm hover:bg-indigo-600 hover:text-white transition-all shadow-2xl active:scale-95 flex items-center gap-3 uppercase tracking-widest group/btn"
+                                        className="bg-indigo-600 text-white px-10 py-4 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all shadow-md flex items-center gap-2 group/btn"
                                     >
-                                        {currentBanner.buttonText || "এখনই কিনুন"}
-                                        <Zap size={18} className="fill-current group-hover:scale-125 transition-transform" />
+                                        {currentBanner.buttonText || "Shop Now"}
+                                        <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
                                     </Link>
 
                                     {hasSpecialCoupon && <CouponCard code="ASTHAR70" />}
@@ -156,25 +173,25 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                                 <m.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    transition={{ delay: 1, duration: 1 }}
+                                    transition={{ delay: 0.6, duration: 1 }}
                                     className="pt-10 flex flex-wrap gap-8"
                                 >
-                                    <div className="flex items-center gap-3 text-white/50 group/item">
-                                        <div className="p-2 bg-white/5 rounded-xl border border-white/10 group-hover/item:bg-indigo-600/20 group-hover/item:border-indigo-500/50 transition-all">
-                                            <ShieldCheck size={20} className="text-indigo-400" />
+                                    <div className="flex items-center gap-3 text-slate-500 group/item">
+                                        <div className="p-2 bg-slate-50 rounded-xl border border-slate-100 group-hover/item:border-indigo-200 group-hover/item:bg-indigo-50 transition-all">
+                                            <ShieldCheck size={20} className="text-indigo-500" />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">১০০% ক্যাশ ব্যাক</span>
-                                            <span className="text-[8px] font-bold text-white/30 uppercase">সন্তুষ্টি নিশ্চিত</span>
+                                            <span className="text-xs font-semibold text-slate-800">100% Secure</span>
+                                            <span className="text-[10px] font-medium text-slate-500">Satisfaction Guaranteed</span>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 text-white/50 group/item">
-                                        <div className="p-2 bg-white/5 rounded-xl border border-white/10 group-hover/item:bg-indigo-600/20 group-hover/item:border-indigo-500/50 transition-all">
-                                            <Zap size={20} className="text-indigo-400" />
+                                    <div className="flex items-center gap-3 text-slate-500 group/item">
+                                        <div className="p-2 bg-slate-50 rounded-xl border border-slate-100 group-hover/item:border-indigo-200 group-hover/item:bg-indigo-50 transition-all">
+                                            <Zap size={20} className="text-amber-500" />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">দ্রুত ডেলিভারি</span>
-                                            <span className="text-[8px] font-bold text-white/30 uppercase">৫-৭ দিনের মধ্যে</span>
+                                            <span className="text-xs font-semibold text-slate-800">Fast Dispatch</span>
+                                            <span className="text-[10px] font-medium text-slate-500">Ready to Ship</span>
                                         </div>
                                     </div>
                                 </m.div>
@@ -191,15 +208,15 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                                 <button
                                     key={i}
                                     onClick={() => setActiveIndex(i)}
-                                    className={`h-1.5 rounded-full transition-all duration-700 ${activeIndex === i ? 'w-16 bg-white' : 'w-4 bg-white/20'}`}
+                                    className={`h-1.5 rounded-full transition-all duration-700 ${activeIndex === i ? 'w-16 bg-indigo-600' : 'w-4 bg-slate-300'}`}
                                 />
                             ))}
                         </div>
                         <div className="flex gap-2">
-                            <button onClick={prevBanner} className="w-12 h-12 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all active:scale-90">
+                            <button onClick={prevBanner} className="w-12 h-12 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
                                 <ChevronLeft size={20} />
                             </button>
-                            <button onClick={nextBanner} className="w-12 h-12 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all active:scale-90">
+                            <button onClick={nextBanner} className="w-12 h-12 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
                                 <ChevronRight size={20} />
                             </button>
                         </div>

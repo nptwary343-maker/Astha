@@ -11,31 +11,32 @@ export default function FacebookPixel() {
 
     // 1. Fetch Pixel ID on Mount
     useEffect(() => {
-        fetch('/api/settings')
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+        fetch('/api/settings', { signal: controller.signal })
             .then(async res => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                const contentType = res.headers.get("content-type");
-                if (contentType && contentType.indexOf("application/json") !== -1) {
-                    return res.json();
-                } else {
-                    // Start of fallback logic
-                    // If API is missing/broken, we return null so the app doesn't crash
-                    return { pixelId: null };
-                }
-            })
-            .then(data => {
+                clearTimeout(timeoutId);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const data = await res.json();
                 if (data && data.pixelId) {
                     setPixelId(data.pixelId);
                 }
             })
             .catch(err => {
-                // Squelch the error in production, log in dev
-                if (process.env.NODE_ENV === 'development') {
+                if (err.name === 'AbortError') {
+                    console.warn("Facebook Pixel ID fetch timed out");
+                } else if (process.env.NODE_ENV === 'development') {
                     console.warn("Facebook Pixel ID could not be loaded:", err);
                 }
+                // Fallback: Check localStorage if we ever saved it there? 
+                // For now, just remain silent.
             });
+
+        return () => {
+            controller.abort();
+            clearTimeout(timeoutId);
+        };
     }, []);
 
     // 2. Track PageViews on Route Change

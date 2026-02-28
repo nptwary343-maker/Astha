@@ -14,6 +14,10 @@ export default function BannersPage() {
     const [gradientFrom, setGradientFrom] = useState('orange-600');
     const [gradientTo, setGradientTo] = useState('purple-900');
     const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+    const [videoUrl, setVideoUrl] = useState<string | null>(null);
+    const [bannerHeight, setBannerHeight] = useState(650);
+    const [videoPosition, setVideoPosition] = useState('object-center');
+    const [shape, setShape] = useState('rounded'); // 'rounded', 'square', 'pill'
     const [bgOpacity, setBgOpacity] = useState(0.5);
     const [isSaving, setIsSaving] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -30,6 +34,10 @@ export default function BannersPage() {
                     setGradientFrom(data.gradientFrom || 'orange-600');
                     setGradientTo(data.gradientTo || 'purple-900');
                     setBackgroundImage(data.backgroundImage || null);
+                    setVideoUrl(data.videoUrl || null);
+                    setBannerHeight(data.bannerHeight || 650);
+                    setVideoPosition(data.videoPosition || 'object-center');
+                    setShape(data.shape || 'rounded');
                     if (data.bgOpacity) setBgOpacity(data.bgOpacity);
                 }
             } catch (error) {
@@ -49,6 +57,10 @@ export default function BannersPage() {
                 gradientFrom,
                 gradientTo,
                 backgroundImage, // Saves null if removed
+                videoUrl,
+                bannerHeight,
+                videoPosition,
+                shape,
                 bgOpacity
             });
 
@@ -101,15 +113,31 @@ export default function BannersPage() {
                 <div className="lg:col-span-2 space-y-4">
                     <h2 className="font-bold text-gray-700 flex items-center gap-2"><Layout size={18} /> Live Preview</h2>
                     <div
-                        className={`relative rounded-2xl overflow-hidden bg-gradient-to-r from-${gradientFrom} to-${gradientTo} p-12 flex flex-col items-center justify-center text-center min-h-[350px] shadow-2xl transition-all duration-500 group`}
+                        className={`relative overflow-hidden bg-gradient-to-r from-${gradientFrom} to-${gradientTo} p-12 flex flex-col items-center justify-center text-center shadow-2xl transition-all duration-500 group ${shape === 'square' ? 'rounded-none' : shape === 'pill' ? 'rounded-full' : 'rounded-[2.5rem]'}`}
+                        style={{ minHeight: `${bannerHeight / 1.5}px` }}
                     >
-                        {/* Background Image Layer */}
-                        {backgroundImage && (
+                        {/* Background Video Layer */}
+                        {videoUrl && (
+                            <div className="absolute inset-0 z-0">
+                                <video
+                                    src={videoUrl}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    className={`w-full h-full object-cover ${videoPosition} transition-transform duration-700 group-hover:scale-105`}
+                                />
+                                <div className="absolute inset-0 bg-black transition-opacity duration-300" style={{ opacity: bgOpacity }}></div>
+                            </div>
+                        )}
+
+                        {/* Background Image Layer (Fallback if no video) */}
+                        {backgroundImage && !videoUrl && (
                             <div className="absolute inset-0 z-0">
                                 <img
                                     src={backgroundImage}
                                     alt="Banner Background"
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    className={`w-full h-full object-cover ${videoPosition} transition-transform duration-700 group-hover:scale-105`}
                                 />
                                 <div className="absolute inset-0 bg-black transition-opacity duration-300" style={{ opacity: bgOpacity }}></div>
                             </div>
@@ -221,11 +249,41 @@ export default function BannersPage() {
                             </div>
                         </div>
 
-                        {/* Opacity Control (Only if image exists) */}
-                        {backgroundImage && (
-                            <div className="animate-in fade-in slide-in-from-top-2">
+                        {/* Background Video Input */}
+                        <div className="pt-4 border-t border-gray-100">
+                            <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                                <UploadCloud size={16} /> Video Background (Direct Link)
+                            </label>
+
+                            <div className="space-y-3">
+                                {/* URL Input */}
+                                <div className="relative">
+                                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                                    <input
+                                        type="text"
+                                        value={videoUrl || ''}
+                                        onChange={(e) => setVideoUrl(e.target.value)}
+                                        placeholder="Paste .mp4 video URL here..."
+                                        className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    />
+                                    {videoUrl && (
+                                        <button
+                                            onClick={() => setVideoUrl(null)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                    )}
+                                </div>
+                                <p className="text-[10px] text-gray-400 font-medium">Note: Use a compressed .mp4 file for best performance. Video will override the background image.</p>
+                            </div>
+                        </div>
+
+                        {/* Opacity Control (Only if image or video exists) */}
+                        {(backgroundImage || videoUrl) && (
+                            <div className="animate-in fade-in slide-in-from-top-2 pt-2">
                                 <div className="flex justify-between text-xs font-bold text-gray-600 mb-2">
-                                    <span>Image Overlay Darkness</span>
+                                    <span>Overlay Darkness</span>
                                     <span>{(bgOpacity * 100).toFixed(0)}%</span>
                                 </div>
                                 <input
@@ -239,6 +297,66 @@ export default function BannersPage() {
                                 />
                             </div>
                         )}
+
+                        <div className="w-full h-px bg-gray-100 my-4"></div>
+
+                        {/* Shape Selector */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                                <Layout size={16} /> Banner Shape
+                            </label>
+                            <div className="grid grid-cols-3 gap-3">
+                                <button
+                                    onClick={() => setShape('rounded')}
+                                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${shape === 'rounded' ? 'bg-blue-50 border-blue-500 text-blue-600 shadow-sm' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                                >
+                                    Rounded
+                                </button>
+                                <button
+                                    onClick={() => setShape('square')}
+                                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${shape === 'square' ? 'bg-blue-50 border-blue-500 text-blue-600 shadow-sm' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                                >
+                                    Square
+                                </button>
+                                <button
+                                    onClick={() => setShape('pill')}
+                                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${shape === 'pill' ? 'bg-blue-50 border-blue-500 text-blue-600 shadow-sm' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}
+                                >
+                                    Pill
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="w-full h-px bg-gray-100 my-4"></div>
+
+                        {/* Height & Position Controls */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Height (px)</label>
+                                <input
+                                    type="number"
+                                    value={bannerHeight}
+                                    onChange={(e) => setBannerHeight(parseInt(e.target.value))}
+                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                />
+                                <p className="text-[10px] text-gray-400 mt-1">Recommended: 600 - 800</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Focus Position</label>
+                                <select
+                                    value={videoPosition}
+                                    onChange={(e) => setVideoPosition(e.target.value)}
+                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-white"
+                                >
+                                    <option value="object-center">Center (Default)</option>
+                                    <option value="object-top">Top</option>
+                                    <option value="object-bottom">Bottom</option>
+                                    <option value="object-left">Left</option>
+                                    <option value="object-right">Right</option>
+                                </select>
+                                <p className="text-[10px] text-gray-400 mt-1">Adjust if important parts are cut.</p>
+                            </div>
+                        </div>
 
                         <div className="w-full h-px bg-gray-100 my-4"></div>
 

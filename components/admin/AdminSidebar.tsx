@@ -55,6 +55,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
         { name: 'Invoices', icon: FileText, href: '/admin/invoices', allowed: ['super_admin', 'admin'] },
         { name: 'Manual Order / POS', icon: CreditCard, href: '/admin/manual-orders', allowed: ['super_admin', 'admin', 'manager'] },
         { name: 'Products', icon: Package, href: '/admin/products', allowed: ['super_admin', 'admin', 'manager'] },
+        { name: 'Categories', icon: LayoutList, href: '/admin/categories', allowed: ['super_admin', 'admin', 'manager'] },
         { name: 'Stock Updater', icon: Zap, href: '/admin/stock-updater', allowed: ['super_admin', 'admin', 'manager'] },
         { name: 'Customers', icon: Users, href: '/admin/customers', allowed: ['super_admin', 'admin', 'manager'] },
         { name: 'Ads/Banners', icon: MonitorPlay, href: '/admin/banners', allowed: ['super_admin', 'admin'] },

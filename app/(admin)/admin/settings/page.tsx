@@ -2,7 +2,7 @@
 export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
-import { Save, Lock, Globe, Bell, CreditCard, UserPlus, Trash2, Shield, UploadCloud, Image as ImageIcon, Loader, Facebook, Layout, Zap, Award } from 'lucide-react';
+import { Save, Lock, Globe, Bell, CreditCard, UserPlus, Trash2, Shield, UploadCloud, Image as ImageIcon, Loader, Facebook, Layout, Zap, Award, Check } from 'lucide-react';
 import { doc, getDoc, setDoc, collection, query, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase';
@@ -192,6 +192,38 @@ export default function SettingsPage() {
         };
         fetchSettings();
     }, []);
+
+    const [isTestingFb, setIsTestingFb] = useState(false);
+    const [fbStatus, setFbStatus] = useState<any>(null);
+
+    const testFacebookConnection = async () => {
+        setIsTestingFb(true);
+        setFbStatus(null);
+        try {
+            const lines = fbConfigStr.split('\n').map(l => l.trim()).filter(l => l);
+            if (lines.length === 0) {
+                setFbStatus({ success: false, message: "Please provide an access token." });
+                return;
+            }
+            const token = lines[0];
+            const res = await fetch(`https://graph.facebook.com/v20.0/me?fields=id,name&access_token=${token}`);
+            const data = await res.json();
+
+            if (data.error) {
+                setFbStatus({ success: false, message: data.error.message });
+            } else {
+                setFbStatus({
+                    success: true,
+                    message: `Verified: ${data.name}`,
+                    id: data.id
+                });
+            }
+        } catch (e: any) {
+            setFbStatus({ success: false, message: e.message });
+        } finally {
+            setIsTestingFb(false);
+        }
+    };
 
     const handleSaveGemini = async () => {
         try {
@@ -920,35 +952,62 @@ export default function SettingsPage() {
                     {
                         activeTab === 'facebook' && (
                             <div className="space-y-6">
-                                <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-4">Facebook API Keys</h2>
-                                <p className="text-sm text-gray-500">Paste your raw configuration below. Required for launching radius ads and Pixel tracking.</p>
+                                <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-4 flex items-center gap-2 italic uppercase tracking-tighter"><Facebook size={20} className="text-blue-600" /> Facebook Marketing Integration</h2>
 
-                                <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl text-xs text-blue-800 space-y-1 font-mono">
-                                    <p>Line 1: Facebook Access Token</p>
-                                    <p>Line 2: Ad Account ID (e.g. act_123456789)</p>
-                                    <p>Line 3: Pixel ID (Optional)</p>
-                                </div>
-
-                                <div className="relative">
-                                    <textarea
-                                        value={fbConfigStr}
-                                        onChange={(e) => setFbConfigStr(e.target.value)}
-                                        className="w-full bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-xl h-48 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
-                                        placeholder={`EAABwz...\nact_12345678\n1234567890`}
-                                        spellCheck={false}
-                                    />
-                                    <div className="absolute top-2 right-2 px-2 py-1 bg-gray-800 text-gray-400 text-[10px] rounded font-bold uppercase">
-                                        The Magic Box
+                                <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2 font-mono text-[10px] uppercase text-gray-400">Environment Configuration</label>
+                                        <div className="bg-black rounded-xl p-4 shadow-2xl relative group">
+                                            <textarea
+                                                value={fbConfigStr}
+                                                onChange={(e) => setFbConfigStr(e.target.value)}
+                                                className="w-full bg-transparent text-green-400 font-mono text-xs h-40 resize-none outline-none"
+                                                placeholder="Line 1: Access Token&#10;Line 2: Ad Account ID&#10;Line 3: Pixel ID"
+                                                spellCheck={false}
+                                            />
+                                            <div className="absolute top-2 right-2 px-2 py-1 bg-gray-800 text-gray-500 text-[8px] rounded font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                                Meta Graph v20.0
+                                            </div>
+                                        </div>
+                                        <p className="text-[10px] text-gray-400 mt-2 italic px-1 flex items-center gap-1"><Zap size={10} /> Tip: Paste your long-lived access token, ad account id, and pixel id on separate lines.</p>
                                     </div>
+
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={handleSaveFacebook}
+                                            className="bg-blue-600 hover:bg-black text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2"
+                                        >
+                                            <Save size={18} /> Update Keys
+                                        </button>
+                                        <button
+                                            onClick={testFacebookConnection}
+                                            disabled={isTestingFb || !fbConfigStr}
+                                            className={`px-6 py-2.5 rounded-xl font-bold border transition-all flex items-center gap-2 ${fbStatus?.success ? 'bg-green-50 border-green-200 text-green-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                                        >
+                                            {isTestingFb ? <Loader className="animate-spin" size={18} /> :
+                                                fbStatus?.success ? <Check size={18} /> : <Zap size={18} />}
+                                            {isTestingFb ? 'Testing...' : fbStatus?.success ? 'Connected' : 'Test Token'}
+                                        </button>
+                                    </div>
+
+                                    {fbStatus && (
+                                        <div className={`p-4 rounded-xl border text-xs font-medium animate-in slide-in-from-top-2 flex flex-col gap-1 ${fbStatus.success ? 'bg-green-50 border-green-100 text-green-600' : 'bg-red-50 border-red-100 text-red-600'}`}>
+                                            <div className="flex items-center gap-2">
+                                                {fbStatus.success ? <Award size={14} /> : <Shield size={14} />}
+                                                {fbStatus.message}
+                                            </div>
+                                            {fbStatus.id && <span className="block font-mono text-[10px] opacity-70 ml-5">Verified Page ID: {fbStatus.id}</span>}
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className="flex justify-end">
-                                    <button
-                                        onClick={handleSaveFacebook}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-blue-200 transition-all flex items-center gap-2"
-                                    >
-                                        <Save size={18} /> Save Keys
-                                    </button>
+                                <div className="p-6 bg-blue-50 border border-blue-100 rounded-2xl italic text-sm text-blue-700 flex gap-3">
+                                    <div className="bg-blue-100 p-2 rounded-lg h-fit text-blue-600">
+                                        <Globe size={20} />
+                                    </div>
+                                    <p>
+                                        "Facebook Conversion API (CAPI) helps you track events even when pixels are blocked by browser extensions or iOS privacy settings. This connection ensures your ads are measured accurately and ROI is tracked properly."
+                                    </p>
                                 </div>
                             </div>
                         )
