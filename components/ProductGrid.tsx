@@ -90,8 +90,8 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                         ) : (
                             <ImageIcon size={64} className="text-slate-200" />
                         )}
-                        <div className="absolute top-4 left-4 bg-slate-900 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
-                            Verified Asset
+                        <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-slate-800 px-3 py-1.5 rounded-full text-[10px] font-semibold shadow-sm border border-slate-100">
+                            <ShieldCheck size={14} className="text-emerald-500" /> Authentic
                         </div>
                     </div>
                 </div>
@@ -117,81 +117,95 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                                 </div>
                             )}
                         </div>
-                        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 leading-snug mb-3 tracking-tight">{product.name}</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 leading-snug mb-4 tracking-tight">{product.name}</h2>
 
-                        <div className="flex items-center gap-4 py-3 border-y border-slate-50">
-                            <div className="flex items-center gap-0.5 text-amber-400">
-                                {[...Array(5)].map((_, i) => <span key={i} className="text-base">★</span>)}
-                            </div>
-                            <span className="text-xs font-medium text-slate-400">4.9 (155 Reviews)</span>
-                        </div>
-                    </div>
-
-                    <div className="bg-slate-50 p-6 rounded-2xl mb-6 border border-slate-100 relative overflow-hidden group">
-                        <div className="flex items-baseline gap-2 mb-1">
+                        <div className="flex items-baseline gap-3 mb-6">
                             <span className="text-3xl font-bold text-slate-900 tracking-tight">৳{finalPrice.toFixed(0)}</span>
-                            {isWeightBased && <span className="text-sm font-medium text-slate-400">/{selectedUnit.label}</span>}
+                            {hasDiscount && (
+                                <>
+                                    <span className="text-lg text-slate-400 line-through">৳ {(product.price * selectedUnit.multiplier * qty).toFixed(0)}</span>
+                                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-md ml-2">Save ৳{savings.toFixed(0)}</span>
+                                </>
+                            )}
+                            {isWeightBased && <span className="text-sm font-medium text-slate-500 ml-auto">/ {selectedUnit.label}</span>}
                         </div>
-                        {hasDiscount && (
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm text-slate-400 line-through">৳ {(product.price * selectedUnit.multiplier * qty).toFixed(0)}</span>
-                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-md">Save ৳{savings.toFixed(0)}</span>
+
+                        <div className="grid grid-cols-2 gap-4 mb-8">
+                            <div className="flex flex-col p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">Quality</span>
+                                <div className="flex items-center gap-1.5 text-slate-700 text-xs font-medium">
+                                    <ShieldCheck size={14} className="text-emerald-500" />
+                                    {['electronic', 'gadget', 'mobile'].some(c => product.category.toLowerCase().includes(c)) ? 'Authentic Product' : 'Verified Safe'}
+                                </div>
+                            </div>
+                            <div className="flex flex-col p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">Delivery</span>
+                                <div className="flex items-center gap-1.5 text-slate-700 text-xs font-medium">
+                                    <Truck size={14} className="text-blue-500" /> Fast Dispatch
+                                </div>
+                            </div>
+                            {(product.expirationDate || product.productionDate) && (
+                                <div className="col-span-2 flex flex-col p-3 bg-slate-50/50 rounded-xl border border-slate-100 mt-2">
+                                    <div className="flex justify-between items-center text-xs text-slate-600">
+                                        {product.productionDate && <span><strong className="font-semibold text-slate-800">Mfg:</strong> {product.productionDate}</span>}
+                                        {product.expirationDate && <span><strong className="font-semibold text-slate-800">Exp:</strong> {product.expirationDate}</span>}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {isWeightBased && (
+                            <div className="mb-6">
+                                <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest block mb-3">পছন্দমতো ওজন বেছে নিন</label>
+                                <div className="grid grid-cols-3 gap-2">
+                                    {WEIGHT_UNITS.map(unit => (
+                                        <button
+                                            key={unit.label}
+                                            onClick={() => setSelectedUnit(unit as any)}
+                                            className={`py-3 px-1 rounded-xl text-[10px] font-black transition-all border-2 uppercase tracking-tighter ${selectedUnit.label === unit.label
+                                                ? 'border-indigo-600 bg-indigo-600 text-white shadow-lg'
+                                                : 'border-slate-100 bg-white text-slate-400 hover:border-indigo-300'
+                                                }`}
+                                        >
+                                            {unit.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         )}
-                    </div>
 
-                    {isWeightBased && (
-                        <div className="mb-6">
-                            <label className="text-[10px] uppercase font-black text-slate-400 tracking-widest block mb-3">পছন্দমতো ওজন বেছে নিন</label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {WEIGHT_UNITS.map(unit => (
+                        <div className="flex flex-col gap-6 mt-auto">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[10px] uppercase font-black text-slate-400 tracking-widest">পরিমাণ (QTY)</span>
+                                <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
                                     <button
-                                        key={unit.label}
-                                        onClick={() => setSelectedUnit(unit as any)}
-                                        className={`py-3 px-1 rounded-xl text-[10px] font-black transition-all border-2 uppercase tracking-tighter ${selectedUnit.label === unit.label
-                                            ? 'border-indigo-600 bg-indigo-600 text-white shadow-lg'
-                                            : 'border-slate-100 bg-white text-slate-400 hover:border-indigo-300'
-                                            }`}
-                                    >
-                                        {unit.label}
-                                    </button>
-                                ))}
+                                        onClick={() => setQty(Math.max(1, qty - 1))}
+                                        className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
+                                    >-</button>
+                                    <span className="w-10 text-center text-sm font-black text-slate-800">{qty}</span>
+                                    <button
+                                        onClick={() => setQty(qty + 1)}
+                                        className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
+                                    >+</button>
+                                </div>
                             </div>
-                        </div>
-                    )}
 
-                    <div className="flex flex-col gap-6 mt-auto">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[10px] uppercase font-black text-slate-400 tracking-widest">পরিমাণ (QTY)</span>
-                            <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
+                            <div className="flex gap-3">
                                 <button
-                                    onClick={() => setQty(Math.max(1, qty - 1))}
-                                    className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
-                                >-</button>
-                                <span className="w-10 text-center text-sm font-black text-slate-800">{qty}</span>
+                                    onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); router.push('/cart'); })}
+                                    className="flex-[1.5] bg-indigo-600 hover:bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/btn"
+                                >
+                                    সরাসরি কিনুন <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                                </button>
                                 <button
-                                    onClick={() => setQty(qty + 1)}
-                                    className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
-                                >+</button>
+                                    onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); onClose(); })}
+                                    className="flex-1 bg-white hover:bg-slate-50 text-indigo-600 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all border-2 border-indigo-100"
+                                >
+                                    কার্টে যোগ করুন
+                                </button>
                             </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); router.push('/cart'); })}
-                                className="flex-[1.5] bg-indigo-600 hover:bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/btn"
-                            >
-                                সরাসরি কিনুন <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                            </button>
-                            <button
-                                onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); onClose(); })}
-                                className="flex-1 bg-white hover:bg-slate-50 text-indigo-600 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all border-2 border-indigo-100"
-                            >
-                                কার্টে যোগ করুন
-                            </button>
                         </div>
                     </div>
-                </div>
             </m.div>
         </div>
     );
