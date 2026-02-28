@@ -23,6 +23,12 @@ export const compressImage = async (file: File): Promise<File> => {
 
     console.log(`📸 [COMPRESSION] Starting: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
 
+    // ⚡ SPEED OPTIMIZATION: If the file is already very small (under 300KB), skip compression entirely to save time.
+    if (file.size < 300 * 1024) {
+        console.log(`⚡ [COMPRESSION SKIPPED] File is already small enough (${(file.size / 1024).toFixed(1)} KB). Speeding up upload.`);
+        return file;
+    }
+
     try {
         // Add a race condition to prevent "hanging" forever
         const compressionPromise = imageCompression(file, options);
