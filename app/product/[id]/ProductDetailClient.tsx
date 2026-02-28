@@ -33,6 +33,10 @@ interface Product {
     originDetails?: string;
     labReportUrl?: string;
     descriptionBn?: string;
+    dimensions?: {
+        length: string;
+        width: string;
+    };
 }
 
 interface Review {
@@ -361,6 +365,30 @@ export default function ProductDetailClient({ initialProduct, productId, similar
                                     </p>
                                 )}
                             </div>
+
+                            {/* 📐 Product Dimensions */}
+                            {product.dimensions && (
+                                <div className="mb-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                    <p className="text-gray-900 font-bold text-base mb-3 flex items-center gap-2">
+                                        <span className="text-lg">📐</span> Product Size / পণ্যের মাপ
+                                    </p>
+                                    <div className="flex flex-wrap gap-3">
+                                        <div className="flex items-center gap-2 bg-orange-50 border border-orange-100 px-5 py-3 rounded-2xl">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-orange-500">Length</span>
+                                            <span className="text-xl font-black text-gray-900">{product.dimensions.length} cm</span>
+                                        </div>
+                                        <div className="flex items-center justify-center text-gray-400 font-black text-xl">×</div>
+                                        <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 px-5 py-3 rounded-2xl">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-blue-500">Width</span>
+                                            <span className="text-xl font-black text-gray-900">{product.dimensions.width} cm</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 px-5 py-3 rounded-2xl">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Area</span>
+                                            <span className="text-xl font-black text-gray-700">{(parseFloat(product.dimensions.length || '0') * parseFloat(product.dimensions.width || '0')).toFixed(2)} cm²</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* 🔍 Transparency & Origin Section (QR System) */}
                             <div className="mb-10 p-6 bg-gradient-to-br from-zinc-900 to-black rounded-3xl text-white shadow-2xl relative overflow-hidden group">

@@ -40,6 +40,10 @@ interface Product {
     labReportUrl?: string;
     descriptionBn?: string;
     weightOptions?: { label: string, price: number }[];
+    dimensions?: {
+        length: string;
+        width: string;
+    };
     trackingInfo?: {
         status: string;
         location: string;
@@ -109,6 +113,8 @@ export default function ProductsPage() {
         labReportUrl: string;
         descriptionBn: string;
         weightOptions: { label: string, price: number }[];
+        dimensionLength: string;
+        dimensionWidth: string;
         trackingStatus: string;
         trackingLocation: string;
     }>({
@@ -116,6 +122,7 @@ export default function ProductsPage() {
         images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
         isExpertVerified: false, originDetails: '', labReportUrl: '',
         descriptionBn: '', weightOptions: [] as { label: string, price: number }[],
+        dimensionLength: '5.5', dimensionWidth: '5.5',
         trackingStatus: 'Pickup Pending', trackingLocation: 'Main Warehouse'
     });
 
@@ -184,6 +191,8 @@ export default function ProductsPage() {
             labReportUrl: product.labReportUrl || '',
             descriptionBn: product.descriptionBn || '',
             weightOptions: product.weightOptions || [],
+            dimensionLength: product.dimensions?.length || '5.5',
+            dimensionWidth: product.dimensions?.width || '5.5',
             trackingStatus: product.trackingInfo?.status || 'Pickup Pending',
             trackingLocation: product.trackingInfo?.location || 'Main Warehouse'
         });
@@ -204,6 +213,7 @@ export default function ProductsPage() {
             images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
             isExpertVerified: false, originDetails: '', labReportUrl: '',
             descriptionBn: '', weightOptions: [],
+            dimensionLength: '5.5', dimensionWidth: '5.5',
             trackingStatus: 'Pickup Pending', trackingLocation: 'Main Warehouse'
         });
         setImgInputMode([false, false]);
@@ -267,12 +277,16 @@ export default function ProductsPage() {
             labReportUrl: formData.labReportUrl,
             descriptionBn: formData.descriptionBn,
             weightOptions: formData.weightOptions,
+            dimensions: {
+                length: formData.dimensionLength || '5.5',
+                width: formData.dimensionWidth || '5.5',
+            },
             trackingInfo: {
                 status: formData.trackingStatus,
                 location: formData.trackingLocation,
                 updatedAt: new Date().toISOString()
             },
-            createdAt: new Date().toISOString(), // 🛡️ Fix: Add timestamp for sorting
+            createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
 
@@ -942,6 +956,34 @@ export default function ProductsPage() {
                                                     className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="10"
                                                 />
                                             </div>
+                                        </div>
+
+                                        {/* Dimensions */}
+                                        <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                            <label className="block text-sm font-bold text-blue-800 mb-3">📐 Product Dimensions (cm)</label>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-600 mb-1">Length (cm)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={formData.dimensionLength}
+                                                        onChange={(e) => setFormData({ ...formData, dimensionLength: e.target.value })}
+                                                        className="w-full px-4 py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                                                        placeholder="5.5"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-600 mb-1">Width (cm)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={formData.dimensionWidth}
+                                                        onChange={(e) => setFormData({ ...formData, dimensionWidth: e.target.value })}
+                                                        className="w-full px-4 py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                                                        placeholder="5.5"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <p className="text-[10px] text-blue-500 mt-2 font-medium">Default: 5.5cm × 5.5cm. Shown to customers on the product page.</p>
                                         </div>
 
                                         {/* Description */}
