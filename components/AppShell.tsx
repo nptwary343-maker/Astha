@@ -26,7 +26,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <BottomNav />
-            <main className="pt-24 md:pt-32 min-h-screen transition-all duration-300 bg-[#f4f4f4] dark:bg-slate-950">
+            <main className="pt-24 md:pt-32 pb-20 md:pb-0 min-h-screen transition-all duration-300 bg-[#f4f4f4] dark:bg-slate-950">
                 <AnimatePresence mode="wait">
                     <m.div
                         key={pathname}

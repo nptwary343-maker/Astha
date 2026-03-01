@@ -31,7 +31,7 @@ export default function Home() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [p, b, bl] = await Promise.all([
+        const [p, b, bl, bl_cat] = await Promise.all([
           getFeaturedProducts(),
           getHomeBanners(),
           getProductBlocks(selectedLocationId),
@@ -120,7 +120,7 @@ export default function Home() {
 
                 return (
                   <div key={cat.id} className={`group bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col h-full border border-border-light relative overflow-hidden active:scale-[0.98] ${categorySettings.shape === 'square' ? 'rounded-none' :
-                      categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[3rem]'
+                    categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[3rem]'
                     }`}>
                     {/* Abstract Grid background */}
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
@@ -130,7 +130,7 @@ export default function Home() {
                     </h3>
 
                     <div className={`relative aspect-[16/10] mb-8 overflow-hidden bg-ui-bg border border-border-light flex items-center justify-center p-6 sm:p-10 shadow-inner group/img ${categorySettings.shape === 'square' ? 'rounded-none' :
-                        categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem]'
+                      categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem]'
                       }`}>
                       {cat.image ? (
                         <img

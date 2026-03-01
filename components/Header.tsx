@@ -217,7 +217,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                             <Link href="/cart" id="cart-icon-container" className={`bg-ui-bg p-3 rounded-2xl border border-border-light flex items-center gap-3 hover:border-brand-primary/30 transition-all ${isCartAnimating ? 'animate-rubber-band bg-brand-primary/5' : ''}`}>
                                 <div className="relative">
                                     <ShoppingCart size={22} className="text-text-main" />
-                                    <span className="absolute -top-3 -right-3 bg-brand-accent text-white text-[10px] font-black min-w-[20px] h-20px px-1.5 py-0.5 rounded-full flex items-center justify-center shadow-lg shadow-brand-accent/30 border-2 border-white">
+                                    <span className="absolute -top-3 -right-3 bg-brand-accent text-white text-[10px] font-black min-w-[20px] h-5 px-1.5 py-0.5 rounded-full flex items-center justify-center shadow-lg shadow-brand-accent/30 border-2 border-white">
                                         {cartCount}
                                     </span>
                                 </div>
