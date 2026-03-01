@@ -5,13 +5,13 @@ import { getStorage } from "firebase/storage";
 
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyBfjbpYGWkrvd2oxDRDgbRpYSlhKo-pyCo",
-    authDomain: "astharhar.firebaseapp.com",
-    projectId: "astharhar",
-    storageBucket: "astharhar.firebasestorage.app",
-    messagingSenderId: "940224314643",
-    appId: "1:940224314643:web:dfbf033ba63569bb6feee6",
-    measurementId: "G-2T32864N2K"
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBfjbpYGWkrvd2oxDRDgbRpYSlhKo-pyCo",
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "astharhar.firebaseapp.com",
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "astharhar",
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "astharhar.firebasestorage.app",
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "940224314643",
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:940224314643:web:dfbf033ba63569bb6feee6",
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-2T32864N2K"
 };
 
 // Singleton initialization
