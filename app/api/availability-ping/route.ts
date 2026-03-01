@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const isLocal = process.env.NODE_ENV === 'development';
 
     // In production, we should protect this but allow easy monitoring
-    const secret = process.env.INTERNAL_API_SECRET || 'dev_secret_bypass';
+    const secret = process.env.INTERNAL_API_SECRET || '';
     if (!isLocal && authHeader !== `Bearer ${secret}`) {
         return NextResponse.json({ status: "RESTRICTED", message: "Authorization required for full metrics" }, { status: 401 });
     }

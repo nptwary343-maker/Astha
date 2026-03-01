@@ -2,8 +2,8 @@
 
 import { algoliasearch } from 'algoliasearch';
 
-const APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || 'NS1FPYWGCF';
-const ADMIN_API_KEY = process.env.ALGOLIA_WRITE_KEY || '9b26b0fba76a8a5dec5112a2cab3d493';
+const APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || '';
+const ADMIN_API_KEY = process.env.ALGOLIA_WRITE_KEY || '';
 const INDEX_NAME = 'asthar_products';
 
 const client = algoliasearch(APP_ID, ADMIN_API_KEY);

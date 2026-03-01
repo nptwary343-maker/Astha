@@ -2,7 +2,7 @@ export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
 import { clearProductCache } from '@/lib/db-utils';
 
-const SECRET_TOKEN = process.env.REVALIDATION_TOKEN || 'asthar_secret_123';
+const SECRET_TOKEN = process.env.REVALIDATION_TOKEN || '';
 
 export async function POST(request: NextRequest) {
     try {

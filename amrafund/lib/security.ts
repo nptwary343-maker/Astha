@@ -6,7 +6,7 @@ import { AMRAFUND_CONFIG } from '../config';
  */
 
 export async function generateDocumentHash(data: string): Promise<string> {
-    const salt = process.env.DOCUMENT_SECRET_SALT || 'default_salt_for_dev';
+    const salt = process.env.DOCUMENT_SECRET_SALT || '';
     const msgBuffer = new TextEncoder().encode(data + salt);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
