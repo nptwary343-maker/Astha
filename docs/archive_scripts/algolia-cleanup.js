@@ -1,8 +1,8 @@
 const { algoliasearch } = require('algoliasearch');
 
 // Credentials
-const APP_ID = 'NS1FPYWGCF';
-const ADMIN_API_KEY = '9b26b0fba76a8a5dec5112a2cab3d493'; // Using the Write Key provided
+const APP_ID = '';
+const ADMIN_API_KEY = '';
 
 // INDEX TO KEEP
 const PROTECTED_INDICES = ['products', 'asthar_hat_products', 'asthar_products'];

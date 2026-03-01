@@ -1,8 +1,8 @@
 const { algoliasearch } = require('algoliasearch');
 
 // Credentials (Directly using authorized keys)
-const APP_ID = 'NS1FPYWGCF';
-const ADMIN_API_KEY = '9b26b0fba76a8a5dec5112a2cab3d493';
+const APP_ID = '';
+const ADMIN_API_KEY = '';
 const INDEX_NAME = 'asthar_products';
 
 async function forceInitializeIndex() {

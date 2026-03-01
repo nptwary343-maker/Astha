@@ -16,8 +16,8 @@ if (admin.apps.length === 0) {
 const db = admin.firestore();
 
 // 2. Initialize Algolia
-const APP_ID = 'NS1FPYWGCF';
-const ADMIN_API_KEY = '9b26b0fba76a8a5dec5112a2cab3d493';
+const APP_ID = '';
+const ADMIN_API_KEY = '';
 const INDEX_NAME = 'asthar_products';
 const client = algoliasearch(APP_ID, ADMIN_API_KEY);
 
