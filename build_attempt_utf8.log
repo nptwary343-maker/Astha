@@ -1,0 +1,37 @@
+﻿
+> astharhars@0.1.0 build
+> next build
+
+   Γû▓ Next.js 15.1.7
+   - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+node.exe : Failed to compile.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Failed to compile.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+./app/(admin)/admin/orders/page.tsx:158:119
+Type error: Property 'couponDiscount' does not exist on type 'OrderHelpers'.
+
+[0m [90m 156 |[39m[0m
+[0m [90m 157 |[39m                         [33m<[39m[33mspan[39m[33m>[39m[33mRewards[39m [33m&[39m 
+[33mCoupons[39m[33m<[39m[33m/[39m[33mspan[39m[33m>[39m[0m
+[0m[31m[1m>[22m[39m[90m 158 |[39m                         [33m<[39m[33mspan[39m 
+className[33m=[39m[32m"text-right 
+text-rose-400"[39m[33m>[39m[33m-[39mαº│{[33mNumber[39m(order[33m.[39mtotals[33m?[39m[33m.[39mdiscount 
+[33m?[39m[33m?[39m (order[33m.[39mtotals[33m?[39m[33m.[39mcouponDiscount [33m||[39m 
+[35m0[39m))[33m.[39mtoLocaleString()}[33m<[39m[33m/[39m[33mspan[39m[33m>[39m[0m
+[0m [90m     |[39m                                                                                                  
+                     [31m[1m^[22m[39m[0m
+[0m [90m 159 |[39m[0m
+[0m [90m 160 |[39m                         [33m<[39m[33mdiv[39m className[33m=[39m[32m"col-span-2 my-2 
+h-[1px] bg-slate-800"[39m [33m/[39m[33m>[39m[0m
+[0m [90m 161 |[39m[0m
+Next.js build worker exited with code: 1 and signal: null

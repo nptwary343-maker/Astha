@@ -55,6 +55,10 @@ interface HeroBannerProps {
 
 const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBannerProps) => {
     const [globalSettings, setGlobalSettings] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [bannerData, setBannerData] = useState<any[]>([]);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [bHeight, setBHeight] = useState('650px');
 
     useEffect(() => {
         const fetchData = async () => {
