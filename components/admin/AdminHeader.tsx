@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Bell, Menu, Terminal, AlertTriangle } from 'lucide-react';
+import { Search, Bell, Menu, Zap, AlertTriangle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, limit, query } from 'firebase/firestore';

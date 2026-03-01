@@ -2,7 +2,7 @@
 export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
-import { Eye, Filter, Search, Download, DollarSign, Package, CheckCircle, Clock, PlusCircle, XCircle, Trash2, AlertTriangle, Mail } from 'lucide-react';
+import { Eye, Filter, Search, Download, DollarSign, Package, CheckCircle, Clock, PlusCircle, XCircle, Trash2, AlertTriangle, Mail, MapPin } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { collection, getDocs, query, orderBy, doc, updateDoc, addDoc, serverTimestamp, deleteDoc, limit, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
