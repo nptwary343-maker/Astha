@@ -126,34 +126,7 @@ interface SidebarProps {
                                     <LogOut size={18} /> Logout
                                 </button>
                             </div>
-                        ) : (
-                            <div className="space-y-3">
-                                <Link
-                                    href="/login"
-                                    onClick={() => setIsOpen(false)}
-                                    className="relative overflow-hidden group block px-4 py-3 text-gray-800 font-bold hover:text-white rounded-xl transition-all border border-gray-100 hover:border-black shadow-sm"
-                                >
-                                    <span className="relative z-10 flex items-center justify-between">
-                                        Login
-                                        <span className="text-gray-400 group-hover:text-white transition-colors">→</span>
-                                    </span>
-                                    {/* Strict Rule: Black BG / White Text Hover Effect */}
-                                    <div className="absolute inset-0 bg-black transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out origin-left" />
-                                </Link>
-
-                                <Link
-                                    href="/signup"
-                                    onClick={() => setIsOpen(false)}
-                                    className="relative block px-4 py-3 bg-black text-white font-bold rounded-xl shadow-lg shadow-black/10 overflow-hidden group hover:scale-[1.02] transition-transform active:scale-[0.98] text-center"
-                                >
-                                    <span className="relative z-10 flex items-center justify-center gap-2">
-                                        Sign Up Free
-                                    </span>
-                                    {/* Shine Effect */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                                </Link>
-                            </div>
-                        )}
+                        ) : null}
                     </div>
 
                     {/* Categories - Now first */}
@@ -167,8 +140,9 @@ interface SidebarProps {
                     {/* Main Nav Items - Now second */}
                     <h2 className="text-lg font-bold mb-4 px-2 text-gray-800">Explore</h2>
                     <div className="space-y-1.5">
-                        {['Home', 'About', 'Billing History', 'Tracking'].filter(name => {
-                            if (!user && (name === 'Billing History' || name === 'Tracking')) return false;
+                        {['Home', 'About', 'Billing', 'Tracking'].filter(name => {
+
+                            if (!user && (name === 'Billing' || name === 'Tracking')) return false;
                             return true;
                         }).map((name) => (
                             <Link

@@ -4,6 +4,8 @@ export const runtime = 'edge';
 import { useState, useEffect } from 'react';
 import { doc, getDoc, collection, addDoc, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { createOrderAction } from '@/actions/order-management';
+
 
 import { Save, Plus, Trash2, Search, CreditCard, User, ShoppingBag, ShoppingCart as ShoppingCartIcon, Truck, Printer } from 'lucide-react';
 
@@ -96,7 +98,7 @@ export default function ManualOrderPage() {
     const handleAddCustomItem = () => {
         if (!customItem.name || !customItem.price) return;
         const newItem = {
-             
+
             id: Date.now(),
             name: customItem.name,
             price: parseFloat(customItem.price),
@@ -155,8 +157,8 @@ export default function ManualOrderPage() {
             const currentTotal = currentSubtotal + currentTax + shippingCost;
             const currentDue = currentTotal - paymentDetails.paidAmount;
 
-            // Prepare Order Data
-            const orderData = {
+            // Preparation of Order Data
+            const orderPayload = {
                 invoiceNumber,
                 customer,
                 items: items,
@@ -165,6 +167,7 @@ export default function ManualOrderPage() {
                 date: new Date(invoiceDate).toISOString(),
                 createdAt: new Date().toISOString(),
                 status: paymentDetails.status,
+                orderStatus: 'Pending', // New field for consistency
                 source: 'manual',
                 deliveryMan,
                 settings: {
@@ -175,11 +178,16 @@ export default function ManualOrderPage() {
                 }
             };
 
-            // Save to Firestore
-            await addDoc(collection(db, 'orders'), orderData);
+            // Process through Server Action
+            const actionResult = await createOrderAction(orderPayload);
 
-            console.log("Order Confirmed & Saved:", orderData);
+            if (!actionResult.success) {
+                throw new Error(actionResult.error || "Failed to save order");
+            }
+
+            console.log("Order Confirmed & Saved:", orderPayload);
             alert("Order Confirmed & Saved Successfully!");
+
 
             // Reset form
             setOrderItems([]);

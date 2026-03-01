@@ -73,6 +73,32 @@ export default function AdminHeader({ onMenuClick = () => { }, title }: AdminHea
                     </div>
                 )}
 
+                <button
+                    onClick={async (e) => {
+                        const { clearAllCacheAction } = await import('@/actions/public-data');
+                        const btn = e.currentTarget;
+                        const icon = btn.querySelector('.refresh-icon');
+                        if (icon) icon.classList.add('animate-spin', 'text-orange-500');
+                        btn.classList.add('opacity-50', 'pointer-events-none');
+
+                        try {
+                            const res = await clearAllCacheAction();
+                            if (res.success) alert("✅ Cloud Storefront Refreshed! Changes are now live for all users.");
+                            else alert("❌ Refresh failed. Please try again.");
+                        } catch (err) {
+                            alert("❌ Error connecting to cloud revalidation service.");
+                        } finally {
+                            if (icon) icon.classList.remove('animate-spin', 'text-orange-500');
+                            btn.classList.remove('opacity-50', 'pointer-events-none');
+                        }
+                    }}
+                    className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-xl hover:bg-black transition-all shadow-lg shadow-black/10 group"
+                    title="Force refresh storefront cache on Cloudflare"
+                >
+                    <Zap className="refresh-icon transition-colors" size={16} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Refresh Cloud</span>
+                </button>
+
                 <button className="relative text-gray-500 hover:text-blue-600 transition-colors">
                     <Bell size={20} />
                     <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white"></span>

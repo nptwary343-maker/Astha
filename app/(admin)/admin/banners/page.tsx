@@ -16,7 +16,9 @@ export default function BannersPage() {
     const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
     const [bannerHeight, setBannerHeight] = useState(650);
+    const [mobileBannerHeight, setMobileBannerHeight] = useState(400);
     const [videoPosition, setVideoPosition] = useState('object-center');
+
     const [shape, setShape] = useState('rounded'); // 'rounded', 'square', 'pill'
     const [bgOpacity, setBgOpacity] = useState(0.5);
     const [isSaving, setIsSaving] = useState(false);
@@ -36,7 +38,9 @@ export default function BannersPage() {
                     setBackgroundImage(data.backgroundImage || null);
                     setVideoUrl(data.videoUrl || null);
                     setBannerHeight(data.bannerHeight || 650);
+                    setMobileBannerHeight(data.mobileBannerHeight || 400);
                     setVideoPosition(data.videoPosition || 'object-center');
+
                     setShape(data.shape || 'rounded');
                     if (data.bgOpacity) setBgOpacity(data.bgOpacity);
                 }
@@ -59,7 +63,9 @@ export default function BannersPage() {
                 backgroundImage, // Saves null if removed
                 videoUrl,
                 bannerHeight,
+                mobileBannerHeight,
                 videoPosition,
+
                 shape,
                 bgOpacity
             });
@@ -332,15 +338,26 @@ export default function BannersPage() {
                         {/* Height & Position Controls */}
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Height (px)</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Desktop Height (px)</label>
                                 <input
                                     type="number"
                                     value={bannerHeight}
                                     onChange={(e) => setBannerHeight(parseInt(e.target.value))}
                                     className="w-full px-4 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
-                                <p className="text-[10px] text-gray-400 mt-1">Recommended: 600 - 800</p>
+                                <p className="text-[10px] text-gray-400 mt-1">Rec: 600 - 800</p>
                             </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile Height (px)</label>
+                                <input
+                                    type="number"
+                                    value={mobileBannerHeight}
+                                    onChange={(e) => setMobileBannerHeight(parseInt(e.target.value))}
+                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                />
+                                <p className="text-[10px] text-gray-400 mt-1">Rec: 400 - 550</p>
+                            </div>
+
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Focus Position</label>
                                 <select

@@ -101,7 +101,7 @@ export default function CartPreview({ onClose }: { onClose: () => void }) {
                         View Cart
                     </Link>
                     <Link
-                        href="/checkout" // Assuming checkout route exists, otherwise /cart
+                        href="/cart"
                         onClick={onClose}
                         className="block w-full py-2.5 text-center text-sm font-bold text-white bg-black rounded-lg hover:bg-gray-800 shadow-lg shadow-black/10 transition-all hover:scale-[1.02]"
                     >

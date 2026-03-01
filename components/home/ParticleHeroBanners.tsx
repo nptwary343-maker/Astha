@@ -147,7 +147,7 @@ export default function ParticleHeroBanners() {
     const secondaryBanner = banners.find(b => b.bannerType === 'secondary' && b.id !== primaryBanner.id);
 
     return (
-        <section className="relative w-full bg-blue-950 overflow-hidden py-8 md:py-12">
+        <section className="relative w-full bg-blue-950 overflow-hidden py-8 md:py-12" >
             {/* Particle Canvas Layer - Zero DB hits after mount */}
             {particlesEnabled && init && (
                 <div className="absolute inset-0 z-0">
@@ -157,21 +157,22 @@ export default function ParticleHeroBanners() {
                         options={particlesConfig}
                     />
                 </div>
-            )}
+            )
+            }
 
-            <div className="max-w-[1600px] mx-auto px-4 md:px-8 relative z-10">
+            < div className="max-w-[1600px] mx-auto px-4 md:px-8 relative z-10" >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
 
                     {/* Primary Banner - Large */}
-                    <div className={`${secondaryBanner ? 'lg:col-span-8' : 'lg:col-span-12'} group relative aspect-[21/9] md:aspect-[2.4/1] rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]`}>
+                    <div className={`${secondaryBanner ? 'lg:col-span-8' : 'lg:col-span-12'} group relative min-h-[450px] md:min-h-0 aspect-auto md:aspect-[2.4/1] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]`}>
                         <img
                             src={primaryBanner.imageUrl}
                             alt={primaryBanner.title}
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/40 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/95 via-blue-900/60 to-transparent" />
 
-                        <div className="absolute inset-0 p-8 md:p-16 flex flex-col justify-center max-w-2xl">
+                        <div className="absolute inset-0 p-6 sm:p-8 md:p-16 flex flex-col justify-center max-w-2xl">
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white text-[10px] md:text-xs font-black uppercase tracking-widest rounded-full mb-6 w-fit animate-bounce">
                                 <Zap size={14} /> Flash Deal Live
                             </div>
@@ -193,15 +194,15 @@ export default function ParticleHeroBanners() {
 
                     {/* Secondary Banner - Compact */}
                     {secondaryBanner && (
-                        <div className="lg:col-span-4 group relative aspect-square lg:aspect-auto rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]">
+                        <div className="lg:col-span-4 group relative min-h-[350px] md:min-h-0 aspect-auto md:aspect-square lg:aspect-auto rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]">
                             <img
                                 src={secondaryBanner.imageUrl}
                                 alt={secondaryBanner.title}
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-900/40 to-blue-900/95" />
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-900/60 to-blue-900/95" />
 
-                            <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end">
+                            <div className="absolute inset-0 p-6 sm:p-8 md:p-12 flex flex-col justify-end">
                                 <h3 className="text-white text-2xl md:text-4xl font-black tracking-tighter mb-2 italic uppercase">
                                     {secondaryBanner.title}
                                 </h3>
@@ -219,7 +220,7 @@ export default function ParticleHeroBanners() {
                     )}
 
                 </div>
-            </div>
-        </section>
+            </div >
+        </section >
     );
 }

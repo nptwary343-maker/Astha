@@ -6,6 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { Ticket, Copy, Check, Zap, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
 import { Magnet } from './motion/MotionGraphics';
+import { m, AnimatePresence } from 'framer-motion';
 
 const CouponCard = ({ code }: { code: string }) => {
     const [copied, setCopied] = useState(false);
@@ -47,39 +48,58 @@ const CouponCard = ({ code }: { code: string }) => {
     );
 };
 
-import { m, AnimatePresence } from 'framer-motion';
-
 interface HeroBannerProps {
     hasSpecialCoupon?: boolean;
     customBanners?: any[];
 }
 
 const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBannerProps) => {
-    const [bannerData, setBannerData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [globalSettings, setGlobalSettings] = useState<any>(null);
 
     useEffect(() => {
-        const fetchBanner = async () => {
-            if (customBanners.length > 0) {
-                setBannerData(customBanners);
-                setLoading(false);
-                return;
-            }
+        const fetchData = async () => {
+            setLoading(true);
             try {
-                const docRef = doc(db, 'settings', 'hero-banner');
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setBannerData([docSnap.data()]);
+                // 1. Fetch Global Settings for Height Fallbacks
+                const globalSnap = await getDoc(doc(db, 'settings', 'hero-banner'));
+                const globalData = globalSnap.exists() ? globalSnap.data() : null;
+                setGlobalSettings(globalData);
+
+                // 2. Prioritize Custom Banners (Carousel) or Single Admin Banner
+                if (customBanners.length > 0) {
+                    setBannerData(customBanners);
+                } else if (globalData) {
+                    setBannerData([globalData]);
                 }
             } catch (error) {
-                console.error("Error loading banner:", error);
+                console.error("HeroBanner Load Error:", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchBanner();
+        fetchData();
     }, [customBanners]);
+
+    useEffect(() => {
+        if (!bannerData || !bannerData[activeIndex]) return;
+        const currentBanner = bannerData[activeIndex];
+
+        const updateHeight = () => {
+            // Priority: Local Banner Height -> Global Admin Height -> Legacy Default
+            const mH = currentBanner.mobileBannerHeight || globalSettings?.mobileBannerHeight || 450;
+            const dH = currentBanner.bannerHeight || globalSettings?.bannerHeight || 650;
+
+            if (window.innerWidth < 768) {
+                setBHeight(`${mH}px`);
+            } else {
+                setBHeight(`${dH}px`);
+            }
+        };
+
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => window.removeEventListener('resize', updateHeight);
+    }, [bannerData, activeIndex, globalSettings]);
 
     if (loading) {
         return (
@@ -98,10 +118,9 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
     return (
         <section className="relative w-full py-4 px-4 md:px-8">
             <div
-                className={`relative w-full max-w-[1600px] mx-auto overflow-hidden shadow-sm border border-slate-200 bg-white group min-h-[350px] md:min-h-[450px] ${currentBanner.shape === 'square' ? 'rounded-none' : currentBanner.shape === 'pill' ? 'rounded-full' : 'rounded-[2.5rem]'}`}
-                style={currentBanner.bannerHeight ? { height: `${currentBanner.bannerHeight}px` } : { height: 'auto' }}
+                className={`relative w-full max-w-[1600px] mx-auto overflow-hidden shadow-sm border border-slate-200 bg-white group ${currentBanner.shape === 'square' ? 'rounded-none' : currentBanner.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem] md:rounded-[2.5rem]'}`}
+                style={{ height: bHeight }}
             >
-
                 <AnimatePresence mode="wait">
                     <m.div
                         key={activeIndex}
@@ -129,7 +148,7 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                                 />
                             ) : (
                                 <div
-                                    className={`absolute inset-0 bg-cover ${currentBanner.videoPosition || 'object-center'}`}
+                                    className={`absolute inset-0 bg-cover ${currentBanner.videoPosition?.replace('object-', 'bg-') || 'bg-center'}`}
                                     style={{ backgroundImage: `url(${currentBanner.backgroundImage || currentBanner.imageUrl})` }}
                                 />
                             )}
@@ -137,7 +156,7 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                         </m.div>
 
                         {/* Content Area */}
-                        <div className="relative z-10 flex flex-col justify-center h-full px-8 md:px-24">
+                        <div className="relative z-10 flex flex-col justify-center h-full px-5 sm:px-8 md:px-24 py-12">
                             <m.div
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
@@ -157,10 +176,10 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                                     {currentBanner.subtitle}
                                 </p>
 
-                                <div className="pt-8 flex flex-wrap items-center gap-6">
+                                <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                                     <Link
                                         href={currentBanner.buttonLink || "/shop"}
-                                        className="bg-indigo-600 text-white px-10 py-4 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all shadow-md flex items-center gap-2 group/btn"
+                                        className="bg-indigo-600 text-white px-8 md:px-10 py-3.5 md:py-4 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all shadow-md flex items-center gap-2 group/btn"
                                     >
                                         {currentBanner.buttonText || "Shop Now"}
                                         <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
@@ -202,7 +221,7 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
 
                 {/* Modern Navigation */}
                 {currentBanners.length > 1 && (
-                    <div className="absolute right-12 bottom-12 flex items-center gap-6 z-20">
+                    <div className="absolute right-6 sm:right-12 bottom-6 sm:bottom-12 flex items-center gap-4 sm:gap-6 z-20">
                         <div className="flex gap-2">
                             {currentBanners.map((_, i) => (
                                 <button

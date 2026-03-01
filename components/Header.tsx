@@ -185,12 +185,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                                         {user.displayName?.charAt(0) || <UserIcon size={18} />}
                                     </div>
                                 </div>
-                            ) : (
-                                <Link href="/login" className="flex items-center gap-3 px-5 py-2.5 bg-brand-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-brand-primary/20 hover:scale-105 transition-all">
-                                    <UserIcon size={18} />
-                                    <span>Sign In</span>
-                                </Link>
-                            )}
+                            ) : null}
                         </div>
                     )}
 

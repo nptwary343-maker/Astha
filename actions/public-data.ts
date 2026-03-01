@@ -60,3 +60,18 @@ export async function fetchFashionQuizAction() {
         return { isActive: false };
     }
 }
+export async function clearAllCacheAction() {
+    try {
+        const { clearProductCache } = await import('@/lib/db-utils');
+        const { revalidatePath } = await import('next/cache');
+
+        clearProductCache();
+        revalidatePath('/', 'layout');
+
+        console.log("♻️ [CACHE_PURGE_SUCCESS] Triggered by Admin");
+        return { success: true };
+    } catch (e: any) {
+        console.error("Cache purge failed:", e);
+        return { success: false, error: e.message };
+    }
+}
