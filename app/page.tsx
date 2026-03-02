@@ -17,6 +17,7 @@ import ParticleHeroBanners from '@/components/home/ParticleHeroBanners';
 import FlashSaleBanner from '@/components/FlashSaleBanner';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import FlashSaleHeroBanner from '@/components/FlashSaleHeroBanner';
+import MobileMinimalistHeader, { MobileMinimalistCategories } from '@/components/MobileMinimalistView';
 import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
 export default function Home() {
@@ -75,29 +76,40 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-text-main selection:bg-brand-primary/10">
 
+      {/* 📱 MOBILE MINIMALIST HEADER - Only visible on small screens */}
+      <MobileMinimalistHeader />
+
       {/* NEW: Separate Particle Feature – Zero DB hits */}
-      <ParticleHeroBanners />
+      <div className="hidden md:block">
+        <ParticleHeroBanners />
+      </div>
 
       {/* Hero & Banners Section */}
       <div className="relative z-10 space-y-4">
         <FlashSaleBanner />
-        <SafeBannerRenderer />
+        <div className="hidden md:block">
+          <SafeBannerRenderer />
+        </div>
         <HeroBanner customBanners={banners} />
       </div>
 
-      <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-20 pb-24 -mt-10">
+      <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-12 md:space-y-20 pb-24 -mt-10">
 
         {/* 🛡️ Trust Signals Section */}
         <section className="relative z-20">
           <TrustBar />
         </section>
 
-        <div className="space-y-24">
-          {/* 🧩 Quick Action Bar */}
-          <HomepageActionBar />
+        {/* 🧩 Quick Action Bar - Simplified for Mobile */}
+        <HomepageActionBar />
 
-          {/* Categories Section - Modern High-End Architecture */}
-          <section className="relative z-20">
+        <div className="space-y-12 md:space-y-24">
+
+          {/* 📱 MOBILE CATEGORIES - Horizontal Scroll */}
+          <MobileMinimalistCategories categories={dbCategories.length > 0 ? dbCategories : CATEGORIES.slice(0, 10)} />
+
+          {/* Categories Section - Hidden on Mobile for Minimalist look */}
+          <section className="relative z-20 hidden md:block">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
               <div className="space-y-2">
                 <span className="text-xs font-semibold uppercase tracking-wider text-brand-primary">Curated Collections</span>
