@@ -319,11 +319,16 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
     const { products: cachedProducts, loading } = useProductCache();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+    const [displayLimit, setDisplayLimit] = useState(24);
+
     const products = React.useMemo(() => {
         const base = initialProducts || cachedProducts;
-        if (!base || base.length === 0) return [];
-        return base.slice(0, 30);
+        if (!base) return [];
+        return base;
     }, [initialProducts, cachedProducts]);
+
+    const visibleProducts = products.slice(0, displayLimit);
+    const hasMore = products.length > displayLimit;
 
     if (loading) return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
@@ -346,10 +351,23 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
                 layout
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6"
             >
-                {products.map((product, index) => (
+                {visibleProducts.map((product, index) => (
                     <ProductCard key={product.id} product={product} onSelect={setSelectedProduct} index={index} />
                 ))}
             </m.div>
+
+            {/* Load More Trigger */}
+            {hasMore && (
+                <div className="mt-12 flex justify-center">
+                    <button
+                        onClick={() => setDisplayLimit(prev => prev + 24)}
+                        className="bg-white border-2 border-slate-100 hover:border-brand-primary text-slate-900 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-sm hover:shadow-xl transition-all active:scale-95 flex items-center gap-2 group"
+                    >
+                        Load More Products
+                        <ChevronRight size={16} className="group-hover:rotate-90 transition-transform" />
+                    </button>
+                </div>
+            )}
 
             <AnimatePresence>
                 {selectedProduct && (

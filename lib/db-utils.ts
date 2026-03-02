@@ -56,7 +56,7 @@ export const getCachedProducts = async () => {
  */
 export const getFeaturedProducts = async () => {
     const all = await getCachedProducts();
-    return all.slice(0, 80);
+    return all; // No slices, return everything to ensure visibility
 };
 
 /**
