@@ -1,6 +1,6 @@
 export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
-import { calculateCart, CouponData, UserContext } from '@/lib/cart-calculator';
+import { calculateCart, UserContext } from '@/lib/cart-calculator';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -36,15 +36,6 @@ const getCachedProduct = async (id: string) => {
     return null;
 };
 
-// 1. Hybrid Coupon Cache: Static data is cached for 1 hour
-const getStaticCouponData = async (code: string) => {
-    const couponRef = doc(db, 'coupons', code.toUpperCase().trim());
-    const snap = await getDoc(couponRef);
-    if (snap.exists()) {
-        return { ...snap.data(), code: snap.id } as CouponData;
-    }
-    return null;
-};
 
 export async function POST(req: NextRequest) {
     try {
@@ -54,34 +45,12 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { items, couponCode: rawCoupon, userEmail: rawEmail, userTags } = body;
+        const { items, userEmail: rawEmail, userTags } = body;
 
-        const couponCode = rawCoupon ? sanitizeInput(rawCoupon).toUpperCase() : undefined;
         const userEmail = rawEmail ? sanitizeInput(rawEmail).toLowerCase() : undefined;
 
         if (!items || !Array.isArray(items)) {
             return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
-        }
-
-        // 2. Hybrid Coupon Validation
-        let couponData: CouponData | undefined = undefined;
-        if (couponCode) {
-            // A. Fetch Static Data (Cached)
-            const staticCoupon = await getStaticCouponData(couponCode);
-
-            if (staticCoupon) {
-                couponData = staticCoupon;
-
-                // B. Real-time Check ONLY if usage limit exists
-                if (staticCoupon.usageLimit > 0) {
-                    const liveRef = doc(db, 'coupons', staticCoupon.code!);
-                    const liveSnap = await getDoc(liveRef); // Single real-time hit
-                    if (liveSnap.exists()) {
-                        const liveData = liveSnap.data();
-                        couponData.usedCount = liveData.usedCount || 0;
-                    }
-                }
-            }
         }
 
         // 3. Fetch Products (Cached)
@@ -126,7 +95,7 @@ export async function POST(req: NextRequest) {
         };
 
         // 4. Calculate
-        const result = calculateCart(items, catalog, couponData, userContext);
+        const result = calculateCart(items, catalog, userContext);
 
         return NextResponse.json(result);
 

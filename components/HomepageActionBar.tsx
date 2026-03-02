@@ -5,13 +5,7 @@ import Link from 'next/link';
 import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
 const ACTIONS = [
-    {
-        label: 'Exclusive Coupons',
-        icon: Ticket,
-        href: '/coupons',
-        desc: 'Claim Member Rewards',
-        accent: 'text-brand-primary bg-brand-primary/5'
-    },
+
     {
         label: 'Top Trending',
         icon: TrendingUp,

@@ -10,12 +10,12 @@ import { CATEGORIES } from '@/data/static-content';
 import Link from 'next/link';
 import { MENU_ITEMS } from '@/components/navigation-config';
 import TrustBar from '@/components/TrustBar';
-import RewardSection from '@/components/RewardSection';
 import { m, AnimatePresence } from "framer-motion";
 import { useLocation } from '@/context/LocationContext';
 import { useState, useEffect } from 'react';
 import ParticleHeroBanners from '@/components/home/ParticleHeroBanners';
 import FlashSaleBanner from '@/components/FlashSaleBanner';
+import RecentlyViewed from '@/components/RecentlyViewed';
 import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
 export default function Home() {
@@ -81,7 +81,7 @@ export default function Home() {
       <div className="relative z-10 space-y-4">
         <FlashSaleBanner />
         <SafeBannerRenderer />
-        <HeroBanner hasSpecialCoupon={true} customBanners={banners} />
+        <HeroBanner customBanners={banners} />
       </div>
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-20 pb-24 -mt-10">
@@ -116,7 +116,7 @@ export default function Home() {
               }`}>
               {dbCategories.length > 0 ? dbCategories.map((cat, idx) => {
                 const menuItem = MENU_ITEMS.find(m => m.name.toLowerCase().includes(cat.name.split(' ')[0].toLowerCase()));
-                const subs = menuItem?.subItems?.slice(0, 4) || [];
+                const subs = cat.subcategories && cat.subcategories.length > 0 ? cat.subcategories.slice(0, 6) : menuItem?.subItems?.slice(0, 4) || [];
 
                 return (
                   <div key={cat.id} className={`group bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col h-full border border-border-light relative overflow-hidden active:scale-[0.98] ${categorySettings.shape === 'square' ? 'rounded-none' :
@@ -125,34 +125,40 @@ export default function Home() {
                     {/* Abstract Grid background */}
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
 
-                    <h3 className="text-xl font-bold mb-6 group-hover:text-brand-primary transition-colors text-slate-800 relative z-10">
-                      {cat.name}
-                    </h3>
+                    <Link href={`/shop?category=${cat.id}`} className="block relative z-10 group/header">
+                      <h3 className="text-xl font-bold mb-6 group-hover:text-brand-primary transition-colors text-slate-800">
+                        {cat.name}
+                      </h3>
 
-                    <div className={`relative aspect-[16/10] mb-8 overflow-hidden bg-ui-bg border border-border-light flex items-center justify-center p-6 sm:p-10 shadow-inner group/img ${categorySettings.shape === 'square' ? 'rounded-none' :
-                      categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem]'
-                      }`}>
-                      {cat.image ? (
-                        <img
-                          src={cat.image}
-                          alt={cat.name}
-                          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
-                        />
-                      ) : (
-                        <div className="w-20 h-20 bg-brand-primary/5 rounded-full flex items-center justify-center text-brand-primary font-black text-2xl">
-                          {cat.name.charAt(0)}
-                        </div>
-                      )}
-                    </div>
+                      <div className={`relative aspect-[16/10] mb-8 overflow-hidden bg-ui-bg border border-border-light flex items-center justify-center p-6 sm:p-10 shadow-inner group/img ${categorySettings.shape === 'square' ? 'rounded-none' :
+                        categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem]'
+                        }`}>
+                        {cat.image ? (
+                          <img
+                            src={cat.image}
+                            alt={cat.name}
+                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
+                          />
+                        ) : (
+                          <div className="w-20 h-20 bg-brand-primary/5 rounded-full flex items-center justify-center text-brand-primary font-black text-2xl">
+                            {cat.name.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                    </Link>
 
                     <div className="mt-auto space-y-4 relative z-10">
                       {subs.length > 0 ? (
                         <div className="grid grid-cols-2 gap-3">
-                          {subs.map((sub) => (
+                          {subs.map((sub: any) => (
                             <Link
                               key={sub.name}
-                              href={sub.href}
-                              className="text-xs font-medium text-slate-600 hover:text-brand-primary bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 transition-all hover:border-brand-primary/30"
+                              href={sub.slug ? `/shop?category=${sub.slug}` : sub.href}
+                              className="text-xs font-medium bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 transition-all hover:opacity-80"
+                              style={{
+                                color: sub.color || '#475569',
+                                borderColor: sub.color ? `${sub.color}40` : '#f1f5f9'
+                              }}
                             >
                               {sub.name}
                             </Link>
@@ -177,39 +183,45 @@ export default function Home() {
               }) : (
                 CATEGORIES.slice(0, 6).map((cat, idx) => {
                   const menuItem = MENU_ITEMS.find(m => m.name.toLowerCase().includes(cat.name.split(' ')[0].toLowerCase()));
-                  const subs = menuItem?.subItems?.slice(0, 4) || [];
+                  const subs = (cat as any).subcategories && (cat as any).subcategories.length > 0 ? (cat as any).subcategories.slice(0, 6) : menuItem?.subItems?.slice(0, 4) || [];
 
                   return (
                     <div key={cat.id} className="group bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col h-full border border-border-light rounded-[3rem] relative overflow-hidden active:scale-[0.98]">
                       {/* Abstract Grid background */}
                       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
 
-                      <h3 className="text-xl font-bold mb-6 group-hover:text-brand-primary transition-colors text-slate-800 relative z-10">
-                        {cat.name}
-                      </h3>
+                      <Link href={`/shop?category=${cat.id}`} className="block relative z-10 group/header">
+                        <h3 className="text-xl font-bold mb-6 group-hover:text-brand-primary transition-colors text-slate-800">
+                          {cat.name}
+                        </h3>
 
-                      <div className="relative aspect-[16/10] mb-8 overflow-hidden bg-ui-bg rounded-[2rem] border border-border-light flex items-center justify-center p-6 sm:p-10 shadow-inner group/img">
-                        {cat.image ? (
-                          <img
-                            src={cat.image}
-                            alt={cat.name}
-                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
-                          />
-                        ) : (
-                          <div className="w-20 h-20 bg-brand-primary/5 rounded-full flex items-center justify-center text-brand-primary font-black text-2xl">
-                            {cat.name.charAt(0)}
-                          </div>
-                        )}
-                      </div>
+                        <div className="relative aspect-[16/10] mb-8 overflow-hidden bg-ui-bg rounded-[2rem] border border-border-light flex items-center justify-center p-6 sm:p-10 shadow-inner group/img">
+                          {cat.image ? (
+                            <img
+                              src={cat.image}
+                              alt={cat.name}
+                              className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
+                            />
+                          ) : (
+                            <div className="w-20 h-20 bg-brand-primary/5 rounded-full flex items-center justify-center text-brand-primary font-black text-2xl">
+                              {cat.name.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                      </Link>
 
                       <div className="mt-auto space-y-4 relative z-10">
                         {subs.length > 0 ? (
                           <div className="grid grid-cols-2 gap-3">
-                            {subs.map((sub) => (
+                            {subs.map((sub: any) => (
                               <Link
                                 key={sub.name}
-                                href={sub.href}
-                                className="text-xs font-medium text-slate-600 hover:text-brand-primary bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 transition-all hover:border-brand-primary/30"
+                                href={sub.slug ? `/shop?category=${sub.slug}` : sub.href}
+                                className="text-xs font-medium bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 transition-all hover:opacity-80"
+                                style={{
+                                  color: sub.color || '#475569',
+                                  borderColor: sub.color ? `${sub.color}40` : '#f1f5f9'
+                                }}
                               >
                                 {sub.name}
                               </Link>
@@ -277,10 +289,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* NEW: Coupons & Rewards Section */}
-      <RewardSection />
-
-
+      <RecentlyViewed />
     </div>
   );
 }

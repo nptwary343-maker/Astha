@@ -27,6 +27,15 @@ interface Customer {
     lastOrderDate: Date;
 }
 
+interface RegisteredUser {
+    id: string;
+    email: string;
+    name: string;
+    phone?: string;
+    role: string;
+    createdAt?: any;
+}
+
 export default function CustomersPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -44,6 +53,11 @@ export default function CustomersPage() {
     ]);
     const [personalBannerActive, setPersonalBannerActive] = useState(true);
     const [loadingBanner, setLoadingBanner] = useState(false);
+
+    // New Registered Users State
+    const [activeTab, setActiveTab] = useState<'orders' | 'registered'>('orders');
+    const [registeredUsers, setRegisteredUsers] = useState<RegisteredUser[]>([]);
+    const [loadingUsers, setLoadingUsers] = useState(true);
 
     useEffect(() => {
         // Fetch All Orders to Aggregate Customers
@@ -114,6 +128,22 @@ export default function CustomersPage() {
 
         return () => unsubscribe();
     }, []);
+
+    // Fetch Registered Users
+    useEffect(() => {
+        if (activeTab === 'registered' && registeredUsers.length === 0) {
+            const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+            const unsubscribe = onSnapshot(q, (snapshot) => {
+                const usersList = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                })) as RegisteredUser[];
+                setRegisteredUsers(usersList);
+                setLoadingUsers(false);
+            });
+            return () => unsubscribe();
+        }
+    }, [activeTab]);
 
 
     const filteredCustomers = customers.filter(c =>
@@ -189,6 +219,18 @@ export default function CustomersPage() {
             console.error(e);
         }
     }
+
+    const toggleWholesaleRole = async (user: RegisteredUser) => {
+        if (!confirm(`Change ${user.name}'s role to ${user.role === 'wholesale' ? 'Regular User' : 'Wholesale / B2B'}?`)) return;
+        try {
+            const newRole = user.role === 'wholesale' ? 'user' : 'wholesale';
+            await setDoc(doc(db, 'users', user.id), { role: newRole }, { merge: true });
+            alert(`Role updated to ${newRole} for ${user.name}`);
+        } catch (error) {
+            console.error(error);
+            alert("Failed to update role");
+        }
+    };
 
     const handleDownloadCSV = () => {
         if (!selectedCustomer) return;
@@ -326,9 +368,23 @@ export default function CustomersPage() {
                         className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                     />
                 </div>
+                <div className="flex bg-gray-100 p-1 rounded-lg">
+                    <button
+                        onClick={() => setActiveTab('orders')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${activeTab === 'orders' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                        Order History
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('registered')}
+                        className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${activeTab === 'registered' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                        Registered Users (B2B Control)
+                    </button>
+                </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            {activeTab === 'orders' ? (<div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
@@ -396,7 +452,48 @@ export default function CustomersPage() {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>) : (
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead className="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
+                                <tr>
+                                    <th className="px-6 py-4">User</th>
+                                    <th className="px-6 py-4">Email</th>
+                                    <th className="px-6 py-4">Role</th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50 text-sm">
+                                {loadingUsers ? (
+                                    <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Loading registered users...</td></tr>
+                                ) : registeredUsers.filter(u => u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || u.email?.toLowerCase().includes(searchTerm.toLowerCase())).map((user, idx) => (
+                                    <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <p className="font-bold text-gray-900">{user.name}</p>
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-600">{user.email}</td>
+                                        <td className="px-6 py-4">
+                                            <span className={`px-2 py-0.5 rounded text-xs font-bold ${user.role === 'wholesale' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'}`}>
+                                                {user.role || 'user'}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <button
+                                                onClick={() => toggleWholesaleRole(user)}
+                                                className={`font-bold text-xs flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg transition-all border ml-auto 
+                                                ${user.role === 'wholesale' ? 'text-gray-600 hover:text-gray-800 border-gray-200 hover:bg-gray-50' : 'text-indigo-600 hover:text-indigo-800 border-indigo-200 hover:bg-indigo-50'}`}
+                                            >
+                                                {user.role === 'wholesale' ? 'Remove B2B' : 'Make Wholesale (B2B)'}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
 
             {/* Billing Details Modal */}
             {selectedCustomer && (

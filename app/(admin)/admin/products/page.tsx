@@ -19,6 +19,7 @@ interface Product {
     id: string; // Changed to string for Firestore ID
     name: string;
     price: number;
+    wholesalePrice?: number;
     stock: number;
     category: string;
     status: string;
@@ -100,6 +101,7 @@ export default function ProductsPage() {
         slug: string;
         category: string;
         price: string;
+        wholesalePrice: string;
         tax: string;
         stock: string;
         status: string;
@@ -119,7 +121,7 @@ export default function ProductsPage() {
         trackingStatus: string;
         trackingLocation: string;
     }>({
-        name: '', slug: '', category: 'Electronics', price: '', tax: '0', stock: '', status: 'Active', brand: '', description: '',
+        name: '', slug: '', category: 'Electronics', price: '', wholesalePrice: '', tax: '0', stock: '', status: 'Active', brand: '', description: '',
         images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
         isExpertVerified: false, originDetails: '', labReportUrl: '',
         descriptionBn: '', weightOptions: [] as { label: string, price: number }[],
@@ -178,6 +180,7 @@ export default function ProductsPage() {
             slug: product.slug || '', // Load existing
             category: product.category,
             price: product.price.toString(),
+            wholesalePrice: product.wholesalePrice?.toString() || '',
             tax: (product.tax || 0).toString(),
             stock: product.stock.toString(),
             status: product.status,
@@ -211,7 +214,7 @@ export default function ProductsPage() {
         setActiveTab('general');
         setSlugLocked(false); // Helper for new products
         setFormData({
-            name: '', slug: '', category: categories[0], price: '', tax: '0', stock: '', status: 'Active', brand: '', description: '',
+            name: '', slug: '', category: categories[0], price: '', wholesalePrice: '', tax: '0', stock: '', status: 'Active', brand: '', description: '',
             images: ['', ''], discountEnabled: false, discountType: 'PERCENT', discountValue: '',
             isExpertVerified: false, originDetails: '', labReportUrl: '',
             descriptionBn: '', weightOptions: [],
@@ -265,6 +268,7 @@ export default function ProductsPage() {
             previousSlugs: previousSlugs, // Save History
             category: formData.category,
             price: parseFloat(formData.price) || 0,
+            wholesalePrice: formData.wholesalePrice ? parseFloat(formData.wholesalePrice) : null,
             tax: parseFloat(formData.tax) || 0,
             stock: parseInt(formData.stock) || 0,
             status: formData.status,
@@ -940,6 +944,15 @@ export default function ProductsPage() {
                                                     value={formData.price}
                                                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                                     className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="0.00"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold text-indigo-700 mb-1">Wholesale Price (BDT)</label>
+                                                <input
+                                                    type="number"
+                                                    value={formData.wholesalePrice}
+                                                    onChange={(e) => setFormData({ ...formData, wholesalePrice: e.target.value })}
+                                                    className="w-full px-4 py-2 rounded-xl border border-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-indigo-50" placeholder="Optional"
                                                 />
                                             </div>
                                             <div>

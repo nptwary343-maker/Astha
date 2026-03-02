@@ -8,52 +8,12 @@ import { Ticket, Copy, Check, Zap, ChevronLeft, ChevronRight, ShieldCheck } from
 import { Magnet } from './motion/MotionGraphics';
 import { m, AnimatePresence } from 'framer-motion';
 
-const CouponCard = ({ code }: { code: string }) => {
-    const [copied, setCopied] = useState(false);
-    const handleCopy = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        navigator.clipboard.writeText(code);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    return (
-        <div onClick={handleCopy} className="relative cursor-pointer group">
-            <div className="bg-white/95 backdrop-blur-md border-2 border-dashed border-brand-primary/30 rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-white shadow-xl hover:border-brand-primary/50">
-                <div className="relative">
-                    <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                        <Ticket className="text-brand-primary" size={20} />
-                    </div>
-                </div>
-                <div className="flex flex-col">
-                    <span className="text-[9px] font-black text-brand-primary uppercase tracking-[0.2em] leading-none mb-1">
-                        Locked Asset
-                    </span>
-                    <span className="text-xl font-black text-text-main leading-tight tracking-tighter uppercase italic">
-                        {code.slice(0, 3)}****
-                    </span>
-                </div>
-                <div className="ml-auto pl-4 border-l border-border-light">
-                    {copied ? (
-                        <Check className="text-emerald-500" size={20} />
-                    ) : (
-                        <div className="w-10 h-10 rounded-xl hover:bg-ui-bg flex items-center justify-center transition-colors">
-                            <Copy className="text-text-muted group-hover:text-brand-primary" size={18} />
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
 
 interface HeroBannerProps {
-    hasSpecialCoupon?: boolean;
     customBanners?: any[];
 }
 
-const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBannerProps) => {
+const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
     const [globalSettings, setGlobalSettings] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [bannerData, setBannerData] = useState<any[]>([]);
@@ -188,8 +148,6 @@ const HeroBanner = ({ hasSpecialCoupon = false, customBanners = [] }: HeroBanner
                                         {currentBanner.buttonText || "Shop Now"}
                                         <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
                                     </Link>
-
-                                    {hasSpecialCoupon && <CouponCard code="ASTHAR70" />}
                                 </div>
 
                                 {/* Trust Signal Badges */}

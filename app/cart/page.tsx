@@ -13,7 +13,7 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useFCM } from '@/hooks/useFCM';
 import PermissionModal from '@/components/PermissionModal';
-import CouponSection from '@/components/CouponSection';
+// no coupon section
 import { placeOrderAction } from '@/actions/checkout';
 
 interface CalculatedItem {
@@ -32,9 +32,6 @@ interface CartSummary {
     totalDiscount: number;
     totalTax: number;
     finalTotal: number;
-    couponDiscount?: number;
-    couponCode?: string;
-    couponError?: string;
 }
 
 export default function CartPage() {
@@ -47,7 +44,7 @@ export default function CartPage() {
     const [loading, setLoading] = useState(true);
     const [calculating, setCalculating] = useState(false);
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-    const [couponCode, setCouponCode] = useState('');
+
 
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
@@ -97,7 +94,7 @@ export default function CartPage() {
                 const res = await fetch('/api/cart/calculate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items, couponCode, userEmail: user?.email, userTags: userData?.tags || [] })
+                    body: JSON.stringify({ items, userEmail: user?.email, userTags: userData?.tags || [] })
                 });
                 const data = await res.json();
                 if (data.items && data.summary) {
@@ -113,7 +110,7 @@ export default function CartPage() {
         };
         const timer = setTimeout(calculate, 300);
         return () => clearTimeout(timer);
-    }, [items, couponCode, user, userData]);
+    }, [items, user, userData]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><Loader2 className="animate-spin text-blue-600" /></div>;
 
@@ -161,7 +158,6 @@ export default function CartPage() {
                     method: paymentMethod,
                     trxId: bkashTrxId || null
                 },
-                couponCode: couponCode || null,
                 userEmail: user?.email || null,
                 userTags: userData?.tags || [],
                 fcmToken
@@ -310,7 +306,7 @@ export default function CartPage() {
 
                 {/* Sidebar Summary */}
                 <div className="space-y-6">
-                    <CouponSection onApply={setCouponCode} error={summary?.couponError} appliedCode={summary?.couponCode} discount={summary?.couponDiscount} loading={calculating} />
+
 
                     <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-4 sticky top-8">
                         <h2 className="text-xs font-black border-b border-slate-50 pb-5 uppercase tracking-[0.2em] text-slate-400">অর্ডার ডিটেইলস</h2>
@@ -320,12 +316,7 @@ export default function CartPage() {
                                 <span>মোট ডিসকাউন্ট</span>
                                 <span>-৳{summary?.totalDiscount || 0}</span>
                             </div>
-                            {summary?.couponDiscount && summary.couponDiscount > 0 && (
-                                <div className="flex justify-between text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-2 rounded-xl border border-indigo-100/50">
-                                    <span>কুপন ছাড়</span>
-                                    <span>-৳{summary.couponDiscount}</span>
-                                </div>
-                            )}
+
                             <div className="flex justify-between text-slate-400 uppercase tracking-widest px-3"><span>ভ্যাট (Vat)</span><span>৳{summary?.totalTax || 0}</span></div>
 
                             <div className="pt-6 border-t border-slate-50">
@@ -350,7 +341,7 @@ export default function CartPage() {
                             <div className="bg-rose-50 border border-rose-100 p-4 rounded-2xl text-center group">
                                 <p className="text-[10px] font-black text-rose-600 uppercase tracking-widest flex items-center justify-center gap-2">
                                     <span className="flex h-2 w-2 rounded-full bg-rose-600 animate-ping"></span>
-                                    সেরা ডিল! আপনি মোট ৳{((summary?.totalDiscount || 0) + (summary?.couponDiscount || 0))} সেভ করছেন।
+                                    সেরা ডিল! আপনি মোট ৳{summary?.totalDiscount || 0} সেভ করছেন।
                                 </p>
                             </div>
                         )}

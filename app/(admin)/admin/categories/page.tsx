@@ -8,11 +8,18 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from 'firebase/firestore';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
+interface SubCategory {
+    name: string;
+    slug: string;
+    color: string;
+}
+
 interface Category {
     id: string;
     name: string;
     image: string;
     order: number;
+    subcategories?: SubCategory[];
 }
 
 export default function CategoriesPage() {
@@ -33,7 +40,8 @@ export default function CategoriesPage() {
     const [formData, setFormData] = useState({
         name: '',
         image: '',
-        order: 0
+        order: 0,
+        subcategories: [] as SubCategory[]
     });
 
     useEffect(() => {
@@ -95,7 +103,7 @@ export default function CategoriesPage() {
             }
             setIsModalOpen(false);
             setEditingId(null);
-            setFormData({ name: '', image: '', order: categories.length });
+            setFormData({ name: '', image: '', order: categories.length, subcategories: [] });
         } catch (error) {
             console.error(error);
             alert('Failed to save category.');
@@ -142,7 +150,7 @@ export default function CategoriesPage() {
                 <button
                     onClick={() => {
                         setEditingId(null);
-                        setFormData({ name: '', image: '', order: categories.length });
+                        setFormData({ name: '', image: '', order: categories.length, subcategories: [] });
                         setIsModalOpen(true);
                     }}
                     className="bg-blue-600 hover:bg-black text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg"
@@ -236,7 +244,7 @@ export default function CategoriesPage() {
                                     <button
                                         onClick={() => {
                                             setEditingId(cat.id);
-                                            setFormData({ name: cat.name, image: cat.image, order: cat.order || 0 });
+                                            setFormData({ name: cat.name, image: cat.image, order: cat.order || 0, subcategories: cat.subcategories || [] });
                                             setIsModalOpen(true);
                                         }}
                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl"
@@ -308,6 +316,75 @@ export default function CategoriesPage() {
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+
+                            {/* Subcategories Management */}
+                            <div className="space-y-4 pt-4 border-t border-gray-100">
+                                <div className="flex items-center justify-between px-2">
+                                    <label className="block text-[10px] font-black uppercase text-gray-400 tracking-widest">Subcategories</label>
+                                    <button
+                                        onClick={() => setFormData(prev => ({
+                                            ...prev,
+                                            subcategories: [...prev.subcategories, { name: '', slug: '', color: '#3b82f6' }]
+                                        }))}
+                                        className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-3 py-1 rounded-lg"
+                                    >
+                                        + Add Sub
+                                    </button>
+                                </div>
+
+                                {formData.subcategories.length === 0 ? (
+                                    <div className="text-center py-4 bg-gray-50 rounded-xl text-xs text-gray-400 font-medium border border-dashed border-gray-200">
+                                        No subcategories added yet.
+                                    </div>
+                                ) : (
+                                    <div className="max-h-60 overflow-y-auto pr-2 space-y-3">
+                                        {formData.subcategories.map((sub, idx) => (
+                                            <div key={idx} className="bg-gray-50 border border-gray-100 p-3 rounded-xl flex items-start gap-3 relative group">
+                                                <button
+                                                    onClick={() => setFormData(prev => ({
+                                                        ...prev,
+                                                        subcategories: prev.subcategories.filter((_, i) => i !== idx)
+                                                    }))}
+                                                    className="absolute -top-2 -right-2 text-white bg-red-400 hover:bg-red-500 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+
+                                                <div className="flex-1 space-y-3">
+                                                    <div className="flex gap-2">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Sub Name"
+                                                            value={sub.name}
+                                                            onChange={(e) => {
+                                                                const newSubs = [...formData.subcategories];
+                                                                newSubs[idx].name = e.target.value;
+                                                                newSubs[idx].slug = e.target.value.toLowerCase().replace(/\s+/g, '-');
+                                                                setFormData({ ...formData, subcategories: newSubs });
+                                                            }}
+                                                            className="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                                                        />
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        <label className="text-[10px] uppercase font-bold text-gray-500">Color:</label>
+                                                        <input
+                                                            type="color"
+                                                            value={sub.color || '#3b82f6'}
+                                                            onChange={(e) => {
+                                                                const newSubs = [...formData.subcategories];
+                                                                newSubs[idx].color = e.target.value;
+                                                                setFormData({ ...formData, subcategories: newSubs });
+                                                            }}
+                                                            className="w-8 h-8 rounded cursor-pointer border-none bg-transparent"
+                                                        />
+                                                        <span className="text-xs text-gray-500 font-mono">{sub.color || '#3b82f6'}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             <button

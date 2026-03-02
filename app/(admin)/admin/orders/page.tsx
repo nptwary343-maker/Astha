@@ -155,7 +155,7 @@ const OrderDetailsModal = ({ order, onStatusUpdate, onPaymentUpdate, onClose }: 
                         <span className="text-right text-emerald-400">+৳{Number(order.totals?.shipping ?? 0).toLocaleString()}</span>
 
                         <span>Rewards & Coupons</span>
-                        <span className="text-right text-rose-400">-৳{Number(order.totals?.discount ?? (order.totals?.couponDiscount || 0)).toLocaleString()}</span>
+                        <span className="text-right text-rose-400">-৳{Number(order.totals?.discount ?? 0).toLocaleString()}</span>
 
                         <div className="col-span-2 my-2 h-[1px] bg-slate-800" />
 

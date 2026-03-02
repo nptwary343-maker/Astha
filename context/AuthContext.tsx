@@ -115,6 +115,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         }
                     }
 
+                    // 4. Checking Normal Users Collection for Custom Roles (e.g. wholesale, user)
+                    if (!isFound) {
+                        const normalUserDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                        if (normalUserDoc.exists()) {
+                            isFound = true;
+                            data = normalUserDoc.data();
+                        }
+                    }
+
                     const isSuperUID = currentUser.uid === 'ZzAXMq57TVRIaQ8UDUoCldz6F863';
 
                     if (isFound && data) {

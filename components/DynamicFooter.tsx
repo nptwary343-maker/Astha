@@ -118,7 +118,7 @@ export default function DynamicFooter() {
                                 <FooterLink href="/shop" label={t('footer.allProducts')} />
                                 <FooterLink href="/shop?category=popular" label={t('footer.bestSellers')} />
                                 <FooterLink href="/shop?category=new" label={t('footer.newArrivals')} />
-                                <FooterLink href="/coupons" label={t('footer.discountTickets')} />
+
                             </ul>
                         </div>
 

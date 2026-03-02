@@ -36,17 +36,6 @@ export interface ProductBlock {
     active: boolean;
 }
 
-export interface Coupon {
-    id: string;
-    code: string;
-    title: string;
-    description: string;
-    discount: number;
-    expiry: any; // Firebase Timestamp
-    imageUrl: string;
-    active: boolean;
-    applicableLocations: string[];
-}
 
 export interface Partner {
     id: string;

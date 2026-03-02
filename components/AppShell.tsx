@@ -11,6 +11,8 @@ import BottomNav from "./BottomNav";
 import { m, AnimatePresence } from 'framer-motion';
 import MotionGraphics from './motion/MotionGraphics';
 
+import MarqueeBar from '@/components/MarqueeBar';
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isStandalone = pathname?.startsWith('/admin') || pathname === '/login';
@@ -23,6 +25,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
         <>
             <MotionGraphics />
+            <MarqueeBar />
+
             <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <BottomNav />

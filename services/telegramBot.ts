@@ -25,7 +25,6 @@ ${itemsTable}
 💰 *Financial Summary:*
 Subtotal: ৳${order.totals.subtotal}
 Vat/Tax: ৳${order.totals.tax}
-Coupon: -৳${order.totals.couponDiscount}
 *Grand Total: ৳${order.totals.total}*
 
 👤 *Customer Info:*

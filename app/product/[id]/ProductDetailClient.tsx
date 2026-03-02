@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 
 interface Product {
     id: string;
@@ -19,6 +20,7 @@ interface Product {
     brand?: string;
     images: string[];
     description?: string;
+    wholesalePrice?: number;
     slug?: string;
     discountType?: 'PERCENT' | 'FIXED';
     discountValue?: number;
@@ -64,14 +66,23 @@ export default function ProductDetailClient({ initialProduct, productId, similar
     const [quantity, setQuantity] = useState(1);
     const [activeImage, setActiveImage] = useState(0);
     const [isAdded, setIsAdded] = useState(false);
-    const { user } = useAuth();
+    const { user, role } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
 
+    const { addProduct } = useRecentlyViewed();
+
     const [selectedWeight, setSelectedWeight] = useState<string | null>(null);
     const [dynamicPrice, setDynamicPrice] = useState<number>(initialProduct?.price || 0);
+
+    const isWholesale = role === 'wholesale' || role === 'b2b';
+
     // Price Calculation Helper
-    const getDiscountedPrice = (price: number) => {
+    const getDiscountedPrice = (price: number, overrideWholesalePrice?: number) => {
+        if (isWholesale && overrideWholesalePrice) {
+            return overrideWholesalePrice;
+        }
+
         if (product?.discountType && product?.discountValue) {
             if (product.discountType === 'PERCENT') {
                 return price - (price * (product.discountValue / 100));
@@ -91,21 +102,37 @@ export default function ProductDetailClient({ initialProduct, productId, similar
     // Initialize dynamic price with discount applied
     useEffect(() => {
         if (product) {
-            setDynamicPrice(getDiscountedPrice(product.price));
+            setDynamicPrice(getDiscountedPrice(product.price, product.wholesalePrice));
         }
-    }, [product?.id]);
+    }, [product?.id, isWholesale]);
 
     // Dynamic Price Calculation Logic for Variants
     useEffect(() => {
         if (product && selectedWeight && product.weightOptions) {
             const option = product.weightOptions.find(o => o.label === selectedWeight);
             if (option) {
+                // Wholesale fallback to original price if option wholesale price not defined yet
                 setDynamicPrice(getDiscountedPrice(option.price));
             }
         } else if (product) {
-            setDynamicPrice(getDiscountedPrice(product.price));
+            setDynamicPrice(getDiscountedPrice(product.price, product.wholesalePrice));
         }
-    }, [selectedWeight, product]);
+    }, [selectedWeight, product, isWholesale]);
+
+    // Save product to recently viewed list
+    useEffect(() => {
+        if (product && product.id) {
+            addProduct({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.images?.[0] || '',
+                slug: product.slug,
+                discountValue: product.discountValue || product.discount?.value,
+                discountType: product.discountType || (product.discount?.type === 'percent' ? 'PERCENT' : 'FIXED')
+            });
+        }
+    }, [product?.id]);
 
     const handleAddToCart = () => {
         if (!product) return;
@@ -303,10 +330,20 @@ export default function ProductDetailClient({ initialProduct, productId, similar
                                 <span className="text-gray-500 font-medium text-sm">({reviews.length} Reviews)</span>
                             </div>
 
+                            {/* Wholesale Indicator */}
+                            {isWholesale && product.wholesalePrice && (
+                                <div className="mb-2 w-fit bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg flex items-center gap-2">
+                                    <Award size={14} /> Wholesale Pricing Unlocked
+                                </div>
+                            )}
+
                             <div className="flex items-end gap-3 mb-8">
                                 <span className="text-4xl font-bold text-gray-900 dark:text-white transition-all">৳{dynamicPrice.toFixed(0)}</span>
-                                {((product.discountValue && product.discountValue > 0) || (product.discount && product.discount.value > 0)) && (
+                                {!isWholesale && ((product.discountValue && product.discountValue > 0) || (product.discount && product.discount.value > 0)) && (
                                     <span className="text-lg text-gray-400 line-through mb-1">৳{selectedWeight && product.weightOptions ? (product.weightOptions.find(o => o.label === selectedWeight)?.price || product.price) : product.price}</span>
+                                )}
+                                {isWholesale && product.wholesalePrice && (
+                                    <span className="text-sm font-bold text-gray-400 line-through mb-1">Retail: ৳{product.price}</span>
                                 )}
                             </div>
 
@@ -316,26 +353,41 @@ export default function ProductDetailClient({ initialProduct, productId, similar
                                 {product.weightOptions && product.weightOptions.length > 0 && (
                                     <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-500">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Select Variant / ওজন নির্বাচন করুন</span>
-                                            {product.expiryDate && (
-                                                <span className="text-xs font-bold text-red-500 flex items-center gap-1">
-                                                    Expiry: {product.expiryDate}
-                                                </span>
-                                            )}
+                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                                <Award size={14} className="text-orange-500" /> Select Variant / ভেরিয়েন্ট নির্বাচন করুন
+                                            </span>
+                                            <button className="text-[10px] font-bold text-blue-500 underline uppercase tracking-widest hover:text-blue-700 transition-colors">
+                                                Size Guide
+                                            </button>
                                         </div>
                                         <div className="flex flex-wrap gap-3">
-                                            {product.weightOptions.map((opt) => (
-                                                <button
-                                                    key={opt.label}
-                                                    onClick={() => setSelectedWeight(opt.label)}
-                                                    className={`px-6 py-2.5 rounded-xl border-2 font-bold transition-all ${selectedWeight === opt.label
-                                                        ? 'border-orange-600 bg-orange-50 text-orange-600 shadow-inner'
-                                                        : 'border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-300'}`}
-                                                >
-                                                    {opt.label}
-                                                </button>
-                                            ))}
+                                            {product.weightOptions.map((opt) => {
+                                                const isSelected = selectedWeight === opt.label;
+                                                return (
+                                                    <button
+                                                        key={opt.label}
+                                                        onClick={() => setSelectedWeight(opt.label)}
+                                                        className={`relative overflow-hidden px-6 py-3 rounded-2xl border-2 font-bold transition-all duration-300 hover:-translate-y-1 shadow-sm flex flex-col items-center justify-center min-w-[90px] ${isSelected
+                                                            ? 'border-orange-500 bg-orange-50 text-orange-600 shadow-orange-200/50 ring-2 ring-orange-500/20'
+                                                            : 'border-gray-200 bg-white text-gray-600 hover:border-orange-300 hover:shadow-md'}`}
+                                                    >
+                                                        {isSelected && (
+                                                            <div className="absolute top-0 right-0 w-8 h-8 flex items-start justify-end p-1">
+                                                                <div className="w-0 h-0 border-t-[32px] border-t-orange-500 border-l-[32px] border-l-transparent absolute top-0 right-0"></div>
+                                                                <Check size={12} className="text-white z-10 absolute top-1.5 right-1.5" strokeWidth={4} />
+                                                            </div>
+                                                        )}
+                                                        <span className={`text-base z-10 ${isSelected ? 'text-orange-600 font-extrabold' : 'text-gray-700 font-bold'}`}>{opt.label}</span>
+                                                        <span className={`text-[10px] uppercase font-bold tracking-widest mt-0.5 z-10 ${isSelected ? 'text-orange-500' : 'text-gray-400'}`}>৳{opt.price}</span>
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
+                                        {product.expiryDate && (
+                                            <div className="inline-flex items-center gap-2 mt-2 bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-red-100">
+                                                <ShieldCheck size={14} /> Expiry: {product.expiryDate}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
@@ -650,7 +702,50 @@ export default function ProductDetailClient({ initialProduct, productId, similar
                             </div>
                         )}
                     </div>
+
                 </div>
+
+                {/* Recently Viewed Products (To be fully implemented with local storage later) */}
+                <div className="mt-16 border-t border-gray-100 pt-10">
+                    <h3 className="text-2xl font-black text-gray-900 mb-6 flex items-center gap-2">
+                        You Might Also Like
+                    </h3>
+                    {similarProducts.length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {similarProducts.map((p) => {
+                                const pPrice = p.discountValue && p.discountType === 'PERCENT'
+                                    ? p.price - (p.price * (p.discountValue / 100))
+                                    : p.discountValue && p.discountType === 'FIXED'
+                                        ? p.price - p.discountValue
+                                        : p.price;
+
+                                return (
+                                    <Link key={p.id} href={`/product/${p.slug || p.id}`} className="group bg-white rounded-2xl p-4 border border-gray-100 hover:border-orange-200 transition-all hover:shadow-xl hover:-translate-y-1">
+                                        <div className="aspect-square bg-gray-50 rounded-xl mb-3 overflow-hidden">
+                                            {p.images?.[0] ? (
+                                                <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-gray-300">No Image</div>
+                                            )}
+                                        </div>
+                                        <h4 className="font-bold text-gray-900 line-clamp-2 text-sm mb-1 group-hover:text-orange-600 transition-colors">{p.name}</h4>
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-black text-orange-600">৳{pPrice.toFixed(0)}</span>
+                                            {((p.discountValue && p.discountValue > 0) || (p.discount && p.discount.value > 0)) && (
+                                                <span className="text-xs text-gray-400 line-through">৳{p.price}</span>
+                                            )}
+                                        </div>
+                                    </Link>
+                                )
+                            })}
+                        </div>
+                    ) : (
+                        <div className="text-center py-8 bg-gray-50 rounded-2xl text-gray-400 text-sm font-bold">
+                            Keep exploring to see more suggestions!
+                        </div>
+                    )}
+                </div>
+
             </div>
         </div>
     );

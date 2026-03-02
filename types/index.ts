@@ -10,7 +10,6 @@ export interface OrderHelpers {
     shipping?: number;
     tax?: number;
     discount?: number;
-    couponDiscount?: number;
     due?: number;
 }
 

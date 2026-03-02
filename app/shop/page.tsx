@@ -14,6 +14,7 @@ import { fetchProductsAction, fetchSiteSettingsAction } from '@/actions/public-d
 
 import HeroBanner from '@/components/HeroBanner';
 import { m, AnimatePresence } from 'framer-motion';
+import { MENU_ITEMS } from '@/components/navigation-config';
 
 function ShopContent() {
     const searchParams = useSearchParams();
@@ -56,7 +57,32 @@ function ShopContent() {
     const allBrands = Array.from(new Set(products.map(p => p.brand).filter(Boolean)));
 
     const filteredProducts = products.filter(p => {
-        const matchesCategory = category ? p.category?.toLowerCase() === category.toLowerCase() : true;
+        let matchesCategory = true;
+
+        if (category) {
+            const lowerCategory = category.toLowerCase();
+            const lowerProductCat = p.category?.toLowerCase() || '';
+
+            // Collect all matching aliases/subcategories if it's a parent category
+            let validCategories = [lowerCategory];
+            const menuItem = MENU_ITEMS.find(m =>
+                m.href.toLowerCase().includes(`category=${lowerCategory}`) ||
+                m.name.toLowerCase() === lowerCategory
+            );
+
+            if (menuItem && menuItem.subItems) {
+                menuItem.subItems.forEach((sub: any) => {
+                    const match = sub.href.toLowerCase().match(/category=([^&]+)/);
+                    if (match) validCategories.push(match[1]);
+                });
+            }
+
+            // Also checking if the product category matches the target or its subcategories
+            matchesCategory = validCategories.some(validCat =>
+                lowerProductCat.includes(validCat) || validCat.includes(lowerProductCat)
+            );
+        }
+
         const matchesBrand = brand ? p.brand?.toLowerCase() === brand.toLowerCase() : true;
         const matchesSearch = searchQuery
             ? (p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -91,7 +117,7 @@ function ShopContent() {
 
     return (
         <div className="bg-slate-50 min-h-screen">
-            <HeroBanner hasSpecialCoupon={true} />
+            <HeroBanner />
 
             <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-12 md:py-20">
                 <m.div

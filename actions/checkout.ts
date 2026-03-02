@@ -32,7 +32,6 @@ const CheckoutPayload = z.object({
     items: z.array(OrderItemSchema).min(1, "Cart is empty"),
     customer: CustomerSchema,
     payment: PaymentSchema,
-    couponCode: z.string().optional().nullable(),
     userEmail: z.string().optional().nullable(),
     userTags: z.array(z.string()).optional(),
     fcmToken: z.string().optional().nullable(),
@@ -51,7 +50,7 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
 
     try {
         // A. Validate Payload Structure
-        const { items, customer, payment, couponCode, userEmail, userTags, fcmToken } = CheckoutPayload.parse(rawPayload);
+        const { items, customer, payment, userEmail, userTags, fcmToken } = CheckoutPayload.parse(rawPayload);
 
         console.log(`🔒 START TRANSACTION: User=${userEmail || 'Guest'}, Items=${items.length}`);
 
@@ -64,17 +63,6 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                 const snap = await transaction.get(productRef);
                 return { item, snap, productRef };
             }));
-
-            let couponData: any = null;
-            let couponRef: any = null;
-
-            if (couponCode) {
-                couponRef = doc(db, 'coupons', couponCode.toUpperCase().trim());
-                const couponSnap = await transaction.get(couponRef);
-                if (couponSnap.exists()) {
-                    couponData = couponSnap.data();
-                }
-            }
 
             // 2. Calculation Engine (Strict Order: Gross -> Discount -> Tax)
             const calculatedItems: any[] = [];
@@ -165,45 +153,8 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                 });
             }
 
-            // 3. Coupon Application (Global)
-            let couponDiscount = 0;
-            if (couponData) {
-                // Basic Validation
-                const now = new Date();
-                const expiry = new Date(couponData.expiryDate);
-
-                let isValid = true;
-                if (!couponData.isActive) isValid = false;
-                if (now > expiry) isValid = false;
-                if (couponData.usageLimit > 0 && (couponData.usedCount || 0) >= couponData.usageLimit) isValid = false;
-                if (subtotal < (couponData.minOrderValue || 0)) isValid = false;
-
-                // User Validations
-                if (userEmail && couponData.targeting?.excludedEmails?.includes(userEmail)) isValid = false;
-
-                if (isValid) {
-                    // Apply Coupon
-                    const currentNetTotal = (subtotal - totalDiscount); // Net before tax
-
-                    if (couponData.type === 'PERCENTAGE') {
-                        couponDiscount = currentNetTotal * (couponData.value / 100);
-                        if (couponData.maxDiscountAmount) {
-                            couponDiscount = Math.min(couponDiscount, couponData.maxDiscountAmount);
-                        }
-                    } else if (couponData.type === 'FLAT') {
-                        couponDiscount = Math.min(couponData.value, currentNetTotal);
-                    }
-
-                    // Increment Coupon Usage
-                    transaction.update(couponRef!, {
-                        usedCount: increment(1),
-                        usedBy: [userEmail || 'Guest'] // Simplification for Standard SDK arrayUnion if needed, using standard proxy
-                    });
-                }
-            }
-
             // 4. Final Aggregation
-            const finalTotal = (subtotal - totalDiscount - couponDiscount) + totalTax;
+            const finalTotal = (subtotal - totalDiscount) + totalTax;
 
             // 5. Create Order
             const orderId = `AH-${Date.now()}`;
@@ -216,10 +167,8 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                 totals: {
                     subtotal: Number(subtotal.toFixed(2)),
                     discount: Number(totalDiscount.toFixed(2)),
-                    couponDiscount: Number(couponDiscount.toFixed(2)),
                     tax: Number(totalTax.toFixed(2)),
-                    total: Number(finalTotal.toFixed(2)),
-                    couponCode: couponDiscount > 0 ? couponCode : null
+                    total: Number(finalTotal.toFixed(2))
                 },
                 payment: {
                     ...payment,

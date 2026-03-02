@@ -18,22 +18,6 @@ export const seedMockData = async () => {
             console.log("✅ Seeded Partners");
         }
 
-        // 2. Seed Coupons
-        const couponsCol = collection(db, 'coupons');
-        const couponsSnap = await getDocs(query(couponsCol, limit(1)));
-        if (couponsSnap.empty) {
-            await addDoc(couponsCol, {
-                code: 'ASTHAR30',
-                title: 'ASTHAR30 – 30% Off First Order',
-                description: 'Get exclusive discount on your very first purchase at AstharHat.',
-                discount: 30,
-                expiry: null,
-                imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
-                active: true,
-                applicableLocations: ['all']
-            });
-            console.log("✅ Seeded Coupons");
-        }
 
         // 3. Seed Locations
         const locationsCol = collection(db, 'businessLocations');

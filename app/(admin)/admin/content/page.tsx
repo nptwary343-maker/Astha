@@ -9,7 +9,7 @@ import { seedMockData } from '@/lib/seeder-utils';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { Loader2, UploadCloud } from 'lucide-react';
 
-type Section = 'banners' | 'partners' | 'coupons' | 'locations' | 'blocks';
+type Section = 'banners' | 'partners' | 'locations' | 'blocks';
 
 export default function ContentManager() {
     const [activeSection, setActiveSection] = useState<Section>('banners');
@@ -37,7 +37,6 @@ export default function ContentManager() {
         const colMap: Record<Section, string> = {
             banners: 'homeBanners',
             partners: 'partners',
-            coupons: 'coupons',
             locations: 'businessLocations',
             blocks: 'productBlocks'
         };
@@ -56,7 +55,6 @@ export default function ContentManager() {
         const colMap: Record<Section, string> = {
             banners: 'homeBanners',
             partners: 'partners',
-            coupons: 'coupons',
             locations: 'businessLocations',
             blocks: 'productBlocks'
         };
@@ -85,7 +83,6 @@ export default function ContentManager() {
         const colMap: Record<Section, string> = {
             banners: 'homeBanners',
             partners: 'partners',
-            coupons: 'coupons',
             locations: 'businessLocations',
             blocks: 'productBlocks'
         };
@@ -177,16 +174,7 @@ export default function ContentManager() {
                         <input type="text" placeholder="Website" value={formData.website || ''} onChange={e => setFormData({ ...formData, website: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
                     </div>
                 );
-            case 'coupons':
-                return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" placeholder="Coupon Code" value={formData.code || ''} onChange={e => setFormData({ ...formData, code: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <input type="text" placeholder="Title" value={formData.title || ''} onChange={e => setFormData({ ...formData, title: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <input type="text" placeholder="Description" value={formData.description || ''} onChange={e => setFormData({ ...formData, description: e.target.value })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <input type="number" placeholder="Discount %" value={formData.discount || ''} onChange={e => setFormData({ ...formData, discount: Number(e.target.value) })} className="p-3 bg-gray-50 border rounded-xl" />
-                        <ImageUploadField field="imageUrl" placeholder="Coupon Image URL" />
-                    </div>
-                );
+
             case 'locations':
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -234,7 +222,7 @@ export default function ContentManager() {
                         </button>
                     </div>
                     <div className="flex bg-white/10 backdrop-blur-md p-1 rounded-2xl overflow-hidden border border-white/10">
-                        {(['banners', 'partners', 'coupons', 'locations'] as Section[]).map(s => (
+                        {(['banners', 'partners', 'locations'] as Section[]).map(s => (
                             <button
                                 key={s}
                                 onClick={() => setActiveSection(s)}
