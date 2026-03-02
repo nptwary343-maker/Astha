@@ -16,6 +16,7 @@ import { useState, useEffect } from 'react';
 import ParticleHeroBanners from '@/components/home/ParticleHeroBanners';
 import FlashSaleBanner from '@/components/FlashSaleBanner';
 import RecentlyViewed from '@/components/RecentlyViewed';
+import FlashSaleHeroBanner from '@/components/FlashSaleHeroBanner';
 import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
 export default function Home() {
@@ -247,6 +248,9 @@ export default function Home() {
               )}
             </div>
           </section>
+
+          {/* ⚡ DHAMAKA FLASH SALE BANNER - Middle Section */}
+          <FlashSaleHeroBanner />
 
           {/* 📍 Dynamic Product Blocks based on Location */}
           {blocks.map(block => (
