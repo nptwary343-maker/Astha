@@ -93,7 +93,7 @@ export default function Home() {
         <HeroBanner customBanners={banners} />
       </div>
 
-      <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-12 md:space-y-20 pb-24 -mt-10">
+      <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-12 md:space-y-20 pb-24">
 
         {/* 🛡️ Trust Signals Section */}
         <section className="relative z-20">

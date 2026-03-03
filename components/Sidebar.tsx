@@ -126,7 +126,25 @@ interface SidebarProps {
                                     <LogOut size={18} /> Logout
                                 </button>
                             </div>
-                        ) : null}
+                        ) : (
+                            <div className="space-y-3">
+                                <Link
+                                    href="/login"
+                                    onClick={() => setIsOpen(false)}
+                                    className="flex items-center gap-3 px-4 py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all group shadow-md"
+                                >
+                                    <User size={20} className="text-gray-400 group-hover:text-white transition-colors" />
+                                    <span>Log in</span>
+                                </Link>
+                                <Link
+                                    href="/signup"
+                                    onClick={() => setIsOpen(false)}
+                                    className="flex items-center gap-3 px-4 py-3 bg-gray-50 text-gray-800 font-bold rounded-xl hover:bg-gray-100 transition-all group"
+                                >
+                                    <span>Sign Up</span>
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {/* Categories - Now first */}
