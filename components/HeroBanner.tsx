@@ -50,7 +50,7 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
 
         const updateHeight = () => {
             // Priority: Local Banner Height -> Global Admin Height -> Legacy Default
-            const mH = currentBanner.mobileBannerHeight || globalSettings?.mobileBannerHeight || 450;
+            const mH = currentBanner.mobileBannerHeight || globalSettings?.mobileBannerHeight || 220;
             const dH = currentBanner.bannerHeight || globalSettings?.bannerHeight || 650;
 
             if (window.innerWidth < 768) {

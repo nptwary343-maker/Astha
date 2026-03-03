@@ -80,14 +80,14 @@ export default function Home() {
       <MobileMinimalistHeader />
 
       {/* NEW: Separate Particle Feature – Zero DB hits */}
-      <div className="hidden md:block">
+      <div className="block">
         <ParticleHeroBanners />
       </div>
 
       {/* Hero & Banners Section */}
       <div className="relative z-10 space-y-4">
         <FlashSaleBanner />
-        <div className="hidden md:block">
+        <div className="block">
           <SafeBannerRenderer />
         </div>
         <HeroBanner customBanners={banners} />

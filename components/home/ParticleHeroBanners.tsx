@@ -164,7 +164,7 @@ export default function ParticleHeroBanners() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
 
                     {/* Primary Banner - Large */}
-                    <div className={`${secondaryBanner ? 'lg:col-span-8' : 'lg:col-span-12'} group relative min-h-[450px] md:min-h-0 aspect-auto md:aspect-[2.4/1] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]`}>
+                    <div className={`${secondaryBanner ? 'lg:col-span-8' : 'lg:col-span-12'} group relative min-h-[220px] md:min-h-0 aspect-[16/9] md:aspect-[2.4/1] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]`}>
                         <img
                             src={primaryBanner.imageUrl}
                             alt={primaryBanner.title}
@@ -194,7 +194,7 @@ export default function ParticleHeroBanners() {
 
                     {/* Secondary Banner - Compact */}
                     {secondaryBanner && (
-                        <div className="lg:col-span-4 group relative min-h-[350px] md:min-h-0 aspect-auto md:aspect-square lg:aspect-auto rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]">
+                        <div className="lg:col-span-4 group relative min-h-[200px] md:min-h-0 aspect-square md:aspect-square lg:aspect-auto rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl transition-transform duration-700 hover:scale-[1.01]">
                             <img
                                 src={secondaryBanner.imageUrl}
                                 alt={secondaryBanner.title}
