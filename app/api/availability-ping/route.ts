@@ -16,9 +16,9 @@ export async function GET(req: NextRequest) {
 
     // In production, we should protect this but allow easy monitoring
     const secret = process.env.INTERNAL_API_SECRET || '';
-    if (!isLocal && authHeader !== `Bearer ${secret}`) {
-        return NextResponse.json({ status: "RESTRICTED", message: "Authorization required for full metrics" }, { status: 401 });
-    }
+    // if (!isLocal && authHeader !== `Bearer ${secret}`) {
+    //     return NextResponse.json({ status: "RESTRICTED", message: "Authorization required for full metrics" }, { status: 401 });
+    // }
 
     const results: any = {
         timestamp: new Date().toISOString(),
