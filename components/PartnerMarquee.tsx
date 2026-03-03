@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { getActivePartners } from '@/lib/db-utils';
 import { Partner } from '@/types/admin';
 
@@ -30,7 +30,7 @@ const PartnerMarquee = () => {
             </div>
 
             <div className="relative flex">
-                <m.div
+                <motion.div
                     className="flex items-center gap-12 md:gap-24 whitespace-nowrap py-4"
                     animate={{
                         x: [0, -1000],
@@ -59,7 +59,7 @@ const PartnerMarquee = () => {
                             </span>
                         </div>
                     ))}
-                </m.div>
+                </motion.div>
             </div>
         </section>
     );

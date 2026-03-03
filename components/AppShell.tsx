@@ -8,7 +8,7 @@ import FloatingActionButtons from "./FloatingActionButtons";
 import DynamicFooter from "./DynamicFooter";
 import BottomNav from "./BottomNav";
 
-import { m, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import MotionGraphics from './motion/MotionGraphics';
 
 import MarqueeBar from '@/components/MarqueeBar';
@@ -32,7 +32,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <BottomNav />
             <main className="pt-24 md:pt-32 pb-20 md:pb-0 min-h-screen transition-all duration-300 bg-[#f4f4f4] dark:bg-slate-950">
                 <AnimatePresence mode="wait">
-                    <m.div
+                    <motion.div
                         key={pathname}
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
                         {children}
-                    </m.div>
+                    </motion.div>
                 </AnimatePresence>
             </main>
             <FloatingActionButtons />

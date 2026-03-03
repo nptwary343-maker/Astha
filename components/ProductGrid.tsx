@@ -59,14 +59,14 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4">
-            <m.div
+            <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"
                 onClick={onClose}
-            ></m.div>
+            ></motion.div>
 
-            <m.div
+            <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 className="bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col md:flex-row max-h-[95vh] border border-slate-100"
@@ -208,12 +208,12 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                         </div>
                     </div>
                 </div>
-            </m.div>
+            </motion.div>
         </div>
     );
 };
 
-import { m, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PerspectiveCard } from './motion/MotionGraphics';
 
 const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect: (p: Product) => void, index: number }) => {
@@ -257,7 +257,7 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
     };
 
     return (
-        <m.div
+        <motion.div
             onClick={() => onSelect(product)}
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -311,7 +311,7 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
                     </button>
                 </div>
             </div>
-        </m.div>
+        </motion.div>
     );
 };
 
@@ -347,14 +347,14 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
 
     return (
         <section className="relative">
-            <m.div
+            <motion.div
                 layout
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6"
             >
                 {visibleProducts.map((product, index) => (
                     <ProductCard key={product.id} product={product} onSelect={setSelectedProduct} index={index} />
                 ))}
-            </m.div>
+            </motion.div>
 
             {/* Load More Trigger */}
             {hasMore && (

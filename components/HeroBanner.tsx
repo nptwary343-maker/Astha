@@ -6,7 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { Ticket, Copy, Check, Zap, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
 import { Magnet } from './motion/MotionGraphics';
-import { m, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 interface HeroBannerProps {
@@ -86,7 +86,7 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                 style={{ height: bHeight }}
             >
                 <AnimatePresence mode="wait">
-                    <m.div
+                    <motion.div
                         key={activeIndex}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -95,7 +95,7 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                         className="absolute inset-0"
                     >
                         {/* Background with Parallel Effect */}
-                        <m.div
+                        <motion.div
                             initial={{ scale: 1.05 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 1.5, ease: "easeOut" }}
@@ -117,11 +117,11 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                                 />
                             )}
                             <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent" />
-                        </m.div>
+                        </motion.div>
 
                         {/* Content Area */}
                         <div className="relative z-10 flex flex-col justify-center h-full px-5 sm:px-8 md:px-24 py-12">
-                            <m.div
+                            <motion.div
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
@@ -151,7 +151,7 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                                 </div>
 
                                 {/* Trust Signal Badges */}
-                                <m.div
+                                <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.6, duration: 1 }}
@@ -175,10 +175,10 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                                             <span className="text-[10px] font-medium text-slate-500">Ready to Ship</span>
                                         </div>
                                     </div>
-                                </m.div>
-                            </m.div>
+                                </motion.div>
+                            </motion.div>
                         </div>
-                    </m.div>
+                    </motion.div>
                 </AnimatePresence>
 
                 {/* Modern Navigation */}

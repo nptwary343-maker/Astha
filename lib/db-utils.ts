@@ -31,7 +31,7 @@ export const getCachedProducts = async () => {
 
     console.log("🔥 [FIREBASE_HIT] Fetching products (Limit 200)...");
     try {
-        const q = query(collection(db, 'products'), limit(200));
+        const q = query(collection(db, 'products'), limit(500));
         const snap = await getDocs(q);
         const data = snap.empty ? [] : snap.docs.map(d => ({
             id: d.id,

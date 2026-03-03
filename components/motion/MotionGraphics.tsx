@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { m, useScroll, useSpring, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring, useMotionValue, useTransform } from 'framer-motion';
 
 export const ScrollProgress = () => {
     const { scrollYProgress } = useScroll();
@@ -12,7 +12,7 @@ export const ScrollProgress = () => {
     });
 
     return (
-        <m.div
+        <motion.div
             className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-red-500 to-blue-900 z-[100] origin-left"
             style={{ scaleX }}
         />
@@ -33,7 +33,7 @@ export const MouseFollower = () => {
     }, [mouseX, mouseY]);
 
     return (
-        <m.div
+        <motion.div
             className="pointer-events-none fixed inset-0 z-[60] opacity-30 mix-blend-soft-light hidden lg:block"
             style={{
                 background: useTransform(
@@ -49,7 +49,7 @@ export const FloatingShapes = () => {
     return (
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-20 dark:opacity-10">
             {[...Array(5)].map((_, i) => (
-                <m.div
+                <motion.div
                     key={i}
                     className="absolute rounded-full filter blur-3xl"
                     style={{
@@ -97,13 +97,13 @@ export const Magnet = ({ children, distance = 40 }: { children: React.ReactNode,
     }
 
     return (
-        <m.div
+        <motion.div
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ x: springX, y: springY }}
         >
             {children}
-        </m.div>
+        </motion.div>
     );
 };
 
@@ -135,7 +135,7 @@ export const PerspectiveCard = ({ children }: { children: React.ReactNode }) => 
     };
 
     return (
-        <m.div
+        <motion.div
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{
@@ -153,7 +153,7 @@ export const PerspectiveCard = ({ children }: { children: React.ReactNode }) => 
             >
                 {children}
             </div>
-        </m.div>
+        </motion.div>
     );
 };
 

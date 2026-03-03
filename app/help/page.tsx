@@ -3,7 +3,7 @@ export const runtime = 'edge';
 
 import React, { useState } from 'react';
 import { Search, ChevronDown, Book, HelpCircle, Shield, ShoppingCart, Truck, CreditCard, User } from 'lucide-react';
-import { m, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FAQ_ITEMS = [
     {
@@ -45,28 +45,28 @@ export default function HelpPage() {
             <div className="max-w-7xl mx-auto">
                 {/* Header Sub-section */}
                 <div className="text-center mb-16 space-y-8">
-                    <m.div
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="w-20 h-20 bg-indigo-600 rounded-[2rem] mx-auto flex items-center justify-center text-white shadow-2xl"
                     >
                         <HelpCircle size={40} />
-                    </m.div>
+                    </motion.div>
                     <div className="space-y-4">
-                        <m.h1
+                        <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="text-4xl md:text-7xl font-black text-slate-950 uppercase italic tracking-tighter leading-none"
                         >
                             Help <span className="text-indigo-600 font-normal not-italic">& Support</span>
-                        </m.h1>
+                        </motion.h1>
                         <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto uppercase tracking-wide">
                             Everything you need to know about shopping at AstharHat.
                         </p>
                     </div>
 
                     {/* Quick Search */}
-                    <m.div
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 10 }}
                         transition={{ delay: 0.1 }}
@@ -80,14 +80,14 @@ export default function HelpPage() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-14 pr-6 py-6 bg-white border-2 border-slate-100 rounded-[2rem] shadow-xl shadow-indigo-900/5 outline-none focus:border-indigo-600 transition-all font-bold text-slate-900"
                         />
-                    </m.div>
+                    </motion.div>
                 </div>
 
                 {/* FAQ Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-12">
                         {FAQ_ITEMS.map((cat, idx) => (
-                            <m.section
+                            <motion.section
                                 key={cat.category}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -114,7 +114,7 @@ export default function HelpPage() {
                                                 </button>
                                                 <AnimatePresence>
                                                     {isOpen && (
-                                                        <m.div
+                                                        <motion.div
                                                             initial={{ height: 0, opacity: 0 }}
                                                             animate={{ height: 'auto', opacity: 1 }}
                                                             exit={{ height: 0, opacity: 0 }}
@@ -123,20 +123,20 @@ export default function HelpPage() {
                                                             <div className="px-6 pb-6 text-sm text-slate-500 font-medium leading-relaxed border-t border-slate-50 pt-4">
                                                                 {q.a}
                                                             </div>
-                                                        </m.div>
+                                                        </motion.div>
                                                     )}
                                                 </AnimatePresence>
                                             </div>
                                         );
                                     })}
                                 </div>
-                            </m.section>
+                            </motion.section>
                         ))}
                     </div>
 
                     {/* Sidebar Support */}
                     <div className="space-y-8 sticky top-24 h-fit">
-                        <m.div
+                        <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.5 }}
@@ -148,9 +148,9 @@ export default function HelpPage() {
                                 <button className="w-full py-4 bg-white text-indigo-600 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">Support Center</button>
                                 <button className="w-full py-4 bg-indigo-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-indigo-600 border border-indigo-400 transition-all">Start Chat</button>
                             </div>
-                        </m.div>
+                        </motion.div>
 
-                        <m.div
+                        <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 }}
@@ -162,7 +162,7 @@ export default function HelpPage() {
                                 <QuickLink icon={Shield} label="Privacy Policy" />
                                 <QuickLink icon={Book} label="Terms of Service" />
                             </div>
-                        </m.div>
+                        </motion.div>
                     </div>
                 </div>
             </div>

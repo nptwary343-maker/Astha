@@ -3,7 +3,7 @@ export const runtime = 'edge';
 
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react';
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -24,26 +24,26 @@ export default function ContactPage() {
         <div className="min-h-screen bg-slate-50 py-12 px-4 md:py-20 lg:py-32">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16 md:mb-24">
-                    <m.span
+                    <motion.span
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6"
                     >
                         Get in Touch
-                    </m.span>
-                    <m.h1
+                    </motion.span>
+                    <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         className="text-4xl md:text-7xl font-black text-slate-950 uppercase italic tracking-tighter leading-none"
                     >
                         Contact <span className="text-indigo-600 font-normal not-italic">Us</span>
-                    </m.h1>
+                    </motion.h1>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
                     {/* Left Side: Info */}
-                    <m.div
+                    <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
@@ -85,10 +85,10 @@ export default function ContactPage() {
                                 <MessageCircle size={16} /> Start Chat
                             </button>
                         </div>
-                    </m.div>
+                    </motion.div>
 
                     {/* Right Side: Form */}
-                    <m.div
+                    <motion.div
                         initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
@@ -164,7 +164,7 @@ export default function ContactPage() {
                                 </button>
                             </form>
                         )}
-                    </m.div>
+                    </motion.div>
                 </div>
             </div>
         </div>

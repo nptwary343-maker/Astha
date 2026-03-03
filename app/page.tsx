@@ -10,7 +10,7 @@ import { CATEGORIES } from '@/data/static-content';
 import Link from 'next/link';
 import { MENU_ITEMS } from '@/components/navigation-config';
 import TrustBar from '@/components/TrustBar';
-import { m, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from '@/context/LocationContext';
 import { useState, useEffect } from 'react';
 import ParticleHeroBanners from '@/components/home/ParticleHeroBanners';

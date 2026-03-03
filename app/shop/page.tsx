@@ -13,7 +13,7 @@ import { useSound } from '@/context/SoundContext';
 import { fetchProductsAction, fetchSiteSettingsAction } from '@/actions/public-data';
 
 import HeroBanner from '@/components/HeroBanner';
-import { m, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MENU_ITEMS } from '@/components/navigation-config';
 
 function ShopContent() {
@@ -120,7 +120,7 @@ function ShopContent() {
             <HeroBanner />
 
             <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-12 md:py-20">
-                <m.div
+                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="space-y-12"
@@ -170,7 +170,7 @@ function ShopContent() {
                             }
 
                             return (
-                                <m.div
+                                <motion.div
                                     key={product.id}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -220,7 +220,7 @@ function ShopContent() {
                                             </Link>
                                         </div>
                                     </div>
-                                </m.div>
+                                </motion.div>
                             );
                         })}
 
@@ -231,7 +231,7 @@ function ShopContent() {
                             </div>
                         )}
                     </div>
-                </m.div>
+                </motion.div>
             </div>
         </div>
     );
