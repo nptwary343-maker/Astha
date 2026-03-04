@@ -3,7 +3,7 @@ export const runtime = 'edge';
 
 
 import { useState, useEffect } from 'react';
-import { Trash2, Plus, Minus, CreditCard, ShoppingBag, ArrowRight, ShieldCheck, Copy, Phone, Loader2 } from 'lucide-react';
+import { Trash2, Plus, Minus, CreditCard, ShoppingBag, ArrowRight, ShieldCheck, Copy, Phone, Loader2, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { db, auth } from "@/lib/firebase";
 import { onSnapshot, collection, query, where, doc, getDoc } from "firebase/firestore";
