@@ -672,11 +672,29 @@ export default function ProductsPage() {
                                                                     onClick={() => {
                                                                         setEditingId(product.id);
                                                                         setFormData({
-                                                                            ...product,
+                                                                            name: product.name || '',
+                                                                            slug: product.slug || '',
+                                                                            category: product.category || 'Electronics',
                                                                             price: String(product.price || 0),
+                                                                            wholesalePrice: String(product.wholesalePrice || ''),
+                                                                            tax: String(product.tax || '0'),
+                                                                            stock: String(product.stock || ''),
+                                                                            status: product.status || 'Active',
+                                                                            brand: product.brand || '',
+                                                                            description: product.description || '',
+                                                                            images: [product.images?.[0] || '', product.images?.[1] || ''],
+                                                                            discountEnabled: product.discountEnabled || false,
+                                                                            discountType: product.discountType || 'PERCENT',
+                                                                            discountValue: String(product.discountValue || ''),
+                                                                            isExpertVerified: product.isExpertVerified || false,
+                                                                            originDetails: product.originDetails || '',
+                                                                            labReportUrl: product.labReportUrl || '',
+                                                                            descriptionBn: product.descriptionBn || '',
                                                                             weightOptions: product.weightOptions || [],
-                                                                            discountValue: String(product.discountValue || 0),
-                                                                            discountType: product.discountType || 'PERCENT'
+                                                                            dimensionLength: product.dimensionLength || '10',
+                                                                            dimensionWidth: product.dimensionWidth || '10',
+                                                                            trackingStatus: product.trackingStatus || product.trackingInfo?.status || 'Pickup Pending',
+                                                                            trackingLocation: product.trackingLocation || product.trackingInfo?.location || 'Main Warehouse',
                                                                         });
                                                                         setIsModalOpen(true);
                                                                     }}
