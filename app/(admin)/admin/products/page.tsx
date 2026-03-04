@@ -482,24 +482,44 @@ export default function ProductsPage() {
                                     return;
                                 }
 
-                                // 🧠 Injected Logic: Local Keyword-based Categorization first
-                                const suggestions = productsToCategorize.map(p => {
+                                // 🧠 Injected Logic: Real AI-based Categorization
+                                const suggestions = await Promise.all(productsToCategorize.map(async (p) => {
                                     const name = p.name.toLowerCase();
                                     let predicted = 'General';
+
+                                    // Try Fast Local Logic first
                                     if (name.includes('honey') || name.includes('organic') || name.includes('pure')) predicted = 'Natural Product';
                                     else if (name.includes('phone') || name.includes('iphone') || name.includes('gadget') || name.includes('cable')) predicted = 'Electronics';
                                     else if (name.includes('shirt') || name.includes('panjabi') || name.includes('shoe')) predicted = 'Fashion';
                                     else if (name.includes('rice') || name.includes('grain') || name.includes('oil')) predicted = 'Bazar';
                                     else if (name.includes('tablet') || name.includes('medicine')) predicted = 'Medicine';
 
+                                    // If unknown, use Cloudflare AI Brain
+                                    if (predicted === 'General') {
+                                        try {
+                                            const aiRes = await fetch('/api/ai/categorize', {
+                                                method: 'POST',
+                                                body: JSON.stringify({
+                                                    productName: p.name,
+                                                    productDescription: p.description,
+                                                    availableCategories: categories
+                                                })
+                                            });
+                                            const aiData = await aiRes.json();
+                                            if (aiData.category) predicted = aiData.category;
+                                        } catch (e) {
+                                            console.error("AI Categorization Error:", e);
+                                        }
+                                    }
+
                                     return {
                                         id: p.id,
                                         name: p.name,
                                         oldCategory: p.category,
                                         newCategory: predicted,
-                                        confidence: 0.95
+                                        confidence: predicted === 'General' ? 0.3 : 0.98
                                     };
-                                });
+                                }));
 
                                 setCategorizationResults(suggestions);
                                 setIsPreviewModalOpen(true);
