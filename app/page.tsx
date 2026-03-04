@@ -183,10 +183,10 @@ export default function Home() {
                             <Link
                               key={sub.name}
                               href={sub.slug ? `/shop?category=${sub.slug}` : sub.href}
-                              className="text-xs font-medium bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 transition-all hover:opacity-80"
+                              className="text-[10px] font-bold bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-100 transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 block text-center uppercase tracking-tight"
                               style={{
                                 color: sub.color || '#475569',
-                                borderColor: sub.color ? `${sub.color}40` : '#f1f5f9'
+                                borderColor: sub.color ? `${sub.color}20` : '#f1f5f9'
                               }}
                             >
                               {sub.name}
