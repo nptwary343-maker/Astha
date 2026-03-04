@@ -683,7 +683,7 @@ export default function ProductsPage() {
                                                                             brand: product.brand || '',
                                                                             description: product.description || '',
                                                                             images: [product.images?.[0] || '', product.images?.[1] || ''],
-                                                                            discountEnabled: product.discountEnabled || false,
+                                                                            discountEnabled: !!(product.discountValue && product.discountValue > 0),
                                                                             discountType: product.discountType || 'PERCENT',
                                                                             discountValue: String(product.discountValue || ''),
                                                                             isExpertVerified: product.isExpertVerified || false,
@@ -691,10 +691,10 @@ export default function ProductsPage() {
                                                                             labReportUrl: product.labReportUrl || '',
                                                                             descriptionBn: product.descriptionBn || '',
                                                                             weightOptions: product.weightOptions || [],
-                                                                            dimensionLength: product.dimensionLength || '10',
-                                                                            dimensionWidth: product.dimensionWidth || '10',
-                                                                            trackingStatus: product.trackingStatus || product.trackingInfo?.status || 'Pickup Pending',
-                                                                            trackingLocation: product.trackingLocation || product.trackingInfo?.location || 'Main Warehouse',
+                                                                            dimensionLength: product.dimensions?.length || '10',
+                                                                            dimensionWidth: product.dimensions?.width || '10',
+                                                                            trackingStatus: product.trackingInfo?.status || 'Pickup Pending',
+                                                                            trackingLocation: product.trackingInfo?.location || 'Main Warehouse',
                                                                         });
                                                                         setIsModalOpen(true);
                                                                     }}
