@@ -150,7 +150,7 @@ export default function Home() {
                     }`}>
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
 
-                    <Link href={`/shop?category=${cat.id}`} className="block relative z-10 group/header">
+                    <Link href={`/shop?category=${cat.name.toLowerCase()}`} className="block relative z-10 group/header">
                       <h3 className="text-xl font-bold mb-6 group-hover:text-brand-primary transition-colors text-slate-800">
                         {cat.name}
                       </h3>
@@ -198,7 +198,7 @@ export default function Home() {
                       )}
 
                       <Link
-                        href={`/shop?category=${cat.id}`}
+                        href={`/shop?category=${cat.name.toLowerCase()}`}
                         className="flex items-center justify-between group/link py-2 mt-4"
                       >
                         <span className="text-sm font-semibold text-slate-800 group-hover/link:text-brand-primary transition-colors">Shop Selection</span>

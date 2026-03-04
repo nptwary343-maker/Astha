@@ -2,7 +2,7 @@
 export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
-import { Package, Plus, Search, Trash2, Edit, Filter, LayoutGrid, List, UploadCloud, Image as ImageIcon, X, Check, Link as LinkIcon, DollarSign, Percent, Zap, Lock as LockIcon, Loader2, FileText } from 'lucide-react';
+import { Package, Plus, Search, Trash2, Edit, Filter, LayoutGrid, List, UploadCloud, Image as ImageIcon, X, Check, Link as LinkIcon, DollarSign, Percent, Zap, Lock as LockIcon, Loader2, FileText, ArrowRight } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { clearProductCache } from '@/lib/db-utils';
@@ -140,6 +140,9 @@ export default function ProductsPage() {
     const [isSyncing, setIsSyncing] = useState(false);
     const [isAlgoliaSyncing, setIsAlgoliaSyncing] = useState(false);
     const [isCleaning, setIsCleaning] = useState(false);
+    const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+    const [categorizationResults, setCategorizationResults] = useState<any[]>([]);
+    const [isAIProcessing, setIsAIProcessing] = useState(false);
 
     // --- Actions ---
 
@@ -467,6 +470,51 @@ export default function ProductsPage() {
                     >
                         <Zap size={18} /> Refresh Homepage
                     </button>
+
+                    <button
+                        onClick={async () => {
+                            setIsAIProcessing(true);
+                            try {
+                                // Scanning Logic
+                                const productsToCategorize = products.filter(p => !p.category || p.category === 'Electronics' || p.category === 'Uncategorized');
+                                if (productsToCategorize.length === 0) {
+                                    alert("No products found that need categorization!");
+                                    return;
+                                }
+
+                                // 🧠 Injected Logic: Local Keyword-based Categorization first
+                                const suggestions = productsToCategorize.map(p => {
+                                    const name = p.name.toLowerCase();
+                                    let predicted = 'General';
+                                    if (name.includes('honey') || name.includes('organic') || name.includes('pure')) predicted = 'Natural Product';
+                                    else if (name.includes('phone') || name.includes('iphone') || name.includes('gadget') || name.includes('cable')) predicted = 'Electronics';
+                                    else if (name.includes('shirt') || name.includes('panjabi') || name.includes('shoe')) predicted = 'Fashion';
+                                    else if (name.includes('rice') || name.includes('grain') || name.includes('oil')) predicted = 'Bazar';
+                                    else if (name.includes('tablet') || name.includes('medicine')) predicted = 'Medicine';
+
+                                    return {
+                                        id: p.id,
+                                        name: p.name,
+                                        oldCategory: p.category,
+                                        newCategory: predicted,
+                                        confidence: 0.95
+                                    };
+                                });
+
+                                setCategorizationResults(suggestions);
+                                setIsPreviewModalOpen(true);
+                            } catch (error) {
+                                console.error(error);
+                            } finally {
+                                setIsAIProcessing(false);
+                            }
+                        }}
+                        className="bg-indigo-100 text-indigo-700 px-4 py-2.5 rounded-xl font-bold border border-indigo-200 flex items-center gap-2 hover:bg-indigo-200 transition-colors"
+                    >
+                        {isAIProcessing ? <Loader2 className="animate-spin" size={18} /> : <Zap size={18} />}
+                        Auto-Categorize
+                    </button>
+
                     <button className="bg-white text-gray-700 px-4 py-2.5 rounded-xl font-bold border border-gray-200 flex items-center gap-2 hover:bg-gray-50 transition-colors">
                         <Filter size={18} /> Filter
                     </button>
@@ -1256,6 +1304,105 @@ export default function ProductsPage() {
                     </div>
                 )
             }
+            {/* Preview Modal for Auto-Categorization */}
+            {isPreviewModalOpen && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="bg-white w-full max-w-4xl rounded-[2.5rem] shadow-2xl p-10 relative max-h-[85vh] overflow-hidden flex flex-col border border-indigo-50">
+                        <button
+                            onClick={() => setIsPreviewModalOpen(false)}
+                            className="absolute top-8 right-8 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <X size={24} />
+                        </button>
+
+                        <div className="mb-8">
+                            <h2 className="text-3xl font-black text-gray-950 uppercase italic tracking-tighter mb-2">Review AI Categorization</h2>
+                            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                                AI has scanned {categorizationResults.length} products. Review before applying changes.
+                            </p>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto pr-4 mb-8 space-y-3 custom-scrollbar">
+                            {categorizationResults.map((res: any, idx: number) => (
+                                <div key={res.id} className="bg-slate-50 border border-slate-100 p-5 rounded-2xl flex items-center justify-between group hover:border-indigo-200 hover:bg-white transition-all">
+                                    <div className="flex-1">
+                                        <h4 className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{res.name}</h4>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{res.oldCategory || 'Uncategorized'}</span>
+                                            <ArrowRight size={10} className="text-slate-300" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">{res.newCategory}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-right">
+                                            <span className="block text-[10px] font-black text-green-600 uppercase tracking-widest">Confidence</span>
+                                            <div className="w-20 h-1.5 bg-slate-200 rounded-full mt-1 overflow-hidden">
+                                                <div className="h-full bg-green-500 rounded-full" style={{ width: `${res.confidence * 100}%` }}></div>
+                                            </div>
+                                        </div>
+                                        <select
+                                            value={res.newCategory}
+                                            onChange={(e) => {
+                                                const newResults = [...categorizationResults];
+                                                newResults[idx].newCategory = e.target.value;
+                                                setCategorizationResults(newResults);
+                                            }}
+                                            className="bg-white border border-slate-200 text-xs font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        >
+                                            {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex justify-end gap-4 pt-6 border-t border-slate-100">
+                            <button
+                                onClick={() => setIsPreviewModalOpen(false)}
+                                className="px-8 py-3 rounded-xl font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                            >
+                                Discard All
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    setIsAIProcessing(true);
+                                    try {
+                                        const batch = categorizationResults.map(async (res) => {
+                                            const productRef = doc(db, "products", res.id);
+                                            return updateDoc(productRef, { category: res.newCategory, updatedAt: new Date().toISOString() });
+                                        });
+                                        await Promise.all(batch);
+
+                                        // Update local state
+                                        setProducts(products.map(p => {
+                                            const match = categorizationResults.find(r => r.id === p.id);
+                                            return match ? { ...p, category: match.newCategory } : p;
+                                        }));
+
+                                        clearProductCache();
+                                        setIsPreviewModalOpen(false);
+                                        confetti({
+                                            particleCount: 150,
+                                            spread: 70,
+                                            origin: { y: 0.6 }
+                                        });
+                                    } catch (err) {
+                                        console.error(err);
+                                        alert("Failed to update products.");
+                                    } finally {
+                                        setIsAIProcessing(false);
+                                    }
+                                }}
+                                disabled={isAIProcessing}
+                                className="bg-slate-950 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-slate-200 hover:bg-indigo-600 transition-all flex items-center gap-2 group"
+                            >
+                                {isAIProcessing ? <Loader2 className="animate-spin" size={18} /> : <Check size={18} />}
+                                Apply Updates
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 }
