@@ -199,26 +199,46 @@ export default function AccountPage() {
                                     {[
                                         { id: 'ASTHA-13345', date: 'Oct 24, 2024', total: '৳13,900', status: 'In Transit' },
                                         { id: 'ASTHA-12009', date: 'Sep 10, 2024', total: '৳2,500', status: 'Delivered' },
-                                    ].map((order) => (
-                                        <div key={order.id} className="bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-gray-50 dark:border-zinc-800 shadow-xl hover:shadow-2xl transition-all flex items-center justify-between group">
-                                            <div className="flex items-center gap-6">
-                                                <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-zinc-800 flex items-center justify-center text-maroon dark:text-gold">
-                                                    <Package size={24} />
+                                    ].length > 0 ? (
+                                        [
+                                            { id: 'ASTHA-13345', date: 'Oct 24, 2024', total: '৳13,900', status: 'In Transit' },
+                                            { id: 'ASTHA-12009', date: 'Sep 10, 2024', total: '৳2,500', status: 'Delivered' },
+                                        ].map((order) => (
+                                            <div key={order.id} className="bg-white dark:bg-zinc-900 rounded-[2rem] p-6 border-b border-gray-50 dark:border-zinc-800/50 shadow-sm hover:shadow-xl hover:shadow-maroon/5 transition-all flex items-center justify-between group relative overflow-hidden">
+                                                <div className="flex items-center gap-6">
+                                                    <div className="w-14 h-14 rounded-2xl bg-gray-50 dark:bg-zinc-800 flex items-center justify-center text-maroon dark:text-gold group-hover:bg-maroon group-hover:text-gold transition-all duration-500">
+                                                        <Package size={28} />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-black text-gray-900 dark:text-white tracking-tight">{order.id}</h3>
+                                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{order.date}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h3 className="font-black text-gray-900 dark:text-white tracking-tight">{order.id}</h3>
-                                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{order.date}</p>
+                                                <div className="flex items-center gap-8">
+                                                    <div className="text-right">
+                                                        <p className="text-sm font-black text-maroon dark:text-gold">{order.total}</p>
+                                                        <p className="text-[9px] text-gray-400 font-bold uppercase">{order.status}</p>
+                                                    </div>
+                                                    <div className="w-10 h-10 rounded-full bg-gray-50 dark:bg-zinc-800 flex items-center justify-center group-hover:bg-maroon group-hover:text-gold transition-all">
+                                                        <ChevronRight size={20} />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-8">
-                                                <div className="text-right hidden sm:block">
-                                                    <p className="text-xs font-black text-maroon dark:text-gold">{order.total}</p>
-                                                    <p className="text-[9px] text-gray-400 font-bold uppercase">{order.status}</p>
-                                                </div>
-                                                <ChevronRight className="text-gray-300 group-hover:text-gold transition-colors" />
+                                        ))
+                                    ) : (
+                                        <div className="bg-white dark:bg-zinc-900 rounded-[3rem] p-20 text-center border-2 border-dashed border-gray-100 dark:border-zinc-800">
+                                            <div className="w-20 h-20 bg-gray-50 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
+                                                <Package size={40} />
                                             </div>
+                                            <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase italic">কোন অর্ডার নেই!</h3>
+                                            <p className="text-gray-400 text-sm font-medium mb-8 max-w-xs mx-auto">
+                                                আপনি এখনও আমাদের কাছ থেকে কোনো কেনাকাটা করেননি। আপনার প্রথম অর্ডারটি আজই করুন!
+                                            </p>
+                                            <button onClick={() => router.push('/shop')} className="bg-maroon text-gold px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-maroon/20">
+                                                বাজার শুরু করুন
+                                            </button>
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
                             )}
 

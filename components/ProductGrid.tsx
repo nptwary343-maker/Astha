@@ -56,7 +56,7 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col md:flex-row max-h-[95vh] border border-slate-100"
+                className="bg-white w-full max-w-5xl rounded-[2.5rem] overflow-hidden shadow-[0_30px_100px_-20px_rgba(0,0,0,0.3)] relative z-10 flex flex-col md:flex-row max-h-[95vh]"
                 transition={{ duration: 0.3, ease: 'easeOut' }}
             >
                 <button
@@ -88,7 +88,7 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                 <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col bg-white overflow-y-auto">
                     <div className="mb-6">
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs font-semibold text-brand-primary bg-indigo-50/50 px-2 py-0.5 rounded-md">{product.category}</span>
+                            <span className="text-xs font-semibold text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded-md">{product.category}</span>
                             {product.labReportUrl ? (
                                 <a href={product.labReportUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-emerald-600 ml-2 hover:bg-emerald-50 px-2 py-0.5 rounded-md transition-colors cursor-pointer border border-emerald-100/50">
                                     <FileText size={14} className="stroke-[2.5]" />
@@ -161,8 +161,8 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                                                 key={unit.label}
                                                 onClick={() => setSelectedUnit(unit as any)}
                                                 className={`py-3 px-1 rounded-xl text-[10px] font-black transition-all border-2 uppercase tracking-tighter ${selectedUnit.label === unit.label
-                                                    ? 'border-indigo-600 bg-indigo-600 text-white shadow-lg'
-                                                    : 'border-slate-100 bg-white text-slate-400 hover:border-indigo-300'
+                                                    ? 'border-brand-accent bg-brand-accent text-white shadow-lg'
+                                                    : 'border-slate-100 bg-white text-slate-400 hover:border-brand-accent/30'
                                                     }`}
                                             >
                                                 {unit.label}
@@ -178,12 +178,12 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                                     <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
                                         <button
                                             onClick={() => setQty(Math.max(1, qty - 1))}
-                                            className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
+                                            className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-brand-accent transition-all font-black border border-slate-100"
                                         >-</button>
                                         <span className="w-10 text-center text-sm font-black text-slate-800">{qty}</span>
                                         <button
                                             onClick={() => setQty(qty + 1)}
-                                            className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-indigo-600 transition-all font-black border border-slate-100"
+                                            className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-slate-600 hover:text-brand-accent transition-all font-black border border-slate-100"
                                         >+</button>
                                     </div>
                                 </div>
@@ -191,13 +191,13 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                                 <div className="flex gap-3">
                                     <button
                                         onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); router.push('/cart'); })}
-                                        className="flex-[1.5] bg-indigo-600 hover:bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/btn"
+                                        className="flex-[1.5] bg-brand-primary hover:bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/btn"
                                     >
                                         সরাসরি কিনুন <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                                     </button>
                                     <button
                                         onClick={() => handleAuthAction(() => { addToCart(product.id, selectedUnit.multiplier * qty); onClose(); })}
-                                        className="flex-1 bg-white hover:bg-slate-50 text-indigo-600 py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all border-2 border-indigo-100"
+                                        className="flex-1 bg-white hover:bg-slate-50 text-brand-accent py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all border-2 border-brand-accent/10"
                                     >
                                         কার্টে যোগ করুন
                                     </button>
@@ -246,8 +246,8 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ y: -5 }}
-            className="group flex flex-col bg-white transition-all hover:shadow-2xl cursor-pointer h-full border border-slate-100 rounded-2xl overflow-hidden relative active:scale-95"
+            whileHover={{ y: -8 }}
+            className="group flex flex-col bg-white transition-all hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] cursor-pointer h-full shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] rounded-[2rem] overflow-hidden relative active:scale-95 border-0"
         >
             {/* Image Architecture */}
             <div className="relative aspect-square overflow-hidden bg-slate-50 flex items-center justify-center p-4">
@@ -269,9 +269,9 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
             </div>
 
             {/* Data Architecture */}
-            <div className="flex flex-col flex-1 p-4">
-                <span className="text-[10px] font-semibold text-brand-primary mb-1">{product.category}</span>
-                <h3 className="text-sm font-semibold text-slate-800 line-clamp-2 mb-3 leading-snug min-h-[2.5rem] group-hover:text-brand-primary">
+            <div className="flex flex-col flex-1 p-5">
+                <span className="text-[10px] font-black tracking-widest uppercase text-brand-primary opacity-60 mb-2">{product.category}</span>
+                <h3 className="text-sm font-bold text-slate-800 line-clamp-2 mb-4 leading-snug min-h-[2.5rem] group-hover:text-brand-primary transition-colors">
                     {product.name}
                 </h3>
 
@@ -353,7 +353,7 @@ const ProductGrid = ({ initialProducts }: { initialProducts?: any[] }) => {
                         className="bg-white border-2 border-slate-100 hover:border-brand-primary text-slate-900 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-sm hover:shadow-xl transition-all active:scale-95 flex items-center gap-2 group"
                     >
                         Load More Products
-                        <ChevronRight size={16} className="group-hover:rotate-90 transition-transform" />
+                        <ChevronRight size={16} className="group-hover:rotate-90 transition-transform text-brand-primary" />
                     </button>
                 </div>
             )}

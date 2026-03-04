@@ -15,6 +15,8 @@ import { fetchProductsAction, fetchSiteSettingsAction } from '@/actions/public-d
 import HeroBanner from '@/components/HeroBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MENU_ITEMS } from '@/components/navigation-config';
+import { MobileMinimalistCategories } from '@/components/MobileMinimalistView';
+import { CATEGORIES } from '@/data/static-content';
 
 function ShopContent() {
     const searchParams = useSearchParams();
@@ -119,6 +121,11 @@ function ShopContent() {
         <div className="bg-slate-50 min-h-screen">
             <HeroBanner />
 
+            {/* Added Category Quick Access for Search/Category view */}
+            <div className="bg-white border-b border-slate-100">
+                <MobileMinimalistCategories categories={CATEGORIES} />
+            </div>
+
             <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-12 md:py-20">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -128,7 +135,7 @@ function ShopContent() {
                     {/* Header Section */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-slate-200 pb-12">
                         <div className="space-y-2">
-                            <div className="inline-flex items-center gap-2 bg-indigo-50 px-3 py-1 rounded-full text-indigo-600 font-black text-[10px] uppercase tracking-widest">
+                            <div className="inline-flex items-center gap-2 bg-brand-primary/10 px-3 py-1 rounded-full text-brand-primary font-black text-[10px] uppercase tracking-widest">
                                 <Award size={12} /> ASTHA EXCLUSIVE
                             </div>
                             <h1 className="text-4xl md:text-6xl font-black text-slate-950 uppercase italic tracking-tighter leading-none">
@@ -141,7 +148,7 @@ function ShopContent() {
                             <div className="flex items-center gap-3 overflow-x-auto pb-4 md:pb-0 no-scrollbar">
                                 <button
                                     onClick={() => updateFilter('brand', null)}
-                                    className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap shadow-sm border ${!brand ? 'bg-indigo-600 text-white border-indigo-600 shadow-indigo-100' : 'bg-white text-slate-400 border-slate-100 hover:border-indigo-200'}`}
+                                    className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap shadow-sm border ${!brand ? 'bg-brand-accent text-white border-brand-accent shadow-brand-accent/10' : 'bg-white text-slate-400 border-slate-100 hover:border-brand-accent/20'}`}
                                 >
                                     সব ব্র্যান্ড
                                 </button>
@@ -201,7 +208,7 @@ function ShopContent() {
 
                                     <div className="space-y-4 flex flex-col flex-1">
                                         <div className="space-y-1">
-                                            <p className="text-[9px] font-black text-indigo-600 uppercase tracking-widest opacity-60">{product.category}</p>
+                                            <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest opacity-60">{product.category}</p>
                                             <h3 className="font-extrabold text-slate-950 line-clamp-2 text-sm md:text-base leading-tight hover:text-indigo-600 transition-colors uppercase tracking-tight italic">
                                                 {product.name}
                                             </h3>
@@ -214,7 +221,7 @@ function ShopContent() {
                                             </div>
                                             <Link
                                                 href={`/${prefix}/${product.slug || product.id}`}
-                                                className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all shadow-sm group/arr"
+                                                className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-brand-accent hover:text-white transition-all shadow-sm group/arr"
                                             >
                                                 <Filter size={16} className="group-hover/arr:rotate-90 transition-transform" />
                                             </Link>

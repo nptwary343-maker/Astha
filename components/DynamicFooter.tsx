@@ -50,7 +50,7 @@ export default function DynamicFooter() {
     const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
     const { t } = useI18n();
 
-    const isAdmin = pathname?.startsWith('/admin');
+    const isAdmin = pathname?.startsWith('/admin') || pathname?.startsWith('/admin-login');
 
     useEffect(() => {
         const fetchConfig = async () => {

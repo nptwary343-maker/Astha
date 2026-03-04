@@ -34,7 +34,7 @@ export default function CartPreview({ onClose }: { onClose: () => void }) {
     }, 0);
 
     return (
-        <div className="absolute top-full right-0 mt-2 w-80 md:w-96 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-[60] animate-in fade-in slide-in-from-top-2">
+        <div className="absolute top-full right-[-1rem] md:right-0 mt-2 w-[calc(100vw-2rem)] md:w-96 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-[60] animate-in fade-in slide-in-from-top-2 mx-4 md:mx-0">
             <div className="p-4 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
                 <h3 className="font-bold text-gray-900 flex items-center gap-2">
                     <ShoppingBag size={18} /> My Cart ({cartCount})

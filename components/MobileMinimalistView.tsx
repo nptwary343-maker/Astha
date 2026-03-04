@@ -13,60 +13,60 @@ export default function MobileMinimalistHeader() {
     const { user } = useAuth();
 
     return (
-        <div className="md:hidden flex flex-col bg-[#232f3e] text-white sticky top-0 z-[100] shadow-md">
-            {/* Top Bar: Logo, Account, Cart */}
-            <div className="flex items-center justify-between px-4 py-2 gap-4">
-                <div className="flex items-center gap-3">
-                    <button className="p-1 hover:bg-white/10 rounded transition-colors">
-                        <Menu size={24} strokeWidth={2.5} />
+        <div className="md:hidden flex flex-col bg-slate-900 text-white sticky top-0 z-[100] shadow-xl">
+            {/* Bar 1: Logo, Location, Account, Cart */}
+            <div className="flex items-center justify-between px-4 py-3 gap-3 border-b border-white/5">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <button className="p-1.5 hover:bg-white/10 rounded-xl transition-colors shrink-0">
+                        <Menu size={20} strokeWidth={2.5} className="text-brand-primary" />
                     </button>
-                    <Link href="/" className="flex flex-col">
-                        <h1 className="text-xl font-black tracking-tighter italic uppercase leading-none">
-                            Asthar <span className="text-[#febd69]">Hat</span>
+                    <Link href="/" className="shrink-0">
+                        <h1 className="text-lg font-black tracking-tighter italic uppercase leading-none">
+                            Asthar <span className="text-brand-primary">Hat</span>
                         </h1>
                     </Link>
+                    <div className="h-4 w-px bg-white/10 mx-1 hidden sm:block" />
+                    <div className="hidden sm:flex items-center gap-1 overflow-hidden">
+                        <MapPin size={12} className="text-brand-accent shrink-0" />
+                        <span className="text-[10px] font-bold truncate opacity-80 uppercase tracking-tighter">
+                            {selectedLocationId === 'all' ? 'Everywhere' : selectedLocationId}
+                        </span>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Link href="/account" className="flex items-center gap-1 hover:text-[#febd69] transition-colors relative">
-                        <span className="text-[10px] font-bold uppercase tracking-tight hidden sm:inline">Sign In</span>
-                        <User size={22} />
+                    <Link href="/account" className="hover:text-brand-primary transition-colors">
+                        <User size={20} />
                     </Link>
-                    <Link href="/cart" className="flex items-center relative hover:text-[#febd69] transition-colors">
-                        <ShoppingCart size={24} />
+                    <Link href="/cart" className="relative hover:text-brand-primary transition-colors">
+                        <ShoppingCart size={22} />
                         {cartCount > 0 && (
-                            <span className="absolute -top-1 -right-2 bg-[#febd69] text-[#232f3e] text-[10px] font-black h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center border border-[#232f3e]">
+                            <span className="absolute -top-1.5 -right-2 bg-brand-primary text-white text-[9px] font-black h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center border-2 border-slate-900">
                                 {cartCount}
                             </span>
                         )}
-                        <span className="ml-1 text-[10px] font-black uppercase mt-1">Cart</span>
                     </Link>
                 </div>
             </div>
 
-            {/* Search Bar Row */}
-            <div className="px-3 pb-3">
-                <Link href="/shop" className="block w-full">
-                    <div className="relative group">
+            {/* Bar 2: Search + Quick Location for mobile */}
+            <div className="px-3 py-2 flex items-center gap-2 bg-slate-800/50 backdrop-blur-md">
+                <Link href="/shop" className="flex-1">
+                    <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                            <Search size={16} />
+                        </div>
                         <input
                             readOnly
                             placeholder="Search Asthar Hat..."
-                            className="w-full bg-white text-slate-900 rounded-lg py-3 pl-4 pr-12 text-sm font-medium focus:outline-none"
+                            className="w-full bg-white/10 border border-white/5 text-white rounded-xl py-2 pl-10 pr-4 text-xs font-semibold focus:outline-none placeholder:text-slate-500"
                         />
-                        <div className="absolute right-0 top-0 h-full w-12 bg-[#febd69] rounded-r-lg flex items-center justify-center">
-                            <Search size={22} className="text-slate-800" />
-                        </div>
                     </div>
                 </Link>
-            </div>
-
-            {/* Location Bar Row */}
-            <div className="bg-[#37475a] px-4 py-2.5 flex items-center gap-2 text-[11px] font-medium border-t border-white/5">
-                <MapPin size={14} className="text-white" />
-                <span className="flex-1 truncate opacity-90">
-                    Deliver to <span className="font-bold text-white uppercase tracking-wider">{selectedLocationId === 'all' ? 'Everywhere' : selectedLocationId}</span>
-                </span>
-                <ChevronRight size={12} className="opacity-50" />
+                <div className="flex sm:hidden items-center gap-1 bg-white/5 px-2 py-2 rounded-xl border border-white/5 max-w-[80px]">
+                    <MapPin size={14} className="text-brand-accent shrink-0" />
+                    <span className="text-[9px] font-black truncate opacity-90 uppercase">{selectedLocationId === 'all' ? 'Global' : selectedLocationId}</span>
+                </div>
             </div>
         </div>
     );

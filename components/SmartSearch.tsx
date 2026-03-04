@@ -180,7 +180,7 @@ const SmartSearch = ({ selectedCategory = 'All' }: { selectedCategory?: string }
                         setIsOpen(true);
                     }}
                     placeholder="Search for premium products..."
-                    className="w-full bg-white dark:bg-zinc-900 border-2 border-gray-100 dark:border-zinc-800 focus:border-blue-500 rounded-2xl py-3 pl-12 pr-12 text-sm font-bold outline-none shadow-sm transition-all"
+                    className="w-full bg-white dark:bg-zinc-900 border-2 border-gray-100 dark:border-zinc-800 focus:border-blue-500 rounded-2xl py-4 pl-12 pr-12 text-sm font-bold outline-none shadow-sm transition-all"
                 />
                 <div className="absolute right-4 flex items-center gap-2">
                     {isLoading && <Loader2 size={18} className="animate-spin text-blue-500" />}

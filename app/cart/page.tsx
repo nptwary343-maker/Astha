@@ -198,45 +198,70 @@ export default function CartPage() {
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
                         <h1 className="text-2xl font-black flex items-center gap-3 mb-8 uppercase italic tracking-tighter">
-                            <ShoppingBag className="text-indigo-600" />
+                            <ShoppingBag className="text-brand-primary" />
                             আপনার শপিং কার্ট
                         </h1>
 
                         {items.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-16 space-y-6">
-                                <div className="p-8 bg-slate-50 rounded-full">
-                                    <ShoppingBag size={64} className="text-slate-200" />
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex flex-col items-center justify-center py-24 space-y-8"
+                            >
+                                <div className="relative">
+                                    <div className="absolute -inset-4 bg-brand-primary/10 blur-3xl rounded-full animate-pulse" />
+                                    <div className="p-10 bg-white dark:bg-zinc-800 rounded-[2.5rem] shadow-2xl shadow-brand-primary/10 relative z-10 border border-brand-primary/5">
+                                        <ShoppingBag size={80} className="text-brand-primary/30" strokeWidth={1.5} />
+                                        <motion.div
+                                            animate={{
+                                                y: [0, -10, 0],
+                                                rotate: [0, 5, -5, 0]
+                                            }}
+                                            transition={{ repeat: Infinity, duration: 4 }}
+                                            className="absolute -top-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl"
+                                        >
+                                            <Plus size={20} className="animate-pulse" />
+                                        </motion.div>
+                                    </div>
                                 </div>
-                                <div className="text-center space-y-2">
-                                    <h3 className="text-xl font-bold text-slate-900">আপনার কার্ট খালি!</h3>
-                                    <p className="text-slate-500 text-sm">আমাদের চমৎকার সব কালেকশনগুলো একবার ঘুরে দেখুন।</p>
+                                <div className="text-center space-y-3 max-w-xs">
+                                    <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic">কার্টটি একদম খালি!</h3>
+                                    <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                                        আপনার পছন্দের পন্যগুলো এখনও যুক্ত করা হয়নি। চলুন ঘুরে দেখা যাক আপনার জন্য কী কী অপেক্ষা করছে!
+                                    </p>
                                 </div>
                                 <button
                                     onClick={() => router.push('/')}
-                                    className="bg-indigo-600 hover:bg-slate-900 text-white px-10 py-4 rounded-xl font-black transition-all shadow-xl active:scale-95 flex items-center gap-2 uppercase text-xs tracking-widest"
+                                    className="group bg-slate-900 hover:bg-brand-primary text-white px-12 py-5 rounded-[2rem] font-black transition-all shadow-2xl hover:shadow-brand-primary/25 active:scale-95 flex items-center gap-3 uppercase text-xs tracking-[0.2em] relative overflow-hidden"
                                 >
-                                    কেনাকাটা শুরু করুন <ArrowRight size={18} />
+                                    <span className="relative z-10">কেনাকাটা শুরু করুন</span>
+                                    <ArrowRight size={18} className="relative z-10 group-hover:translate-x-2 transition-transform" />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-brand-primary to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </button>
-                            </div>
+                            </motion.div>
                         ) : (
                             <div className="space-y-4">
                                 {calculatedItems.map((item) => (
-                                    <div key={item.productId} className="flex flex-col md:flex-row gap-6 p-5 rounded-2xl border border-slate-50 hover:border-indigo-100 bg-white hover:bg-slate-50/50 transition-all group">
+                                    <div key={item.productId} className="flex flex-col md:flex-row gap-6 p-6 rounded-[2rem] bg-white dark:bg-zinc-900 shadow-sm hover:shadow-xl hover:shadow-brand-primary/5 border border-slate-50 dark:border-zinc-800/50 transition-all group relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 w-1 h-full bg-brand-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <div className="flex-1 space-y-1">
-                                            <h3 className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors uppercase tracking-tight">{item.name}</h3>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">একক মূল্য: ৳{item.unitPrice}</p>
+                                            <h3 className="font-bold text-slate-800 dark:text-zinc-100 group-hover:text-brand-primary transition-colors uppercase tracking-tight text-lg">{item.name}</h3>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-brand-primary/20" />
+                                                একক মূল্য: ৳{item.unitPrice}
+                                            </p>
                                         </div>
                                         <div className="flex items-center justify-between md:justify-end gap-6">
-                                            <div className="flex items-center bg-white border border-slate-100 rounded-xl p-1 shadow-sm">
-                                                <button onClick={() => updateQty(item.productId, -1)} className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-indigo-600 transition-colors"><Minus size={16} /></button>
-                                                <span className="w-8 text-center font-black text-slate-800">{item.qty}</span>
-                                                <button onClick={() => updateQty(item.productId, 1)} className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-indigo-600 transition-colors"><Plus size={16} /></button>
+                                            <div className="flex items-center bg-slate-50 dark:bg-zinc-800/50 rounded-2xl p-1.5 shadow-inner">
+                                                <button onClick={() => updateQty(item.productId, -1)} className="p-3 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-brand-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"><Minus size={18} /></button>
+                                                <span className="w-10 text-center font-black text-slate-800 text-lg">{item.qty}</span>
+                                                <button onClick={() => updateQty(item.productId, 1)} className="p-3 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-brand-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"><Plus size={18} /></button>
                                             </div>
                                             <div className="text-right w-24">
-                                                <p className="font-black text-indigo-600 text-lg tracking-tighter italic">৳{item.total}</p>
+                                                <p className="font-black text-brand-primary text-lg tracking-tighter italic">৳{item.total}</p>
                                                 {item.discountAmount > 0 && <p className="text-[9px] text-emerald-600 font-black uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-md inline-block">সেভ: ৳{item.discountAmount}</p>}
                                             </div>
-                                            <button onClick={() => removeFromCart(item.productId)} className="text-slate-300 hover:text-rose-600 p-2 transition-colors"><Trash2 size={20} /></button>
+                                            <button onClick={() => removeFromCart(item.productId)} className="text-slate-300 hover:text-rose-600 p-3 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"><Trash2 size={24} /></button>
                                         </div>
                                     </div>
                                 ))}
@@ -246,61 +271,133 @@ export default function CartPage() {
 
                     <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100 space-y-6">
                         <h3 className="text-xs font-black flex items-center gap-2 border-b border-slate-50 pb-6 uppercase tracking-[0.2em] text-slate-400">
-                            <CreditCard className="text-indigo-600" size={18} />
+                            <CreditCard className="text-brand-primary" size={18} />
                             অর্ডার করতে নিচের তথ্য দিন
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] uppercase font-black text-slate-400 ml-1">আপনার নাম</label>
-                                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="নাম লিখুন" className="w-full px-5 py-4 rounded-xl border border-slate-100 bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-100 transition-all font-bold" />
+                                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="নাম লিখুন" className="w-full px-5 py-5 rounded-xl border border-slate-100 bg-slate-50 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-bold" />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] uppercase font-black text-slate-400 ml-1">মোবাইল নম্বর</label>
-                                <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="০১৯XXXXXXXX" className="w-full px-5 py-4 rounded-xl border border-slate-100 bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-100 transition-all font-bold" />
+                                <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="০১৯XXXXXXXX" className="w-full px-5 py-5 rounded-xl border border-slate-100 bg-slate-50 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-bold" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase font-black text-slate-400 ml-1">বিস্তারিত ঠিকানা</label>
-                            <textarea value={address} onChange={(e) => setAddress(e.target.value)} placeholder="বাসা নং, রোড নং, এলাকা এবং শহরের নাম..." className="w-full px-5 py-4 rounded-xl border border-slate-100 bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-100 transition-all font-bold h-24 resize-none" />
+                            <textarea value={address} onChange={(e) => setAddress(e.target.value)} placeholder="বাসা নং, রোড নং, এলাকা এবং শহরের নাম..." className="w-full px-5 py-5 rounded-xl border border-slate-100 bg-slate-50 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-bold h-24 resize-none" />
                         </div>
 
-                        <div className="space-y-4 pt-4">
-                            <p className="font-black text-[10px] text-slate-400 uppercase tracking-[0.2em]">পেমেন্ট মেথড বেছে নিন</p>
-                            <div className="grid grid-cols-2 gap-4">
-                                <button onClick={() => setPaymentMethod('cod')} className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 relative overflow-hidden group/cod ${paymentMethod === 'cod' ? 'border-indigo-600 bg-indigo-50/50' : 'border-slate-100 hover:border-slate-200'}`}>
-                                    <ShoppingBag className={paymentMethod === 'cod' ? 'text-indigo-600' : 'text-slate-300'} size={24} />
-                                    <span className={`font-black text-[10px] uppercase tracking-widest ${paymentMethod === 'cod' ? 'text-indigo-600' : 'text-slate-400'}`}>ক্যাশ অন ডেলিভারি</span>
-                                    {paymentMethod === 'cod' && <div className="absolute top-0 right-0 w-8 h-8 bg-indigo-600 rounded-bl-xl flex items-center justify-center text-white"><ShieldCheck size={14} /></div>}
-                                </button>
-                                <button onClick={() => setPaymentMethod('bkash')} className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 relative overflow-hidden ${paymentMethod === 'bkash' ? 'border-pink-600 bg-pink-50/50' : 'border-slate-100 hover:border-slate-200'}`}>
-                                    <div className="bg-pink-600 text-white px-3 py-1 rounded-lg font-black text-[10px] uppercase italic tracking-tighter">bKash</div>
-                                    <span className={`font-black text-[10px] uppercase tracking-widest ${paymentMethod === 'bkash' ? 'text-pink-600' : 'text-slate-400'}`}>বিকাশ পেমেন্ট</span>
-                                    {paymentMethod === 'bkash' && <div className="absolute top-0 right-0 w-8 h-8 bg-pink-600 rounded-bl-xl flex items-center justify-center text-white"><ShieldCheck size={14} /></div>}
-                                </button>
+                        <div className="space-y-6 pt-6">
+                            <div className="flex flex-col gap-1">
+                                <p className="font-black text-[11px] text-slate-400 uppercase tracking-[0.2em] mb-2">পেমেন্ট মেথড বেছে নিন</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {/* COD Interactive Card */}
+                                    <button
+                                        onClick={() => setPaymentMethod('cod')}
+                                        className={`p-6 rounded-3xl border-2 transition-all duration-500 cursor-pointer text-left relative overflow-hidden flex items-center gap-5
+                                            ${paymentMethod === 'cod'
+                                                ? 'border-brand-primary bg-brand-primary/5 shadow-xl shadow-brand-primary/10'
+                                                : 'border-slate-100 bg-white hover:border-slate-200 shadow-sm'}`}
+                                    >
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 
+                                            ${paymentMethod === 'cod' ? 'bg-brand-primary text-white rotate-6' : 'bg-slate-50 text-slate-300'}`}>
+                                            <ShoppingBag size={28} />
+                                        </div>
+                                        <div>
+                                            <p className={`font-black uppercase tracking-widest text-[11px] ${paymentMethod === 'cod' ? 'text-brand-primary' : 'text-slate-400'}`}>ক্যাশ অন ডেলিভারি</p>
+                                            <p className="text-[10px] text-slate-400 font-medium">পণ্যের হাতে পেয়ে দাম পরিশোধ করুন</p>
+                                        </div>
+                                        {paymentMethod === 'cod' && (
+                                            <motion.div layoutId="paymentChecked" className="absolute top-4 right-4 text-brand-primary">
+                                                <CheckCircle size={20} fill="currentColor" className="text-white fill-brand-primary" />
+                                            </motion.div>
+                                        )}
+                                    </button>
+
+                                    {/* bKash Interactive Card */}
+                                    <button
+                                        onClick={() => setPaymentMethod('bkash')}
+                                        className={`p-6 rounded-3xl border-2 transition-all duration-500 cursor-pointer text-left relative overflow-hidden flex items-center gap-5
+                                            ${paymentMethod === 'bkash'
+                                                ? 'border-pink-500 bg-pink-50/50 shadow-xl shadow-pink-100'
+                                                : 'border-slate-100 bg-white hover:border-slate-200 shadow-sm'}`}
+                                    >
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 
+                                            ${paymentMethod === 'bkash' ? 'bg-pink-600 text-white -rotate-6' : 'bg-slate-50 text-slate-300'}`}>
+                                            <div className="font-black text-xs uppercase italic tracking-tighter">bKash</div>
+                                        </div>
+                                        <div>
+                                            <p className={`font-black uppercase tracking-widest text-[11px] ${paymentMethod === 'bkash' ? 'text-pink-600' : 'text-slate-400'}`}>বিকাশ পেমেন্ট</p>
+                                            <p className="text-[10px] text-slate-400 font-medium">ঝটপট এবং নিরাপদ অনলাইন পেমেন্ট</p>
+                                        </div>
+                                        {paymentMethod === 'bkash' && (
+                                            <motion.div layoutId="paymentChecked" className="absolute top-4 right-4 text-pink-600">
+                                                <CheckCircle size={20} fill="currentColor" className="text-white fill-pink-600" />
+                                            </motion.div>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        {paymentMethod === 'bkash' && (
-                            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-6 bg-pink-50/50 rounded-2xl border border-pink-100 space-y-4">
-                                <p className="text-xs text-pink-700 leading-relaxed font-bold uppercase tracking-tight">নিচের বিকাশ নম্বরটি কপি করুন এবং <span className="text-pink-600 font-black">৳{summary?.finalTotal || 0}</span> টাকা **Send Money** বা **Payment** করুন। তারপর মেসেজ থেকে TrxID-এর **শেষ ৬টি সংখ্যা** নিচে দিন।</p>
-                                <div className="flex items-center gap-3 bg-white p-4 rounded-xl border border-pink-200 justify-between shadow-sm">
-                                    <span className="font-black text-pink-600 text-xl tracking-wider">{bkashNumber}</span>
-                                    <button onClick={() => {
-                                        if (typeof navigator !== 'undefined') navigator.clipboard.writeText(bkashNumber);
-                                    }} className="p-2.5 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-100 transition-colors"><Copy size={18} /></button>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[9px] uppercase font-black text-pink-400 ml-1">TrxID-এর শেষ ৬টি সংখ্যা</label>
-                                    <input
-                                        value={bkashTrxId}
-                                        onChange={(e) => setBkashTrxId(e.target.value)}
-                                        maxLength={6}
-                                        placeholder="EX: 7H3J9K"
-                                        className="w-full px-5 py-4 rounded-xl border border-pink-200 outline-none focus:ring-2 focus:ring-pink-100 font-black tracking-[0.3em] text-center text-pink-600 uppercase"
-                                    />
-                                </div>
-                            </motion.div>
-                        )}
+                            <AnimatePresence mode="wait">
+                                {paymentMethod === 'bkash' && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ type: "spring", duration: 0.6, bounce: 0.3 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="p-8 bg-pink-50/30 rounded-[2.5rem] border border-pink-100/50 space-y-6 relative">
+                                            <div className="absolute top-0 right-0 p-8 opacity-5">
+                                                <CreditCard size={120} className="text-pink-600" />
+                                            </div>
+
+                                            <div className="space-y-2 relative z-10">
+                                                <h4 className="text-xs font-black text-pink-600 uppercase tracking-widest flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-pink-600 animate-pulse" />
+                                                    বিকাশ পেমেন্ট ইনস্ট্রাকশন
+                                                </h4>
+                                                <p className="text-[11px] text-pink-700 leading-relaxed font-bold">
+                                                    নিচের নম্বরটি কপি করে আপনার বিকাশ অ্যাপ থেকে <span className="text-pink-600 font-black">৳{summary?.finalTotal || 0}</span> টাকা পে করুন। সফল পেমেন্টের পর ট্র্যানজেকশন আইডি (TrxID) এর শেষ ৬টি সংখ্যা দিন।
+                                                </p>
+                                            </div>
+
+                                            <div className="flex flex-col sm:flex-row items-center gap-4 bg-white p-2 rounded-3xl border border-pink-100 justify-between shadow-lg shadow-pink-100/20 relative z-10">
+                                                <div className="flex items-center gap-4 pl-4 py-2">
+                                                    <Phone size={20} className="text-pink-600" />
+                                                    <span className="font-black text-pink-600 text-2xl tracking-tighter">{bkashNumber}</span>
+                                                </div>
+                                                <button
+                                                    onClick={() => { if (typeof navigator !== 'undefined') navigator.clipboard.writeText(bkashNumber); }}
+                                                    className="w-full sm:w-auto px-8 py-4 bg-pink-600 text-white rounded-2xl hover:bg-pink-700 transition-all font-black text-[10px] uppercase tracking-[0.2em]"
+                                                >
+                                                    নম্বর কপি করুন
+                                                </button>
+                                            </div>
+
+                                            <div className="space-y-3 relative z-10">
+                                                <label className="text-[10px] uppercase font-black text-pink-400 ml-1 tracking-widest">TrxID-এর শেষ ৬টি সংখ্যা প্রবেশ করান</label>
+                                                <div className="relative">
+                                                    <input
+                                                        value={bkashTrxId}
+                                                        onChange={(e) => setBkashTrxId(e.target.value)}
+                                                        maxLength={6}
+                                                        placeholder="7H3J9K"
+                                                        className="w-full px-8 py-6 rounded-3xl border-2 border-pink-100 bg-white outline-none focus:border-pink-400 transition-all font-black tracking-[0.4em] text-center text-2xl text-pink-600 uppercase placeholder:opacity-20 shadow-inner"
+                                                    />
+                                                    <div className="absolute right-6 top-1/2 -translate-y-1/2 text-pink-100">
+                                                        <ShieldCheck size={28} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
 
@@ -322,7 +419,7 @@ export default function CartPage() {
                             <div className="pt-6 border-t border-slate-50">
                                 <div className="flex justify-between items-baseline">
                                     <span className="font-black text-[10px] text-slate-400 uppercase tracking-[0.2em]">সর্বমোট প্রদেয়</span>
-                                    <span className="font-black text-4xl text-indigo-600 tracking-tighter italic">৳{summary?.finalTotal || 0}</span>
+                                    <span className="font-black text-4xl text-brand-primary tracking-tighter italic">৳{summary?.finalTotal || 0}</span>
                                 </div>
                             </div>
                         </div>
@@ -330,8 +427,8 @@ export default function CartPage() {
                         <button
                             onClick={handlePlaceOrderClick}
                             disabled={isPlacingOrder || items.length === 0}
-                            className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl flex items-center justify-center gap-2 mt-8 transition-all active:scale-95 disabled:opacity-50
-                                ${isPlacingOrder ? 'bg-slate-100' : 'bg-indigo-600 hover:bg-slate-900 text-white shadow-indigo-200'}
+                            className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl flex items-center justify-center gap-2 mt-8 transition-all active:scale-95 disabled:opacity-50 min-h-[56px]
+                                ${isPlacingOrder ? 'bg-slate-100' : 'bg-brand-primary hover:bg-slate-900 text-white shadow-brand-primary/20'}
                             `}
                         >
                             {isPlacingOrder ? <Loader2 className="animate-spin" size={20} /> : <>অর্ডার কনফার্ম করুন <ArrowRight size={18} /></>}

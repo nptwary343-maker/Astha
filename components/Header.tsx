@@ -232,7 +232,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
             {/* Mobile Search - Clean */}
             <div className="md:hidden px-4 pb-4">
-                <div className="bg-ui-bg rounded-xl border border-border-light px-4 py-1">
+                <div className="bg-ui-bg rounded-xl border border-border-light px-4 py-3">
                     <SmartSearch selectedCategory={selectedCategory} />
                 </div>
             </div>

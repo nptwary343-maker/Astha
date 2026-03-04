@@ -108,26 +108,38 @@ export default function Home() {
           {/* 📱 MOBILE CATEGORIES - Horizontal Scroll */}
           <MobileMinimalistCategories categories={dbCategories.length > 0 ? dbCategories : CATEGORIES.slice(0, 10)} />
 
-          {/* Categories Section - Hidden on Mobile for Minimalist look */}
-          <section className="relative z-20 hidden md:block">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
-              <div className="space-y-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-brand-primary">Curated Collections</span>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900">
+          {/* Categories Section - Visible on all screens now */}
+          <section className="relative z-20">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 md:mb-12">
+              <div className="space-y-2 text-center md:text-left">
+                <span className="text-[10px] md:text-xs font-semibold uppercase tracking-widest text-brand-primary">Curated Collections</span>
+                <h2 className="text-2xl md:text-5xl font-black tracking-tighter text-slate-900 italic uppercase">
                   Shop by <span className="text-brand-primary">Category</span>
                 </h2>
               </div>
               <div className="flex-1 h-px bg-border-light hidden md:block mb-4 mx-8" />
-              <Link href="/shop" className="text-sm font-semibold text-slate-500 hover:text-brand-primary transition-colors flex items-center gap-1 group">
-                Explore All <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              <Link href="/shop" className="text-xs font-bold text-slate-400 hover:text-brand-primary transition-colors flex items-center justify-center gap-1 group uppercase tracking-widest">
+                Explore All <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
-            <div className={`grid gap-8 ${categorySettings.columnsMobile === 2 ? 'grid-cols-2' : 'grid-cols-1'
+            <div className={`grid gap-3 md:gap-8 ${categorySettings.columnsMobile === 2 || true ? 'grid-cols-2' : 'grid-cols-1'
               } ${categorySettings.columnsDesktop === 2 ? 'lg:grid-cols-2' :
                 categorySettings.columnsDesktop === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'
               }`}>
-              {dbCategories.length > 0 ? dbCategories.map((cat, idx) => {
+              {loading ? (
+                // 🦴 PREMIUM SKELETON LOADING - "Feedback" Principle
+                [...Array(6)].map((_, idx) => (
+                  <div key={`skel-${idx}`} className="bg-white p-8 rounded-[3rem] border border-border-light shadow-sm flex flex-col h-full animate-pulse">
+                    <div className="h-6 w-32 bg-slate-100 rounded-lg mb-6" />
+                    <div className="aspect-[16/10] bg-slate-50 rounded-[2rem] border border-slate-100 mb-8" />
+                    <div className="mt-auto flex gap-3 overflow-hidden">
+                      <div className="h-8 w-20 bg-slate-50 rounded-xl" />
+                      <div className="h-8 w-20 bg-slate-50 rounded-xl" />
+                    </div>
+                  </div>
+                ))
+              ) : dbCategories.length > 0 ? dbCategories.map((cat, idx) => {
                 const menuItem = MENU_ITEMS.find(m => m.name.toLowerCase().includes(cat.name.split(' ')[0].toLowerCase()));
                 const subs = cat.subcategories && cat.subcategories.length > 0 ? cat.subcategories.slice(0, 6) : menuItem?.subItems?.slice(0, 4) || [];
 
@@ -135,7 +147,6 @@ export default function Home() {
                   <div key={cat.id} className={`group bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col h-full border border-border-light relative overflow-hidden active:scale-[0.98] ${categorySettings.shape === 'square' ? 'rounded-none' :
                     categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[3rem]'
                     }`}>
-                    {/* Abstract Grid background */}
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
 
                     <Link href={`/shop?category=${cat.id}`} className="block relative z-10 group/header">
@@ -147,11 +158,15 @@ export default function Home() {
                         categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem]'
                         }`}>
                         {cat.image ? (
-                          <img
-                            src={cat.image}
-                            alt={cat.name}
-                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
-                          />
+                          <div className="relative w-full h-full">
+                            <Image
+                              src={cat.image}
+                              alt={cat.name}
+                              fill
+                              unoptimized
+                              className="object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl px-4 py-2"
+                            />
+                          </div>
                         ) : (
                           <div className="w-20 h-20 bg-brand-primary/5 rounded-full flex items-center justify-center text-brand-primary font-black text-2xl">
                             {cat.name.charAt(0)}
@@ -200,7 +215,6 @@ export default function Home() {
 
                   return (
                     <div key={cat.id} className="group bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col h-full border border-border-light rounded-[3rem] relative overflow-hidden active:scale-[0.98]">
-                      {/* Abstract Grid background */}
                       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
 
                       <Link href={`/shop?category=${cat.id}`} className="block relative z-10 group/header">
@@ -210,11 +224,15 @@ export default function Home() {
 
                         <div className="relative aspect-[16/10] mb-8 overflow-hidden bg-ui-bg rounded-[2rem] border border-border-light flex items-center justify-center p-6 sm:p-10 shadow-inner group/img">
                           {cat.image ? (
-                            <img
-                              src={cat.image}
-                              alt={cat.name}
-                              className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
-                            />
+                            <div className="relative w-full h-full">
+                              <Image
+                                src={cat.image}
+                                alt={cat.name}
+                                fill
+                                unoptimized
+                                className="object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl px-4 py-2"
+                              />
+                            </div>
                           ) : (
                             <div className="w-20 h-20 bg-brand-primary/5 rounded-full flex items-center justify-center text-brand-primary font-black text-2xl">
                               {cat.name.charAt(0)}

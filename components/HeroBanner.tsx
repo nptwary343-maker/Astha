@@ -98,32 +98,40 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                                     className={`w-full h-full object-cover ${currentBanner.videoPosition || 'object-center'}`}
                                 />
                             ) : (
-                                <div
-                                    className={`absolute inset-0 bg-cover ${currentBanner.videoPosition?.replace('object-', 'bg-') || 'bg-center'}`}
-                                    style={{ backgroundImage: `url(${currentBanner.backgroundImage || currentBanner.imageUrl})` }}
-                                />
+                                <picture className="w-full h-full">
+                                    <source
+                                        media="(max-width: 768px)"
+                                        srcSet={currentBanner.mobileImageUrl || currentBanner.backgroundImage || currentBanner.imageUrl}
+                                    />
+                                    <img
+                                        src={currentBanner.backgroundImage || currentBanner.imageUrl}
+                                        alt={currentBanner.title}
+                                        className={`w-full h-full object-cover ${currentBanner.videoPosition || 'object-center'}`}
+                                    />
+                                </picture>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent" />
+                            {/* 🌓 Dynamic Overlay for Contrast - Refactoring UI Principle */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent md:from-white/90 md:via-white/70 md:to-transparent" />
                         </motion.div>
 
                         {/* Content Area */}
-                        <div className="relative z-10 flex flex-col justify-center h-full px-5 sm:px-8 md:px-24 py-12">
+                        <div className="relative z-10 flex flex-col justify-center h-full px-6 sm:px-8 md:px-24 py-12">
                             <motion.div
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
-                                className="max-w-2xl space-y-6"
+                                className="max-w-2xl space-y-4 md:space-y-6"
                             >
                                 <div className="inline-flex items-center gap-2 bg-indigo-50 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-100">
                                     <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
                                     <span className="text-xs font-semibold uppercase tracking-wider text-indigo-700">Premium Collection</span>
                                 </div>
 
-                                <h1 className="text-slate-900 text-3xl md:text-7xl font-bold leading-tight tracking-tight drop-shadow-sm">
+                                <h1 className="text-white md:text-slate-900 text-3xl md:text-7xl font-bold leading-tight tracking-tight drop-shadow-md italic uppercase">
                                     {currentBanner.title}
                                 </h1>
 
-                                <p className="text-slate-600 text-sm md:text-lg font-medium max-w-xl leading-relaxed border-l-4 border-indigo-600 pl-4 md:pl-6">
+                                <p className="text-slate-200 md:text-slate-600 text-sm md:text-lg font-medium max-w-xl leading-relaxed border-l-4 border-brand-primary pl-4 md:pl-6">
                                     {currentBanner.subtitle}
                                 </p>
 
