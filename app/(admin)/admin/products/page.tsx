@@ -673,9 +673,9 @@ export default function ProductsPage() {
                                                                         setEditingId(product.id);
                                                                         setFormData({
                                                                             ...product,
-                                                                            price: product.price || 0,
+                                                                            price: String(product.price || 0),
                                                                             weightOptions: product.weightOptions || [],
-                                                                            discountValue: product.discountValue || 0,
+                                                                            discountValue: String(product.discountValue || 0),
                                                                             discountType: product.discountType || 'PERCENT'
                                                                         });
                                                                         setIsModalOpen(true);
