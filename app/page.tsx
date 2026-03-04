@@ -7,6 +7,7 @@ import HomeScanSection from '@/components/HomeScanSection';
 import HomepageActionBar from '@/components/HomepageActionBar';
 import SafeBannerRenderer from '@/components/SafeBannerRenderer';
 import { CATEGORIES } from '@/data/static-content';
+import Image from 'next/image';
 import Link from 'next/link';
 import { MENU_ITEMS } from '@/components/navigation-config';
 import TrustBar from '@/components/TrustBar';
