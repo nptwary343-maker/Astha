@@ -14,7 +14,6 @@ import { ToastProvider } from "@/components/ToastProvider";
 import { I18nProvider } from "@/context/I18nContext";
 import { LocationProvider } from "@/context/LocationContext";
 import { LazyMotion, domAnimation } from "framer-motion"
-import GlobalSignalWatcher from "@/components/GlobalSignalWatcher";
 
 export const runtime = 'edge';
 
@@ -105,7 +104,6 @@ export default function RootLayout({
           <Providers>
             <I18nProvider>
               <ToastProvider>
-                <GlobalSignalWatcher />
                 <CartProvider>
                   <LocationProvider>
                     <SoundProvider>

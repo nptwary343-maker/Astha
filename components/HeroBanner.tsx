@@ -18,7 +18,6 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
     const [loading, setLoading] = useState(true);
     const [bannerData, setBannerData] = useState<any[]>([]);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [bHeight, setBHeight] = useState('650px');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,26 +43,7 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
         fetchData();
     }, [customBanners]);
 
-    useEffect(() => {
-        if (!bannerData || !bannerData[activeIndex]) return;
-        const currentBanner = bannerData[activeIndex];
 
-        const updateHeight = () => {
-            // Priority: Local Banner Height -> Global Admin Height -> Legacy Default
-            const mH = currentBanner.mobileBannerHeight || globalSettings?.mobileBannerHeight || 220;
-            const dH = currentBanner.bannerHeight || globalSettings?.bannerHeight || 650;
-
-            if (window.innerWidth < 768) {
-                setBHeight(`${mH}px`);
-            } else {
-                setBHeight(`${dH}px`);
-            }
-        };
-
-        updateHeight();
-        window.addEventListener('resize', updateHeight);
-        return () => window.removeEventListener('resize', updateHeight);
-    }, [bannerData, activeIndex, globalSettings]);
 
     if (loading) {
         return (
@@ -76,14 +56,21 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
 
     const currentBanner = currentBanners[activeIndex];
 
+    // CSS-Native Responsive Height Calculation (Prevents CLS)
+    const mH = currentBanner?.mobileBannerHeight || globalSettings?.mobileBannerHeight || 220;
+    const dH = currentBanner?.bannerHeight || globalSettings?.bannerHeight || 650;
+
     const nextBanner = () => setActiveIndex((prev) => (prev + 1) % currentBanners.length);
     const prevBanner = () => setActiveIndex((prev) => (prev - 1 + currentBanners.length) % currentBanners.length);
 
     return (
         <section className="relative w-full py-4 px-4 md:px-8">
             <div
-                className={`relative w-full max-w-[1600px] mx-auto overflow-hidden shadow-sm border border-slate-200 bg-white group ${currentBanner.shape === 'square' ? 'rounded-none' : currentBanner.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem] md:rounded-[2.5rem]'}`}
-                style={{ height: bHeight }}
+                className={`relative w-full max-w-[1600px] mx-auto overflow-hidden shadow-sm border border-slate-200 bg-white group h-[var(--mobile-height)] md:h-[var(--desktop-height)] ${currentBanner.shape === 'square' ? 'rounded-none' : currentBanner.shape === 'pill' ? 'rounded-full' : 'rounded-[2rem] md:rounded-[2.5rem]'}`}
+                style={{
+                    '--mobile-height': `${mH}px`,
+                    '--desktop-height': `${dH}px`
+                } as React.CSSProperties}
             >
                 <AnimatePresence mode="wait">
                     <motion.div

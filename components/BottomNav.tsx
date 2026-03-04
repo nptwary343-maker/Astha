@@ -29,21 +29,24 @@ export default function BottomNav() {
                         <Link
                             key={item.name}
                             href={item.href}
-                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 group transition-all duration-300 ${isActive ? 'text-orange-500' : 'text-gray-400 dark:text-gray-500'}`}
+                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 group transition-colors duration-150 ${isActive ? 'text-orange-500' : 'text-gray-400 dark:text-gray-500 hover:text-orange-400'}`}
                         >
                             <div className="relative">
                                 <item.icon
                                     size={22}
-                                    className={`${isActive ? 'scale-110' : 'group-hover:scale-110'} transition-transform`}
+                                    className={`${isActive ? 'scale-110' : 'group-hover:scale-105'} transition-transform duration-150`}
                                     strokeWidth={isActive ? 2.5 : 2}
+                                    fill={isActive ? 'currentColor' : 'none'}
                                 />
                                 {item.badge ? (
-                                    <span className="absolute -top-1.5 -right-2.5 bg-red-600 text-white text-[9px] font-black h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full border border-white dark:border-slate-900 animate-in zoom-in">
+                                    <span className="absolute -top-1.5 -right-2.5 bg-red-600 text-white text-[9px] font-black h-4 min-w-[16px] px-1 flex items-center justify-center rounded-full border border-white dark:border-slate-900 animate-in zoom-in duration-200">
                                         {item.badge}
                                     </span>
                                 ) : null}
                             </div>
-                            <span className="text-[10px] font-bold tracking-tight">{item.name}</span>
+                            <span className={`text-[10px] font-bold tracking-tight transition-all duration-150 ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`}>
+                                {item.name}
+                            </span>
                         </Link>
                     );
                 })}

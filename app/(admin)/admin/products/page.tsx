@@ -9,7 +9,6 @@ import { clearProductCache } from '@/lib/db-utils';
 import { useAuth } from '@/context/AuthContext';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { deleteImagesFromCloudinary } from '@/actions/cloudinary';
-import { syncProductToAlgoliaAction, deleteProductFromAlgoliaAction } from '@/actions/algolia';
 import confetti from 'canvas-confetti';
 
 // Types
@@ -161,7 +160,6 @@ export default function ProductsPage() {
 
                 await deleteDoc(doc(db, "products", id));
                 clearProductCache(); // Clear local module cache
-                await deleteProductFromAlgoliaAction(id); // 📡 Algolia Cleanup
                 setProducts(products.filter(p => p.id !== id));
             } catch (error) {
                 console.error("Error deleting product: ", error);
@@ -304,12 +302,10 @@ export default function ProductsPage() {
                 const productRef = doc(db, "products", editingId);
                 await updateDoc(productRef, productData);
                 clearProductCache(); // Clear local module cache
-                await syncProductToAlgoliaAction({ id: editingId, ...productData }); // 📡 Algolia Sync
                 setProducts(products.map(p => p.id === editingId ? { ...productData, id: editingId } as Product : p));
             } else {
                 const docRef = await addDoc(collection(db, "products"), productData);
                 clearProductCache(); // Clear local module cache
-                await syncProductToAlgoliaAction({ id: docRef.id, ...productData }); // 📡 Algolia Sync
                 setProducts([{ ...productData, id: docRef.id } as unknown as Product, ...products]);
 
                 // 🎉 Coolness: Confetti!

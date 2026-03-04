@@ -66,7 +66,10 @@ export async function clearAllCacheAction() {
         const { revalidatePath } = await import('next/cache');
 
         clearProductCache();
-        revalidatePath('/', 'layout');
+        // 🎯 TARGETED REVALIDATION: Firebase getDocs bypasses fetch tagging, 
+        // so we manually clear only the specific pages showing products instead of the whole 'layout'.
+        revalidatePath('/', 'page');
+        revalidatePath('/shop', 'page');
 
         console.log("♻️ [CACHE_PURGE_SUCCESS] Triggered by Admin");
         return { success: true };

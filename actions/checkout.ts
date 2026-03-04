@@ -5,6 +5,8 @@ import { db, collection, doc, runTransaction, increment, serverTimestamp } from 
 import { headers } from 'next/headers';
 import { after } from 'next/server';
 import { sendPixelEvent } from '@/lib/capi-bridge';
+import { calculateFinalPrice } from '@/utils/price-calculator';
+import { Product } from '@/types';
 // import { sendOrderToTelegram } from '@/services/telegramBot';
 
 
@@ -91,26 +93,10 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                 // Step 1: Gross Price (Unit * Qty)
                 const grossPrice = price * item.quantity;
 
-                // Step 2: Item Level Discount
-                let itemDiscount = 0;
-
-                // Priority: Check 'discountType' & 'discountValue' first
-                if (data?.discountType && data?.discountValue) {
-                    const val = Number(data.discountValue);
-                    if (data.discountType === 'PERCENT') {
-                        itemDiscount = grossPrice * (val / 100);
-                    } else if (data.discountType === 'FIXED') {
-                        itemDiscount = val * item.quantity;
-                    }
-                }
-                // Fallback: Legacy 'discount' object support
-                else if (data?.discount) {
-                    if (data.discount.type === 'percent') {
-                        itemDiscount = grossPrice * (Number(data.discount.value) / 100);
-                    } else if (data.discount.type === 'flat') {
-                        itemDiscount = Number(data.discount.value) * item.quantity;
-                    }
-                }
+                // Step 2: Item Level Discount (Using Central Domain Logic)
+                const finalUnitPrice = calculateFinalPrice(data as unknown as Partial<Product> & { price: number });
+                const totalFinalPrice = finalUnitPrice * item.quantity;
+                let itemDiscount = grossPrice - totalFinalPrice;
 
                 // Sanity Check: Discount cannot exceed Gross
                 itemDiscount = Math.min(itemDiscount, grossPrice);
@@ -215,7 +201,8 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                 (async () => {
                     try {
                         const { revalidatePath } = await import('next/cache');
-                        revalidatePath('/', 'layout');
+                        revalidatePath('/', 'page');
+                        revalidatePath('/shop', 'page');
                     } catch (e) {
                         console.warn("Stock revalidation failed", e);
                     }
@@ -248,6 +235,17 @@ export async function placeOrderAction(rawPayload: unknown): Promise<CheckoutRes
                         await sendOrderToTelegram(result.orderData);
                     } catch (e) {
                         console.error("📢 Telegram Notification Error:", e);
+                        try {
+                            const { updateDoc, doc } = await import('firebase/firestore');
+                            const orderRef = doc(db, 'orders', result.orderId);
+                            await updateDoc(orderRef, {
+                                notificationError: true,
+                                telegram_notified: false,
+                                notificationErrorReason: e instanceof Error ? e.message : "Unknown error"
+                            });
+                        } catch (updateErr) {
+                            console.error("Failed to flag notification error in database", updateErr);
+                        }
                     }
 
                 })()

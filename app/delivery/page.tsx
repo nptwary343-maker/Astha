@@ -34,6 +34,7 @@ export default function DeliveryDashboard() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [mounted, setMounted] = useState(false);
+    const [processingId, setProcessingId] = useState<string | null>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -69,23 +70,27 @@ export default function DeliveryDashboard() {
 
     const updateStatus = async (orderId: string, status: string) => {
         if (!confirm(`Mark this order as ${status}?`)) return;
+        setProcessingId(orderId);
         try {
             await updateDoc(doc(db, 'orders', orderId), {
                 orderStatus: status,
                 deliveredAt: status === 'Delivered' ? new Date() : null
             });
 
-            // Update local state
+            // 🛡️ UPDATE LOCAL STATE ONLY AFTER DB CONFIRMS (No early optimistic update)
             setOrders(orders.map(o => o.id === orderId ? { ...o, orderStatus: status } : o));
         } catch (error) {
             console.error("Error updating status:", error);
-            alert("Failed to update status");
+            alert("Network error, please try again.");
+        } finally {
+            setProcessingId(null);
         }
     };
 
     const handleCollectCash = async (orderId: string, amount: number) => {
         if (!confirm(`Confirm collection of ৳${amount}?`)) return;
 
+        setProcessingId(orderId);
         try {
             // 🛡️ ZERO TRUST HARDENING: Call SECURE Server Action (Not a public API)
             const result = await verifyPaymentAction({
@@ -103,7 +108,7 @@ export default function DeliveryDashboard() {
             alert(`Success: ${result.message || 'Payment Verified & Customer Notified'}`);
 
 
-            // Update local state
+            // 🛡️ UPDATE LOCAL STATE ONLY AFTER SERVER CONFIRMS (Defends against Partial Failure)
             setOrders(orders.map(o => o.id === orderId ? {
                 ...o,
                 payment: { ...o.payment, status: 'Paid' },
@@ -112,7 +117,9 @@ export default function DeliveryDashboard() {
 
         } catch (error) {
             console.error("Error collecting cash:", error);
-            alert("Failed to verify payment via API.");
+            alert("Network error, please try again.");
+        } finally {
+            setProcessingId(null);
         }
     };
 
@@ -182,11 +189,14 @@ export default function DeliveryDashboard() {
                                 {order.payment?.status !== 'Paid' ? (
                                     <button
                                         onClick={() => handleCollectCash(order.id, order.totals?.total)}
-                                        className="bg-blue-600 text-white py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                        disabled={processingId === order.id}
+                                        className={`py-2.5 rounded-lg text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 ${processingId === order.id ? 'bg-blue-400 text-white cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95'}`}
                                     >
                                         <div className="flex flex-col items-start leading-none">
-                                            <span className="text-[10px] font-normal opacity-80">Collect Cash</span>
-                                            <span>৳{order.totals?.total}</span>
+                                            <span className="text-[10px] font-normal opacity-80">
+                                                {processingId === order.id ? 'Verifying...' : 'Collect Cash'}
+                                            </span>
+                                            {processingId !== order.id && <span>৳{order.totals?.total}</span>}
                                         </div>
                                     </button>
                                 ) : (
@@ -197,9 +207,10 @@ export default function DeliveryDashboard() {
 
                                 <button
                                     onClick={() => updateStatus(order.id, 'Delivered')}
-                                    className="bg-green-600 text-white py-2.5 rounded-lg text-sm font-bold shadow-sm hover:bg-green-700 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                    disabled={processingId === order.id}
+                                    className={`py-2.5 rounded-lg text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 ${processingId === order.id ? 'bg-green-400 text-white cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700 active:scale-95'}`}
                                 >
-                                    Deliver Only
+                                    {processingId === order.id ? 'Processing...' : 'Deliver Only'}
                                 </button>
                             </div>
                         )}

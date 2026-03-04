@@ -72,9 +72,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     // Cart Handlers
     const addToCart = (productId: string, qty: number = 1) => {
-        // 📡 ADD_TO_CART PING (Zero Trust Activity Tracker)
-        sendSystemPing('PRODUCT_ADD_TO_CART', { productId, qty });
-
         setItems(prev => {
             const existing = prev.find(item => item.productId === productId);
             if (existing) {

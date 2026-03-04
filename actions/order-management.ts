@@ -1,6 +1,6 @@
 'use server';
 
-import { db, collection, doc, addDoc, updateDoc, serverTimestamp } from '@/lib/firebase';
+import { db, collection, doc, updateDoc, runTransaction, increment } from '@/lib/firebase';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -19,9 +19,35 @@ export async function createOrderAction(orderData: any) {
             source: orderData.source || 'manual'
         };
 
-        // 2. Save to Firestore
-        const docRef = await addDoc(collection(db, 'orders'), sanitizedOrder);
-        const orderId = docRef.id;
+        // 2. Save to Firestore using an atomic transaction to decrease stock reliably
+        const orderId = await runTransaction(db, async (transaction: any) => {
+            // Validate and map product refs first to maintain zero write skew
+            const itemsWithData = await Promise.all((orderData.items || []).map(async (item: any) => {
+                // For manually added items without a true product match (custom manual items), we skip
+                if (!item.id || typeof item.id === 'number') return { item, productRef: null, exists: false };
+
+                const productRef = doc(db, 'products', item.id.toString());
+                const snap = await transaction.get(productRef);
+                return { item, productRef, exists: snap.exists() };
+            }));
+
+            // Create the order document
+            const docRef = doc(collection(db, 'orders'));
+            const generatedId = docRef.id;
+            transaction.set(docRef, sanitizedOrder);
+
+            // Perform stock decrements (Admin Override Privilege: we decrement even if stock goes negative)
+            for (const { item, productRef, exists } of itemsWithData) {
+                if (exists && productRef) {
+                    transaction.update(productRef, {
+                        stock: increment(-item.qty),
+                        lastSoldAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            return generatedId;
+        });
 
         // 3. Trigger Telegram Notification in background
         try {
@@ -34,6 +60,16 @@ export async function createOrderAction(orderData: any) {
             await sendOrderToTelegram(telegramPayload);
         } catch (teleErr) {
             console.error("📢 Telegram Notification Error (Manual Order):", teleErr);
+            try {
+                const orderRef = doc(db, 'orders', orderId);
+                await updateDoc(orderRef, {
+                    notificationError: true,
+                    telegram_notified: false,
+                    notificationErrorReason: teleErr instanceof Error ? teleErr.message : "Unknown error"
+                });
+            } catch (updateErr) {
+                console.error("Failed to flag notification error in database (Manual Order)", updateErr);
+            }
         }
 
         revalidatePath('/admin/orders');

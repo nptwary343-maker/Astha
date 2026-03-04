@@ -4,6 +4,9 @@
 // In a real app, this might come from a DB, but we keep it here to ensure
 // no client-side price manipulation is possible.
 
+import { calculateFinalPrice } from '@/utils/price-calculator';
+import { Product } from '@/types';
+
 // Fallback for demo purposes if ID not found (optional, or throw error)
 const DEFAULT_PRODUCT = { name: "Unknown Product", price: 0, discountPercent: 0, taxPercent: 0 };
 
@@ -67,23 +70,12 @@ export function calculateCart(
 
         const grossPrice = product.price * safeQty;
 
-        // Base Product Discount
-        let itemDiscount = 0;
+        // Use the Centralized Domain Logic to get final unit price
+        const finalUnitPrice = calculateFinalPrice(product as unknown as Partial<Product> & { price: number });
 
-        // Priority 1: New Standard (PERCENT/FIXED)
-        if (product.discountType && product.discountValue) {
-            if (product.discountType === 'PERCENT') {
-                itemDiscount = grossPrice * (product.discountValue / 100);
-            } else if (product.discountType === 'FIXED') {
-                itemDiscount = product.discountValue * safeQty;
-            }
-        }
-        // Priority 2: Legacy Fallback
-        else if (product.discountFlat && product.discountFlat > 0) {
-            itemDiscount = product.discountFlat * safeQty;
-        } else {
-            itemDiscount = grossPrice * ((product.discountPercent || 0) / 100);
-        }
+        // Calculate total discount for this item based on quantity
+        const totalFinalPrice = finalUnitPrice * safeQty;
+        let itemDiscount = grossPrice - totalFinalPrice;
 
         // Sanity Check: Discount cannot exceed price (Prevent negative money)
         itemDiscount = Math.min(itemDiscount, grossPrice);

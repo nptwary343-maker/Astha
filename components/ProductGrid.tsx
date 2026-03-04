@@ -10,6 +10,7 @@ import { Product } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { calculateFinalPrice, hasActiveDiscount } from '@/utils/price-calculator';
 
 // --- Product Modal Component ---
 const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: () => void }) => {
@@ -30,22 +31,8 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
         action();
     };
 
-    let basePrice = product.price;
-    const hasDiscount = (product.discountValue && product.discountValue > 0) || (product.discount && product.discount.value > 0);
-
-    if (product.discountType && product.discountValue) {
-        if (product.discountType === 'PERCENT') {
-            basePrice = product.price - (product.price * (product.discountValue / 100));
-        } else if (product.discountType === 'FIXED') {
-            basePrice = product.price - product.discountValue;
-        }
-    } else if (product.discount && product.discount.value > 0) {
-        if (product.discount.type === 'percent') {
-            basePrice = product.price - (product.price * (product.discount.value / 100));
-        } else {
-            basePrice = product.price - product.discount.value;
-        }
-    }
+    const basePrice = calculateFinalPrice(product);
+    const hasDiscount = hasActiveDiscount(product);
 
     const finalPrice = basePrice * selectedUnit.multiplier * qty;
     const savings = (product.price * selectedUnit.multiplier * qty) - finalPrice;
@@ -70,6 +57,7 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 className="bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col md:flex-row max-h-[95vh] border border-slate-100"
+                transition={{ duration: 0.3, ease: 'easeOut' }}
             >
                 <button
                     onClick={onClose}
@@ -147,8 +135,18 @@ const ProductDetailModal = ({ product, onClose }: { product: Product, onClose: (
                             {(product.expirationDate || product.productionDate) && (
                                 <div className="col-span-2 flex flex-col p-3 bg-slate-50/50 rounded-xl border border-slate-100 mt-2">
                                     <div className="flex justify-between items-center text-xs text-slate-600">
-                                        {product.productionDate && <span><strong className="font-semibold text-slate-800">Mfg:</strong> {product.productionDate}</span>}
-                                        {product.expirationDate && <span><strong className="font-semibold text-slate-800">Exp:</strong> {product.expirationDate}</span>}
+                                        {product.productionDate && (
+                                            <div className="flex items-center gap-1.5">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                                <span><strong className="font-semibold text-slate-800">Mfg:</strong> {product.productionDate}</span>
+                                            </div>
+                                        )}
+                                        {product.expirationDate && (
+                                            <div className="flex items-center gap-1.5">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                                                <span><strong className="font-semibold text-slate-800">Exp:</strong> {product.expirationDate}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -224,22 +222,8 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
     const { addToCart } = useCart();
     const { playNotification } = useSound();
 
-    let finalPrice = product.price;
-    const hasDiscount = (product.discountValue && product.discountValue > 0) || (product.discount && product.discount.value > 0);
-
-    if (product.discountType && product.discountValue) {
-        if (product.discountType === 'PERCENT') {
-            finalPrice = product.price - (product.price * (product.discountValue / 100));
-        } else if (product.discountType === 'FIXED') {
-            finalPrice = product.price - product.discountValue;
-        }
-    } else if (product.discount && product.discount.value > 0) {
-        if (product.discount.type === 'percent') {
-            finalPrice = product.price - (product.price * (product.discount.value / 100));
-        } else {
-            finalPrice = product.price - product.discount.value;
-        }
-    }
+    const finalPrice = calculateFinalPrice(product);
+    const hasDiscount = hasActiveDiscount(product);
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -253,7 +237,7 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
         addToCart(product.id, 1);
         playNotification();
         setIsAdded(true);
-        setTimeout(() => setIsAdded(false), 800);
+        setTimeout(() => setIsAdded(false), 1500);
     };
 
     return (
@@ -303,11 +287,16 @@ const ProductCard = ({ product, onSelect, index }: { product: Product, onSelect:
                         onClick={handleAddToCart}
                         className={`w-full py-2.5 rounded-lg font-bold text-xs transition-all border flex items-center justify-center gap-2
                             ${isAdded
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                ? 'bg-emerald-600 text-white border-emerald-600 shadow-lg shadow-emerald-200'
                                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
                             }`}
                     >
-                        {isAdded ? 'যোগ হয়েছে' : 'কার্টে যোগ করুন'}
+                        {isAdded ? (
+                            <>
+                                <CheckCircle size={14} className="animate-in zoom-in duration-300" />
+                                <span>কার্টে যোগ হয়েছে</span>
+                            </>
+                        ) : 'কার্টে যোগ করুন'}
                     </button>
                 </div>
             </div>
