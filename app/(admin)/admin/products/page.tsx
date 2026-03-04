@@ -143,6 +143,10 @@ export default function ProductsPage() {
     const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
     const [categorizationResults, setCategorizationResults] = useState<any[]>([]);
     const [isAIProcessing, setIsAIProcessing] = useState(false);
+    const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+    const [adLoading, setAdLoading] = useState(false);
+    const [generatedAd, setGeneratedAd] = useState('');
+    const [adProduct, setAdProduct] = useState<any>(null);
 
     // --- Actions ---
 
@@ -635,13 +639,53 @@ export default function ProductsPage() {
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex items-center justify-end gap-2">
                                                         {isAdmin && (
-                                                            <button
-                                                                onClick={() => handleEdit(product)}
-                                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                                title="Edit Product"
-                                                            >
-                                                                <Edit size={16} />
-                                                            </button>
+                                                            <div className="flex justify-end items-center gap-1">
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        setAdProduct(product);
+                                                                        setAdLoading(true);
+                                                                        setIsAdModalOpen(true);
+                                                                        try {
+                                                                            const res = await fetch('/api/ai/marketing', {
+                                                                                method: 'POST',
+                                                                                body: JSON.stringify({
+                                                                                    productName: product.name,
+                                                                                    productCategory: product.category,
+                                                                                    weightOptions: product.weightOptions
+                                                                                })
+                                                                            });
+                                                                            const data = await res.json();
+                                                                            setGeneratedAd(data.adCopy || "Could not generate ad copy.");
+                                                                        } catch (err) {
+                                                                            console.error(err);
+                                                                            setGeneratedAd("Error connecting to AI.");
+                                                                        } finally {
+                                                                            setAdLoading(false);
+                                                                        }
+                                                                    }}
+                                                                    className="p-2 text-indigo-500 hover:bg-indigo-50 rounded-xl transition-all"
+                                                                    title="Generate AI Ad Copy"
+                                                                >
+                                                                    <Zap size={18} />
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setEditingId(product.id);
+                                                                        setFormData({
+                                                                            ...product,
+                                                                            price: product.price || 0,
+                                                                            weightOptions: product.weightOptions || [],
+                                                                            discountValue: product.discountValue || 0,
+                                                                            discountType: product.discountType || 'PERCENT'
+                                                                        });
+                                                                        setIsModalOpen(true);
+                                                                    }}
+                                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                                                                    title="Edit Product"
+                                                                >
+                                                                    <Edit size={18} />
+                                                                </button>
+                                                            </div>
                                                         )}
                                                         {isSuperAdmin && (
                                                             <button
@@ -1418,6 +1462,56 @@ export default function ProductsPage() {
                             >
                                 {isAIProcessing ? <Loader2 className="animate-spin" size={18} /> : <Check size={18} />}
                                 Apply Updates
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* AI Ad Modal */}
+            {isAdModalOpen && (
+                <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl p-10 relative overflow-hidden flex flex-col border border-indigo-50">
+                        <button onClick={() => setIsAdModalOpen(false)} className="absolute top-8 right-8 text-gray-400 hover:text-gray-600"><X size={24} /></button>
+
+                        <div className="mb-8">
+                            <span className="bg-indigo-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">AI Ad Generator</span>
+                            <h2 className="text-3xl font-black text-slate-900 italic tracking-tighter uppercase leading-none">{adProduct?.name}</h2>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 px-1">Social Media Ad Content for Facebook/Instagram</p>
+                        </div>
+
+                        <div className="flex-1 bg-slate-50 border border-slate-100 p-8 rounded-[2rem] min-h-[300px] flex flex-col justify-center relative overflow-hidden">
+                            {adLoading ? (
+                                <div className="flex flex-col items-center gap-4 animate-pulse">
+                                    <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic animate-bounce">AI is writing your ad copy...</p>
+                                </div>
+                            ) : (
+                                <pre className="text-sm font-bold text-slate-700 whitespace-pre-wrap font-sans leading-relaxed">
+                                    {generatedAd}
+                                </pre>
+                            )}
+                            <div className="absolute top-4 right-4 opacity-[0.05] pointer-events-none transform rotate-12 scale-150">
+                                <Zap size={100} className="text-indigo-600" />
+                            </div>
+                        </div>
+
+                        <div className="mt-8 flex gap-4">
+                            {!adLoading && (
+                                <button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(generatedAd);
+                                        alert("Ad Copy Copied to Clipboard! 📋");
+                                    }}
+                                    className="flex-1 bg-slate-950 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-slate-200 hover:bg-indigo-600 transition-all active:scale-95"
+                                >
+                                    Copy Ad Copy
+                                </button>
+                            )}
+                            <button
+                                onClick={() => setIsAdModalOpen(false)}
+                                className="px-8 py-4 rounded-xl font-bold text-slate-400 hover:bg-slate-50 transition-colors"
+                            >
+                                Done
                             </button>
                         </div>
                     </div>

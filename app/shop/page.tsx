@@ -62,27 +62,29 @@ function ShopContent() {
         let matchesCategory = true;
 
         if (category) {
-            const lowerCategory = category.toLowerCase();
-            const lowerProductCat = p.category?.toLowerCase() || '';
+            const lowerCategory = category.toLowerCase().trim();
+            const lowerProductCat = p.category?.toLowerCase().trim() || '';
+            const lowerProductName = p.name?.toLowerCase().trim() || '';
 
-            // Collect all matching aliases/subcategories if it's a parent category
-            let validCategories = [lowerCategory];
+            // Check 1: Direct Category Match
+            const isDirectMatch = lowerProductCat === lowerCategory || lowerProductCat.includes(lowerCategory);
+
+            // Check 2: Name-based Match (Useful for subcategory slugs)
+            const isNameMatch = lowerProductName.includes(lowerCategory);
+
+            // Check 3: Parent Category Match (Mapping from navigation-config)
+            let isParentMatch = false;
             const menuItem = MENU_ITEMS.find(m =>
-                m.href.toLowerCase().includes(`category=${lowerCategory}`) ||
-                m.name.toLowerCase() === lowerCategory
+                m.name.toLowerCase().includes(lowerCategory) ||
+                m.href.toLowerCase().includes(lowerCategory)
             );
 
-            if (menuItem && menuItem.subItems) {
-                menuItem.subItems.forEach((sub: any) => {
-                    const match = sub.href.toLowerCase().match(/category=([^&]+)/);
-                    if (match) validCategories.push(match[1]);
-                });
+            if (menuItem) {
+                isParentMatch = lowerProductCat.includes(menuItem.name.toLowerCase()) ||
+                    menuItem.name.toLowerCase().includes(lowerProductCat);
             }
 
-            // Also checking if the product category matches the target or its subcategories
-            matchesCategory = validCategories.some(validCat =>
-                lowerProductCat.includes(validCat) || validCat.includes(lowerProductCat)
-            );
+            matchesCategory = isDirectMatch || isNameMatch || isParentMatch;
         }
 
         const matchesBrand = brand ? p.brand?.toLowerCase() === brand.toLowerCase() : true;
@@ -101,7 +103,7 @@ function ShopContent() {
         const params = new URLSearchParams(searchParams?.toString() || '');
         if (value) params.set(type, value);
         else params.delete(type);
-        router.push(`/shop?${params.toString()}`);
+        router.push(`/shop?${params.toString()}`, { scroll: false });
     };
 
     const displayTitle = searchQuery
@@ -128,8 +130,9 @@ function ShopContent() {
 
             <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-12 md:py-20">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     className="space-y-12"
                 >
                     {/* Header Section */}
@@ -167,70 +170,79 @@ function ShopContent() {
 
                     {/* Products Grid */}
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
-                        {filteredProducts.map((product, idx) => {
-                            let finalPrice = product.price;
-                            const hasDiscount = (product.discountValue && product.discountValue > 0) || (product.discount && product.discount.value > 0);
+                        <AnimatePresence mode="popLayout">
+                            {filteredProducts.map((product, idx) => {
+                                let finalPrice = product.price;
+                                const hasDiscount = (product.discountValue && product.discountValue > 0) || (product.discount && product.discount.value > 0);
 
-                            if (product.discountType && product.discountValue) {
-                                if (product.discountType === 'PERCENT') finalPrice = product.price - (product.price * (product.discountValue / 100));
-                                else if (product.discountType === 'FIXED') finalPrice = product.price - product.discountValue;
-                            }
+                                if (product.discountType && product.discountValue) {
+                                    if (product.discountType === 'PERCENT') finalPrice = product.price - (product.price * (product.discountValue / 100));
+                                    else if (product.discountType === 'FIXED') finalPrice = product.price - product.discountValue;
+                                }
 
-                            return (
-                                <motion.div
-                                    key={product.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: idx * 0.05 }}
-                                    className="group bg-white rounded-[2.5rem] border border-slate-100 p-4 md:p-6 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 flex flex-col h-full active:scale-95"
-                                >
-                                    <Link href={`/${prefix}/${product.slug || product.id}`} className="block relative aspect-square bg-slate-50 rounded-[2rem] overflow-hidden mb-6">
-                                        {product.images?.[0] ? (
-                                            <img src={product.images[0]} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 p-4" alt={product.name} />
-                                        ) : <ImageIcon className="text-slate-200 absolute inset-0 m-auto" size={48} />}
+                                return (
+                                    <motion.div
+                                        key={product.id}
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="group bg-white rounded-[2.5rem] border border-slate-100 p-4 md:p-6 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 flex flex-col h-full active:scale-95"
+                                    >
+                                        <Link href={`/${prefix}/${product.slug || product.id}`} className="block relative aspect-square bg-slate-50 rounded-[2rem] overflow-hidden mb-6">
+                                            {(product.images?.[0] || product.image) ? (
+                                                <img
+                                                    src={product.images?.[0] || product.image}
+                                                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 p-4"
+                                                    alt={product.name}
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Image+Not+Found';
+                                                    }}
+                                                />
+                                            ) : <ImageIcon className="text-slate-200 absolute inset-0 m-auto" size={48} />}
 
-                                        {hasDiscount && (
-                                            <div className="absolute top-4 left-4 bg-indigo-600 text-white text-[10px] font-black px-3 py-1 rounded-lg shadow-xl uppercase tracking-widest">
-                                                -{product.discountValue || product.discount?.value}% ছাড়
+                                            {hasDiscount && (
+                                                <div className="absolute top-4 left-4 bg-indigo-600 text-white text-[10px] font-black px-3 py-1 rounded-lg shadow-xl uppercase tracking-widest">
+                                                    -{product.discountValue || product.discount?.value}% ছাড়
+                                                </div>
+                                            )}
+
+                                            <div className="absolute inset-x-4 bottom-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                                <button
+                                                    onClick={(e) => handleAddToCart(e, product.id)}
+                                                    className="w-full bg-slate-900/90 backdrop-blur-md text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"
+                                                >
+                                                    <ShoppingCart size={14} /> কার্টে যোগ করুন
+                                                </button>
                                             </div>
-                                        )}
+                                        </Link>
 
-                                        <div className="absolute inset-x-4 bottom-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                            <button
-                                                onClick={(e) => handleAddToCart(e, product.id)}
-                                                className="w-full bg-slate-900/90 backdrop-blur-md text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"
-                                            >
-                                                <ShoppingCart size={14} /> কার্টে যোগ করুন
-                                            </button>
-                                        </div>
-                                    </Link>
-
-                                    <div className="space-y-4 flex flex-col flex-1">
-                                        <div className="space-y-1">
-                                            <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest opacity-60">{product.category}</p>
-                                            <h3 className="font-extrabold text-slate-950 line-clamp-2 text-sm md:text-base leading-tight hover:text-indigo-600 transition-colors uppercase tracking-tight italic">
-                                                {product.name}
-                                            </h3>
-                                        </div>
-
-                                        <div className="mt-auto pt-4 flex items-center justify-between">
-                                            <div className="flex flex-col">
-                                                {hasDiscount && <span className="text-[10px] text-slate-400 line-through font-bold">৳{product.price}</span>}
-                                                <span className="text-xl font-black text-slate-950 tracking-tighter italic">৳{finalPrice}</span>
+                                        <div className="space-y-4 flex flex-col flex-1">
+                                            <div className="space-y-1">
+                                                <p className="text-[9px] font-black text-brand-primary uppercase tracking-widest opacity-60">{product.category}</p>
+                                                <h3 className="font-extrabold text-slate-950 line-clamp-2 text-sm md:text-base leading-tight hover:text-indigo-600 transition-colors uppercase tracking-tight italic">
+                                                    {product.name}
+                                                </h3>
                                             </div>
-                                            <Link
-                                                href={`/${prefix}/${product.slug || product.id}`}
-                                                className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-brand-accent hover:text-white transition-all shadow-sm group/arr"
-                                            >
-                                                <Filter size={16} className="group-hover/arr:rotate-90 transition-transform" />
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
 
+                                            <div className="mt-auto pt-4 flex items-center justify-between">
+                                                <div className="flex flex-col">
+                                                    {hasDiscount && <span className="text-[10px] text-slate-400 line-through font-bold">৳{product.price}</span>}
+                                                    <span className="text-xl font-black text-slate-950 tracking-tighter italic">৳{finalPrice}</span>
+                                                </div>
+                                                <Link
+                                                    href={`/${prefix}/${product.slug || product.id}`}
+                                                    className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-brand-accent hover:text-white transition-all shadow-sm group/arr"
+                                                >
+                                                    <Filter size={16} className="group-hover/arr:rotate-90 transition-transform" />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </AnimatePresence>
                         {filteredProducts.length === 0 && (
                             <div className="col-span-full py-32 text-center bg-white rounded-[2.5rem] border border-dashed border-slate-200">
                                 <h3 className="text-2xl font-black text-slate-900 uppercase italic mb-2">কোনো পণ্য পাওয়া যায়নি</h3>
