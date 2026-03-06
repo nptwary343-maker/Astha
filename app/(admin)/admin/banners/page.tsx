@@ -4,7 +4,7 @@ export const runtime = 'edge';
 import { useState, useEffect } from 'react';
 import { Save, Image as ImageIcon, Layout, Type, UploadCloud, X, Link as LinkIcon, Trash2 } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { Loader2 } from 'lucide-react';
 
@@ -55,22 +55,32 @@ export default function BannersPage() {
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await setDoc(doc(db, "settings", "hero-banner"), {
+            const bannerData = {
                 title,
                 subtitle,
                 gradientFrom,
                 gradientTo,
-                backgroundImage, // Saves null if removed
+                backgroundImage,
+                imageUrl: backgroundImage, // homepage uses imageUrl field
                 videoUrl,
                 bannerHeight,
                 mobileBannerHeight,
                 videoPosition,
-
                 shape,
-                bgOpacity
-            });
+                bgOpacity,
+                buttonText: 'Shop Now',
+                buttonLink: '/shop',
+                active: true,
+                order: 0,
+            };
 
-            alert('Banner settings updated successfully!');
+            // ✅ Save to settings/hero-banner (for HeroBanner component)
+            await setDoc(doc(db, 'settings', 'hero-banner'), bannerData);
+
+            // ✅ ALSO save to homeBanners collection (for homepage slider)
+            await setDoc(doc(db, 'homeBanners', 'primary'), bannerData);
+
+            alert('Banner settings updated successfully! Homepage will now reflect the change.');
         } catch (error) {
             console.error(error);
             alert('Failed to save settings.');

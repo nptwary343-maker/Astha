@@ -2,6 +2,8 @@
 export const runtime = 'edge';
 import { useState, useEffect } from 'react';
 import { Save, RefreshCw, LayoutTemplate } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const defaultContent = {
     title: 'About AstharHat',
@@ -21,29 +23,45 @@ export default function EditAboutPage() {
     const [isSaved, setIsSaved] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Load saved content on mount
+    // Load saved content from Firestore on mount
     useEffect(() => {
-        const saved = localStorage.getItem('astharhat_about_content');
-        if (saved) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setContent(JSON.parse(saved));
-        }
-
-        setIsLoaded(true);
+        const fetchContent = async () => {
+            try {
+                const docRef = doc(db, 'settings', 'about-content');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setContent({ ...defaultContent, ...docSnap.data() } as typeof defaultContent);
+                }
+            } catch (error) {
+                console.error('Error loading about content:', error);
+            } finally {
+                setIsLoaded(true);
+            }
+        };
+        fetchContent();
     }, []);
 
     if (!isLoaded) return null;
 
-    const handleSave = () => {
-        localStorage.setItem('astharhat_about_content', JSON.stringify(content));
-        setIsSaved(true);
-        setTimeout(() => setIsSaved(false), 2000);
+    const handleSave = async () => {
+        try {
+            await setDoc(doc(db, 'settings', 'about-content'), content);
+            setIsSaved(true);
+            setTimeout(() => setIsSaved(false), 2000);
+        } catch (error) {
+            console.error('Error saving about content:', error);
+            alert('Save failed! Check console for details.');
+        }
     };
 
-    const handleReset = () => {
+    const handleReset = async () => {
         if (confirm('Reset to default content?')) {
             setContent(defaultContent);
-            localStorage.removeItem('astharhat_about_content');
+            try {
+                await setDoc(doc(db, 'settings', 'about-content'), defaultContent);
+            } catch (error) {
+                console.error('Reset failed:', error);
+            }
         }
     };
 

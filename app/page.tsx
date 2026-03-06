@@ -2,7 +2,9 @@
 
 export const runtime = 'edge';
 import { useState, useEffect } from 'react';
-import { getFeaturedProducts, getHomeBanners } from '@/lib/db-utils';
+import { getFeaturedProducts } from '@/lib/db-utils';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, getDocs, collection } from 'firebase/firestore';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, ShoppingCart, ChevronRight, Star } from 'lucide-react';
@@ -10,27 +12,31 @@ import { useCart } from '@/context/CartContext';
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
-  const [banners, setBanners] = useState<any[]>([]);
+  const [banner, setBanner] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentBanner, setCurrentBanner] = useState(0);
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [p, b, c] = await Promise.all([
-          getFeaturedProducts(),
-          getHomeBanners(),
-          import('@/lib/firebase').then(async ({ db, collection, getDocs }) => {
-            const catSnap = await getDocs(collection(db, 'categories'));
-            return catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
-          })
-        ]);
-        setProducts(p);
-        setBanners(b);
-        setCategories(c);
+        // ✅ Read banner from settings/hero-banner (publicly readable, admin saves here)
+        const bannerSnap = await getDoc(doc(db, 'settings', 'hero-banner'));
+        if (bannerSnap.exists()) {
+          setBanner(bannerSnap.data());
+        }
+
+        // ✅ Read categories (publicly readable per rules)
+        const catSnap = await getDocs(collection(db, 'categories'));
+        const cats = catSnap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+        setCategories(cats);
+
+        // ✅ Read products
+        const prods = await getFeaturedProducts();
+        setProducts(prods);
       } catch (e) {
         console.error("Home Page Data Fetch Error:", e);
       } finally {
@@ -39,15 +45,6 @@ export default function Home() {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (banners.length > 1) {
-      const timer = setInterval(() => {
-        setCurrentBanner((prev) => (prev + 1) % banners.length);
-      }, 5000);
-      return () => clearInterval(timer);
-    }
-  }, [banners.length]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col font-sans selection:bg-orange-100">
@@ -70,32 +67,38 @@ export default function Home() {
       {/* Main Content Area */}
       <main className="flex-1 pb-24">
 
-        {/* 2. Hero Slider: Full-width mobile banner (aspect-[21/9]) */}
+        {/* 2. Hero Banner: reads from settings/hero-banner (admin saves here) */}
         <section className="w-full bg-white">
           <div className="w-full aspect-[21/9] relative overflow-hidden">
-            {banners.length > 0 ? (
-              <Image
-                src={banners[currentBanner]?.imageUrl || banners[0]?.imageUrl}
-                alt="Banner"
-                fill
-                className="object-cover transition-opacity duration-1000"
-                priority
-              />
+            {banner?.backgroundImage || banner?.imageUrl ? (
+              <>
+                <Image
+                  src={banner.backgroundImage || banner.imageUrl}
+                  alt={banner.title || 'Banner'}
+                  fill
+                  className="object-cover"
+                  priority
+                  unoptimized
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-center px-4">
+                  {banner.title && (
+                    <p className="text-white font-black text-lg leading-tight drop-shadow">{banner.title}</p>
+                  )}
+                  {banner.subtitle && (
+                    <p className="text-white/80 text-xs mt-1">{banner.subtitle}</p>
+                  )}
+                </div>
+              </>
             ) : (
-              <div className="w-full h-full bg-gradient-to-r from-orange-400 to-rose-400 animate-pulse flex items-center justify-center text-white font-bold opacity-80 text-xl italic uppercase tracking-widest">
-                Flash Sale Live
+              <div className="w-full h-full bg-gradient-to-r from-orange-500 via-rose-500 to-purple-600 flex flex-col items-center justify-center text-white px-4 text-center">
+                <p className="font-black text-xl italic uppercase tracking-widest drop-shadow">
+                  {banner?.title || 'AstharHat'}
+                </p>
+                {banner?.subtitle && (
+                  <p className="text-white/80 text-sm mt-2">{banner.subtitle}</p>
+                )}
               </div>
             )}
-
-            {/* Visual Indicator (Dynamic Dots) */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {banners.map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`w-1.5 h-1.5 rounded-full shadow-sm transition-all duration-300 ${currentBanner === idx ? 'bg-white w-4' : 'bg-white/40'}`}
-                />
-              ))}
-            </div>
           </div>
         </section>
 
@@ -184,15 +187,7 @@ export default function Home() {
                   </div>
 
                   <button
-                    onClick={() => {
-                      addItem({
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        image: product.images[0],
-                        quantity: 1
-                      });
-                    }}
+                    onClick={() => addToCart(product.id, 1)}
                     className="mt-2 w-full py-1.5 bg-yellow-400 text-slate-900 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-yellow-500 transition-colors shadow-sm"
                   >
                     Buy

@@ -4,6 +4,8 @@ export const runtime = 'edge';
 
 import React, { useState, useEffect } from 'react';
 import { Truck, ShieldCheck, Users, Headphones } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const defaultContent = {
     title: 'About AstharHat',
@@ -22,15 +24,22 @@ export default function AboutPage() {
     const [content, setContent] = useState(defaultContent);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Simulate fetching CMS data
+    // Fetch content from Firestore (written by admin)
     useEffect(() => {
-        const saved = localStorage.getItem('astharhat_about_content');
-        if (saved) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setContent(JSON.parse(saved));
-        }
-
-        setIsLoaded(true);
+        const fetchContent = async () => {
+            try {
+                const docRef = doc(db, 'settings', 'about-content');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setContent({ ...defaultContent, ...docSnap.data() } as typeof defaultContent);
+                }
+            } catch (error) {
+                console.error('Error loading about page content:', error);
+            } finally {
+                setIsLoaded(true);
+            }
+        };
+        fetchContent();
     }, []);
 
     if (!isLoaded) return null; // Or a skeleton loader

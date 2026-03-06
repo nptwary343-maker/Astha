@@ -8,10 +8,12 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      // Check if the user exists in 'admin_users' collection and has admin/super_admin/manager role
-      // Note: This costs 1 read per request.
-      return isAuthenticated() && 
-        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid));
+      // Admin users can be stored with either UID or email as document ID.
+      // The Settings page creates admins using email as doc ID, so we check both.
+      return isAuthenticated() && (
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid)) ||
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.token.email))
+      );
     }
 
     function isDeliveryMan() {
@@ -75,7 +77,45 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Match all others
+    // 🛡️ 7. Public Collections (Storefront readable)
+    match /categories/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /homeBanners/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /partners/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /businessLocations/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /productBlocks/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /notifications/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    match /audit_logs/{docId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+    match /site_config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /flash_sale/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Match all others — deny everything not explicitly defined above
     match /{document=**} {
       allow read, write: if false;
     }

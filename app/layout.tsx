@@ -15,7 +15,7 @@ import { I18nProvider } from "@/context/I18nContext";
 import { LocationProvider } from "@/context/LocationContext";
 import { LazyMotion, domAnimation } from "framer-motion"
 
-export const runtime = 'edge';
+
 
 /** Ensures mobile browsers scale the page correctly (fixes "not responsive" on phones). */
 export const viewport: Viewport = {

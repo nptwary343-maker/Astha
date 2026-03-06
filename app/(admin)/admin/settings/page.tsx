@@ -413,20 +413,32 @@ export default function SettingsPage() {
 
     const handleSaveBanner = async () => {
         try {
-            await setDoc(doc(db, 'settings', 'hero-banner'), {
+            const bannerData = {
                 title: bannerTitle,
                 subtitle: bannerSubtitle,
                 backgroundImage: bannerImage,
+                imageUrl: bannerImage, // homepage uses imageUrl field
                 qrValue: bannerQrValue,
                 showQr: bannerShowQr,
                 showTimer: bannerShowTimer,
                 timerEndTime: bannerTimerEndTime,
                 isActive: bannerActive,
-                gradientFrom: 'orange-600', // Default gradients if image missing
+                active: bannerActive, // homeBanners collection uses 'active'
+                gradientFrom: 'orange-600',
                 gradientTo: 'purple-900',
-                bgOpacity: 0.5
-            });
-            alert("Home Banner Settings Saved!");
+                bgOpacity: 0.5,
+                buttonText: 'Shop Now',
+                buttonLink: '/shop',
+                order: 0,
+            };
+
+            // ✅ Save to settings/hero-banner (for HeroBanner on /shop)
+            await setDoc(doc(db, 'settings', 'hero-banner'), bannerData);
+
+            // ✅ ALSO save to homeBanners/primary (for Homepage /)
+            await setDoc(doc(db, 'homeBanners', 'primary'), bannerData);
+
+            alert("Home Banner Settings Saved! Both homepage and shop page updated.");
         } catch (e) {
             console.error(e);
             alert("Failed to save banner.");
