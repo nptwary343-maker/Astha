@@ -19,6 +19,7 @@ import FlashSaleBanner from '@/components/FlashSaleBanner';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import FlashSaleHeroBanner from '@/components/FlashSaleHeroBanner';
 import MobileMinimalistHeader, { MobileMinimalistCategories } from '@/components/MobileMinimalistView';
+import MobileCheckIn from '@/components/MobileCheckIn';
 import { Award, Ticket, Users, TrendingUp, ChevronRight } from 'lucide-react';
 
 export default function Home() {
@@ -110,6 +111,9 @@ export default function Home() {
           {/* 📱 MOBILE CATEGORIES - Horizontal Scroll */}
           <MobileMinimalistCategories categories={dbCategories.length > 0 ? dbCategories : CATEGORIES.slice(0, 10)} />
 
+          {/* 📱 MOBILE DAILY CHECK-IN */}
+          <MobileCheckIn />
+
           {/* Categories Section - Visible on all screens now */}
           <section className="relative z-20">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 md:mb-12">
@@ -149,6 +153,9 @@ export default function Home() {
                   <div key={cat.id} className={`group bg-white p-8 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col h-full border border-border-light relative overflow-hidden active:scale-[0.98] ${categorySettings.shape === 'square' ? 'rounded-none' :
                     categorySettings.shape === 'pill' ? 'rounded-full' : 'rounded-[3rem]'
                     }`}>
+                    {/* 🌈 NEW: Colorful Hover Glow */}
+                    <div className="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-gradient-to-br from-brand-primary/20 via-sky-500/10 to-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 blur-[100px] pointer-events-none" />
+
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#4338ca_1px,transparent_1px)] [background-size:16px_16px]" />
 
                     <Link href={`/shop?category=${cat.name.toLowerCase()}`} className="block relative z-10 group/header">
@@ -166,7 +173,7 @@ export default function Home() {
                               alt={cat.name}
                               fill
                               unoptimized
-                              className="object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl px-4 py-2"
+                              className="object-contain transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2 drop-shadow-2xl px-4 py-2"
                             />
                           </div>
                         ) : (

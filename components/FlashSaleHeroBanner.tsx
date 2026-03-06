@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Zap, Clock, ShoppingBag, ArrowRight } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { fetchFlashSaleConfigAction } from '@/actions/public-data';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,13 +27,15 @@ export default function FlashSaleHeroBanner() {
     const [isExpired, setIsExpired] = useState(false);
 
     useEffect(() => {
-        const loadFlashSale = async () => {
-            const data = await fetchFlashSaleConfigAction();
-            if (data) {
-                setConfig(data as FlashSaleConfig);
+        const unsub = onSnapshot(doc(db, 'settings', 'flash-sale'), (docSnap) => {
+            if (docSnap.exists()) {
+                setConfig(docSnap.data() as FlashSaleConfig);
             }
-        };
-        loadFlashSale();
+        }, (err) => {
+            console.error("Flash Sale Sync Error:", err);
+        });
+
+        return () => unsub();
     }, []);
 
     useEffect(() => {
@@ -69,15 +73,43 @@ export default function FlashSaleHeroBanner() {
             className="relative w-full overflow-hidden rounded-[3rem] bg-slate-950 border border-slate-800 shadow-2xl"
         >
             {/* Dark abstract backgrounds */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-primary/20 rounded-full blur-[120px] -mr-60 -mt-60 animate-pulse" />
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-red-600/10 rounded-full blur-[100px] -ml-40 -mb-40" />
+
+                {/* 🌈 NEW: Premium Colorful Blobs for Flash Sale */}
+                <motion.div
+                    animate={{
+                        x: [0, 60, -30, 0],
+                        y: [0, -40, 40, 0],
+                        scale: [1, 1.3, 0.8, 1],
+                    }}
+                    transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-1/4 left-1/4 w-[40%] h-[40%] bg-red-600/20 blur-[130px] rounded-full mix-blend-screen"
+                />
+                <motion.div
+                    animate={{
+                        x: [0, -50, 40, 0],
+                        y: [0, 60, -20, 0],
+                        scale: [1, 0.9, 1.2, 1],
+                    }}
+                    transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+                    className="absolute bottom-1/4 right-1/3 w-[35%] h-[35%] bg-amber-500/15 blur-[110px] rounded-full mix-blend-screen"
+                />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.4, 1],
+                        opacity: [0.2, 0.4, 0.2],
+                    }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-1/2 right-1/4 w-[30%] h-[30%] bg-cyan-500/10 blur-[90px] rounded-full mix-blend-screen"
+                />
 
                 {/* Image Overlay if available */}
                 {config.backgroundImage && (
                     <img
                         src={config.backgroundImage}
-                        className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
+                        className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay transition-transform duration-[30s] linear animate-slow-zoom"
                         alt="Flash Sale Background"
                     />
                 )}
@@ -89,8 +121,15 @@ export default function FlashSaleHeroBanner() {
             <div className="relative z-10 px-8 py-16 md:py-24 flex flex-col items-center text-center">
                 {/* Badge */}
                 <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
+                    animate={{
+                        y: [0, -6, 0],
+                        scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
                     className="flex items-center gap-2 bg-red-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-8 shadow-[0_0_20px_rgba(220,38,38,0.5)]"
                 >
                     <Zap size={12} fill="currentColor" className="animate-pulse" />

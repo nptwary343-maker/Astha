@@ -103,7 +103,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
                             <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold">Admin Panel</span>
                         </div>
                     </div>
-                    <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 hover:text-white">
+                    <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 hover:text-gray-600 p-1">
                         <X size={24} />
                     </button>
                     <ChevronRight className="ml-auto text-gray-500 hidden md:block" size={16} />
@@ -123,7 +123,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
                                     }`}
                             >
                                 <div className="flex items-center gap-3">
-                                    <item.icon size={18} className={isActive ? 'text-blue-500' : 'text-gray-500 group-hover:text-white'} />
+                                    <item.icon size={18} className={isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} />
                                     <span className="text-sm">{item.name}</span>
                                 </div>
                                 {item.badge && (
