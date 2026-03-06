@@ -133,7 +133,7 @@ const SizeSelector = ({ selected, onSelect }: any) => (
 // --- Main Component ---
 
 export default function ProductDetailClient({ product, productId }: { product: Product, productId: string }) {
-    const { addItem } = useCart();
+    const { addToCart } = useCart();
     const { user } = useAuth();
     const pathname = usePathname();
     const { addToRecentlyViewed } = useRecentlyViewed();
@@ -184,7 +184,7 @@ export default function ProductDetailClient({ product, productId }: { product: P
     }, [productId, product.category]);
 
     const handleAddToCart = () => {
-        addItem({ id: product.id, name: product.name, price: dynamicPrice, image: product.images[0], quantity, weight: selectedSize || undefined });
+        addToCart(product.id, quantity);
         setIsAdded(true);
         setTimeout(() => setIsAdded(false), 2000);
     };
