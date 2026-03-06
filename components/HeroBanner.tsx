@@ -111,7 +111,7 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                                 </picture>
                             )}
                             {/* 🌓 Dynamic Overlay for Contrast - Refactoring UI Principle */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent md:from-white/90 md:via-white/70 md:to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent md:from-white/90 md:via-white/70 md:to-transparent" />
                         </motion.div>
 
                         {/* Content Area */}
@@ -120,54 +120,54 @@ const HeroBanner = ({ customBanners = [] }: HeroBannerProps) => {
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
-                                className="max-w-2xl space-y-4 md:space-y-6"
+                                className="max-w-2xl space-y-3 md:space-y-6"
                             >
-                                <div className="inline-flex items-center gap-2 bg-indigo-50 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-100">
-                                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-                                    <span className="text-xs font-semibold uppercase tracking-wider text-indigo-700">Premium Collection</span>
+                                <div className="inline-flex items-center gap-1.5 bg-brand-primary/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-brand-primary/20">
+                                    <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse" />
+                                    <span className="text-[9px] md:text-xs font-bold uppercase tracking-widest text-brand-primary">Premium Selection</span>
                                 </div>
 
-                                <h1 className="text-white md:text-slate-900 text-3xl md:text-7xl font-bold leading-tight tracking-tight drop-shadow-md italic uppercase">
+                                <h1 className="text-white md:text-slate-900 text-2xl sm:text-3xl md:text-7xl font-black leading-tight tracking-tighter drop-shadow-xl md:drop-shadow-none italic uppercase">
                                     {currentBanner.title}
                                 </h1>
 
-                                <p className="text-slate-200 md:text-slate-600 text-sm md:text-lg font-medium max-w-xl leading-relaxed border-l-4 border-brand-primary pl-4 md:pl-6">
+                                <p className="text-white/90 md:text-slate-600 text-xs md:text-lg font-bold max-w-xl leading-relaxed border-l-2 md:border-l-4 border-brand-primary pl-4 md:pl-6 opacity-90 md:opacity-100">
                                     {currentBanner.subtitle}
                                 </p>
 
-                                <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                                <div className="pt-4 sm:pt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                                     <Link
                                         href={currentBanner.buttonLink || "/shop"}
-                                        className="bg-indigo-600 text-white px-8 md:px-10 py-3.5 md:py-4 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all shadow-md flex items-center gap-2 group/btn"
+                                        className="bg-brand-primary text-white px-6 md:px-10 py-3 md:py-4 rounded-xl font-black text-[10px] md:text-sm hover:bg-slate-900 transition-all shadow-xl shadow-brand-primary/20 flex items-center gap-2 group/btn uppercase tracking-widest"
                                     >
                                         {currentBanner.buttonText || "Shop Now"}
-                                        <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+                                        <ChevronRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                                     </Link>
                                 </div>
 
-                                {/* Trust Signal Badges */}
+                                {/* Trust Signal Badges - Hidden on very small mobile if too crowded, but keeping for now */}
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.6, duration: 1 }}
-                                    className="pt-10 flex flex-wrap gap-8"
+                                    className="pt-6 md:pt-10 flex flex-wrap gap-4 md:gap-8"
                                 >
-                                    <div className="flex items-center gap-3 text-slate-500 group/item">
-                                        <div className="p-2 bg-slate-50 rounded-xl border border-slate-100 group-hover/item:border-indigo-200 group-hover/item:bg-indigo-50 transition-all">
-                                            <ShieldCheck size={20} className="text-indigo-500" />
+                                    <div className="flex items-center gap-2 md:gap-3 text-white/80 md:text-slate-500 group/item">
+                                        <div className="p-1.5 md:p-2 bg-white/10 md:bg-slate-50 rounded-lg md:rounded-xl border border-white/10 md:border-slate-100 transition-all">
+                                            <ShieldCheck size={16} className="text-brand-primary" />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-xs font-semibold text-slate-800">100% Secure</span>
-                                            <span className="text-[10px] font-medium text-slate-500">Satisfaction Guaranteed</span>
+                                            <span className="text-[8px] md:text-xs font-bold text-white md:text-slate-800">100% Secure</span>
+                                            <span className="text-[7px] md:text-[10px] font-medium text-white/60 md:text-slate-500 hidden sm:block">Satisfaction Guaranteed</span>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 text-slate-500 group/item">
-                                        <div className="p-2 bg-slate-50 rounded-xl border border-slate-100 group-hover/item:border-indigo-200 group-hover/item:bg-indigo-50 transition-all">
-                                            <Zap size={20} className="text-amber-500" />
+                                    <div className="flex items-center gap-2 md:gap-3 text-white/80 md:text-slate-500 group/item">
+                                        <div className="p-1.5 md:p-2 bg-white/10 md:bg-slate-50 rounded-lg md:rounded-xl border border-white/10 md:border-slate-100 transition-all">
+                                            <Zap size={16} className="text-orange-500" />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-xs font-semibold text-slate-800">Fast Dispatch</span>
-                                            <span className="text-[10px] font-medium text-slate-500">Ready to Ship</span>
+                                            <span className="text-[8px] md:text-xs font-bold text-white md:text-slate-800">Fast Dispatch</span>
+                                            <span className="text-[7px] md:text-[10px] font-medium text-white/60 md:text-slate-500 hidden sm:block">Ready to Ship</span>
                                         </div>
                                     </div>
                                 </motion.div>

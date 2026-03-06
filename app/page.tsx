@@ -80,7 +80,7 @@ export default function Home() {
       {/* 📱 MOBILE MINIMALIST HEADER - Handled in AppShell now */}
 
       {/* NEW: Separate Particle Feature – Zero DB hits */}
-      <div className="block">
+      <div className="hidden md:block">
         <ParticleHeroBanners />
       </div>
 
@@ -96,12 +96,14 @@ export default function Home() {
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 md:px-8 space-y-12 md:space-y-20 pb-24">
 
         {/* 🛡️ Trust Signals Section */}
-        <section className="relative z-20">
+        <section className="relative z-20 hidden md:block">
           <TrustBar />
         </section>
 
         {/* 🧩 Quick Action Bar - Simplified for Mobile */}
-        <HomepageActionBar />
+        <div className="hidden md:block">
+          <HomepageActionBar />
+        </div>
 
         <div className="space-y-12 md:space-y-24">
 
@@ -280,7 +282,9 @@ export default function Home() {
           </section>
 
           {/* ⚡ DHAMAKA FLASH SALE BANNER - Middle Section */}
-          <FlashSaleHeroBanner />
+          <div className="hidden md:block">
+            <FlashSaleHeroBanner />
+          </div>
 
           {/* 📍 Dynamic Product Blocks based on Location */}
           {blocks.map(block => (
@@ -301,14 +305,14 @@ export default function Home() {
           ))}
 
           {/* Feature Section - QR Scanner */}
-          <section className="bg-text-main p-8 md:p-20 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] rounded-[4rem] relative overflow-hidden group">
+          <section className="bg-text-main p-8 md:p-20 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] rounded-[4rem] relative overflow-hidden group hidden md:block">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-brand-primary/20 transition-colors duration-1000" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-accent/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl group-hover:bg-brand-accent/10 transition-colors duration-1000" />
             <HomeScanSection />
           </section>
 
           {/* Standard Featured Grid (Fallback/Main) */}
-          <section className="pb-12">
+          <section className="pb-12 hidden md:block">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 border-b border-border-light pb-8">
               <div className="space-y-2">
                 <span className="text-xs font-semibold uppercase tracking-wider text-brand-primary">Curated Spotlight</span>
@@ -323,7 +327,9 @@ export default function Home() {
         </div>
       </div>
 
-      <RecentlyViewed />
+      <div className="hidden md:block">
+        <RecentlyViewed />
+      </div>
     </div>
   );
 }

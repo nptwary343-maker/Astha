@@ -54,7 +54,7 @@ export default function AccountPage() {
 
     const tabs = [
         { id: 'personal', name: 'Identity', icon: User },
-        { id: 'orders', name: 'Order History', icon: Package },
+        { id: 'orders', name: 'History', icon: Package },
         { id: 'addresses', name: 'Logistics', icon: MapPin },
         { id: 'payments', name: 'Vault', icon: CreditCard },
         { id: 'settings', name: 'Preferences', icon: Settings },
