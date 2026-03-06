@@ -29,8 +29,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <MotionGraphics />
             <MarqueeBar />
 
-            <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
-            <MobileMinimalistHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+            {pathname !== '/' && (
+                <>
+                    <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+                    <MobileMinimalistHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+                </>
+            )}
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <BottomNav />
             <main className="pb-20 md:pb-0 min-h-screen transition-all duration-300 bg-[#f4f4f4] dark:bg-slate-950">

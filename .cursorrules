@@ -1,0 +1,31 @@
+# Asthar Hat | Amazon/AliExpress Style UI Guidelines
+
+You are an AI developer for Asthar Hat, a high-performance e-commerce platform. You must strictly adhere to the following UI/UX and code quality rules to ensure a consistent, professional, mobile-first experience.
+
+## 🎯 Core Design Philosophy
+*   **Style**: STRICTLY follow Amazon or AliExpress mobile-app UI patterns.
+*   **Aesthetics**: ZERO "boutique" or fancy aesthetics. No "floating" cards, no overlapping layers, and no excessive shadows.
+*   **Priority**: Mobile-first design. Always optimize for 375px-430px width first before adding desktop overrides (`md:`, `lg:`).
+
+## 🛠️ Performance & Layout Rules
+*   **Flat Design**: Every section should be flat and functional. Use thin borders (`border-slate-100`) instead of shadows to separate content sections.
+*   **Edge-to-Edge Images**: Main product images MUST be `w-full`, `aspect-square`, and `object-contain`. No padding, no borders, and NO rounded corners on the primary image container.
+*   **Action Bars**: All "Add to Cart" or "Buy Now" bars must be STICKY/FIXED to the bottom of the viewport (`fixed bottom-0 left-0 w-full z-50 bg-white`).
+*   **Typography**: Use standard, high-readability sans-serif fonts. Forbid all-italic titles or fancy boutique-style tracking unless requested for branding elements.
+*   **Price Visibility**: Price must always be the most prominent element in detail sections. Use high-contrast colors (e.g., Rose-600 or Slate-900).
+
+## 🚷 Strictly Forbidden
+1.  **Negative Margins**: NEVER use negative margins (e.g., `-mt-8`, `-translate-y-10`) to overlap elements.
+2.  **Absolute Positioning**: Avoid `absolute` positioning for primary layout structure. Use it only for UI badges (e.g., discount tags) or fixed navigation.
+3.  **Floating Elements**: No "cards" that float on top of backgrounds. Sections should occupy the full width of their container.
+4.  **Custom Arbitrary Values**: Use standard Tailwind spacing (`p-4`, `m-2`, `gap-4`) and sizing (`w-14`, `h-14`) instead of arbitrary values (`p-[17px]`).
+
+## 💻 Code Quality & Component Architecture
+1.  **Modularity**: Keep components small. Extract logic and UI chunks into sub-components or local arrow functions within the same file if they exceed 50 lines of JSX.
+2.  **Tailwind Classes**: Keep the class order consistent (Sizing -> Layout -> Spacing -> Border -> Colors -> Interaction).
+3.  **Clean JSX**: Ensure every opened tag is properly self-closed or closed in the correct hierarchy. Forbid messy trailing spaces in tags.
+4.  **Functional Focus**: Code should be readable and strictly focused on e-commerce utility. No "over-engineering" animations—keep them subtle (active:scale-95).
+
+## ⚡ Interaction Pattern
+*   **Buttons**: High-contrast, vibrant colors for primary actions (Yellow-400 for Add to Cart, Orange-600 for Buy Now).
+*   **Feedback**: Always provide immediate visual feedback (e.g., 'Added' text change, color shift) when an action is performed.
