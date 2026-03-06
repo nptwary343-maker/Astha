@@ -13,35 +13,31 @@ export default function MobileMinimalistHeader({ onMenuClick }: { onMenuClick?: 
     const { user } = useAuth();
 
     return (
-        <div className="md:hidden flex flex-col bg-slate-900 text-white sticky top-0 z-[100] shadow-xl">
-            {/* Bar 1: Logo, Location, Account, Cart */}
-            <div className="flex items-center justify-between px-4 py-3 gap-3 border-b border-white/5">
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <button onClick={onMenuClick} className="p-1.5 hover:bg-white/10 rounded-xl transition-colors shrink-0">
-                        <Menu size={20} strokeWidth={2.5} className="text-brand-primary" />
+        <div className="md:hidden flex flex-col bg-slate-950 text-white sticky top-0 z-[100] shadow-2xl border-b border-white/5">
+            {/* Unified Bar: Menu, Logo, Search Trigger, Cart */}
+            <div className="flex items-center justify-between px-4 py-3 gap-3">
+                <div className="flex items-center gap-3">
+                    <button onClick={onMenuClick} className="p-1 text-brand-primary">
+                        <Menu size={24} strokeWidth={2.5} />
                     </button>
                     <Link href="/" className="shrink-0">
                         <h1 className="text-lg font-black tracking-tighter italic uppercase leading-none">
                             Asthar <span className="text-brand-primary">Hat</span>
                         </h1>
                     </Link>
-                    <div className="h-4 w-px bg-white/10 mx-1 hidden sm:block" />
-                    <div className="hidden sm:flex items-center gap-1 overflow-hidden">
-                        <MapPin size={12} className="text-brand-accent shrink-0" />
-                        <span className="text-[10px] font-bold truncate opacity-80 uppercase tracking-tighter">
-                            {selectedLocationId === 'all' ? 'Everywhere' : selectedLocationId}
-                        </span>
-                    </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Link href="/account" className="hover:text-brand-primary transition-colors">
+                    <Link href="/shop" className="p-1 text-slate-400 hover:text-white transition-colors">
+                        <Search size={20} />
+                    </Link>
+                    <Link href="/account" className="p-1 text-slate-400 hover:text-white transition-colors">
                         <User size={20} />
                     </Link>
-                    <Link href="/cart" className="relative hover:text-brand-primary transition-colors">
-                        <ShoppingCart size={22} />
+                    <Link href="/cart" className="relative p-1 text-brand-primary">
+                        <ShoppingCart size={22} strokeWidth={2.5} />
                         {cartCount > 0 && (
-                            <span className="absolute -top-1.5 -right-2 bg-brand-primary text-white text-[9px] font-black h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center border-2 border-slate-900">
+                            <span className="absolute -top-1 -right-1 bg-white text-blue-900 text-[8px] font-black h-4 w-4 rounded-full flex items-center justify-center border-2 border-slate-950">
                                 {cartCount}
                             </span>
                         )}
@@ -49,23 +45,19 @@ export default function MobileMinimalistHeader({ onMenuClick }: { onMenuClick?: 
                 </div>
             </div>
 
-            {/* Bar 2: Search + Quick Location for mobile */}
-            <div className="px-3 py-2 flex items-center gap-2 bg-slate-800/50 backdrop-blur-md">
+            {/* Quick Location / Search Bar Semi-collapsed */}
+            <div className="px-4 pb-3 flex items-center gap-2">
                 <Link href="/shop" className="flex-1">
-                    <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                            <Search size={16} />
-                        </div>
-                        <input
-                            readOnly
-                            placeholder="Search Asthar Hat..."
-                            className="w-full bg-white/10 border border-white/5 text-white rounded-xl py-2 pl-10 pr-4 text-xs font-semibold focus:outline-none placeholder:text-slate-500"
-                        />
+                    <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 flex items-center gap-2">
+                        <Search size={14} className="text-slate-500" />
+                        <span className="text-xs text-slate-500 font-medium">Search products...</span>
                     </div>
                 </Link>
-                <div className="flex sm:hidden items-center gap-1 bg-white/5 px-2 py-2 rounded-xl border border-white/5 max-w-[80px]">
-                    <MapPin size={14} className="text-brand-accent shrink-0" />
-                    <span className="text-[9px] font-black truncate opacity-90 uppercase">{selectedLocationId === 'all' ? 'Global' : selectedLocationId}</span>
+                <div className="flex items-center gap-1.5 bg-brand-primary/10 px-3 py-2 rounded-xl border border-brand-primary/20 max-w-[100px]">
+                    <MapPin size={12} className="text-brand-primary shrink-0" />
+                    <span className="text-[9px] font-black truncate text-brand-primary uppercase">
+                        {selectedLocationId === 'all' ? 'Global' : selectedLocationId}
+                    </span>
                 </div>
             </div>
         </div>
@@ -76,23 +68,26 @@ export function MobileMinimalistCategories({ categories }: { categories: any[] }
     if (!categories || categories.length === 0) return null;
 
     return (
-        <div className="md:hidden bg-white py-4 overflow-hidden shadow-sm">
-            <div className="flex overflow-x-auto gap-6 px-4 no-scrollbar">
+        <div className="md:hidden bg-white py-5 overflow-hidden border-b border-slate-100">
+            <div className="flex overflow-x-auto gap-6 px-5 no-scrollbar">
                 {categories.map((cat, idx) => (
-                    <Link key={cat.id || idx} href={`/shop?category=${cat.id}`} className="flex flex-col items-center gap-1.5 shrink-0 active:scale-95 transition-transform group">
-                        <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center p-2.5 relative group-hover:border-brand-primary transition-colors overflow-hidden">
-                            <div className="absolute inset-0 bg-brand-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Link
+                        key={cat.id || idx}
+                        href={`/shop?category=${encodeURIComponent(cat.name)}`}
+                        className="flex flex-col items-center gap-2 shrink-0 active:scale-90 transition-transform group"
+                    >
+                        <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center p-3 relative group-hover:border-brand-primary transition-all shadow-sm">
                             {cat.image ? (
                                 <img
                                     src={cat.image}
                                     alt={cat.name}
-                                    className="w-full h-full object-contain relative z-10 transition-transform group-hover:scale-110"
+                                    className="w-full h-full object-contain transition-transform group-hover:scale-110"
                                 />
                             ) : (
-                                <span className="text-xl relative z-10 font-bold text-slate-400">{cat.name.charAt(0)}</span>
+                                <span className="text-lg font-black text-slate-300">{cat.name.charAt(0)}</span>
                             )}
                         </div>
-                        <span className="text-[10px] font-bold text-slate-800 tracking-tight text-center w-16 truncate leading-tight group-hover:text-brand-primary">
+                        <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter text-center w-14 truncate leading-tight group-hover:text-brand-primary">
                             {cat.name}
                         </span>
                     </Link>

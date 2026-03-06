@@ -26,6 +26,7 @@ function ShopContent() {
     const brand = searchParams?.get('brand');
 
     const [products, setProducts] = useState<any[]>([]);
+    const [dbCategories, setDbCategories] = useState<any[]>([]);
     const [settings, setSettings] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const { addToCart } = useCart();
@@ -34,12 +35,15 @@ function ShopContent() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [items, siteSettings] = await Promise.all([
+                const [items, siteSettings, catsSnap] = await Promise.all([
                     fetchProductsAction(),
-                    fetchSiteSettingsAction()
+                    fetchSiteSettingsAction(),
+                    import('@/lib/firebase').then(({ db, collection, getDocs }) => getDocs(collection(db, 'categories')))
                 ]);
+
                 setProducts(items);
                 setSettings(siteSettings);
+                setDbCategories(catsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
             } catch (err) {
                 console.error(err);
             } finally {
@@ -48,6 +52,20 @@ function ShopContent() {
         };
         fetchData();
     }, []);
+
+    // Determine what to show in the mobile scroll bar
+    const activeCategoryData = dbCategories.find(c =>
+        c.name.toLowerCase() === category?.toLowerCase() ||
+        c.id === category
+    );
+
+    const categoriesToShow = activeCategoryData?.subcategories?.length > 0
+        ? activeCategoryData.subcategories.map((sub: any) => ({
+            id: sub.slug || sub.name,
+            name: sub.name,
+            image: null // Subcategories usually don't have images in this schema
+        }))
+        : (dbCategories.length > 0 ? dbCategories : CATEGORIES);
 
     const handleAddToCart = (e: React.MouseEvent, productId: string) => {
         e.preventDefault();
@@ -113,7 +131,7 @@ function ShopContent() {
     if (isLoading) return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50">
             <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-xs font-black uppercase tracking-widest text-slate-400">অপেক্ষা করুন...</p>
             </div>
         </div>
@@ -125,7 +143,14 @@ function ShopContent() {
 
             {/* Added Category Quick Access for Search/Category view */}
             <div className="bg-white border-b border-slate-100">
-                <MobileMinimalistCategories categories={CATEGORIES} />
+                <div className="max-w-[1600px] mx-auto">
+                    <div className="px-4 pt-4 md:hidden">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            {activeCategoryData ? `${activeCategoryData.name} Subcategories` : 'Categories'}
+                        </span>
+                    </div>
+                    <MobileMinimalistCategories categories={categoriesToShow} />
+                </div>
             </div>
 
             <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-12 md:py-20">
