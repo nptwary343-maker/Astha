@@ -61,7 +61,7 @@ export default async function Page({ params }: Props) {
     const product = await getCachedProductById(id) as Product | null;
 
     if (!product) {
-        return <ProductDetailClient initialProduct={null} productId={id} similarProducts={[]} />;
+        return <ProductDetailClient product={{} as Product} productId={id} />;
     }
 
     const similarProducts = await getSimilarProducts(product.name, product.category, product.id) as Product[];
@@ -105,10 +105,10 @@ export default async function Page({ params }: Props) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <ProductDetailClient
-                initialProduct={product}
+                product={product}
                 productId={id}
-                similarProducts={similarProducts}
             />
         </>
     );
 }
+
