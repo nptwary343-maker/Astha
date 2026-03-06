@@ -136,7 +136,7 @@ export default function ProductDetailClient({ product, productId }: { product: P
     const { addToCart } = useCart();
     const { user } = useAuth();
     const pathname = usePathname();
-    const { addToRecentlyViewed } = useRecentlyViewed();
+    const { addProduct: addToRecentlyViewed } = useRecentlyViewed();
 
     const [activeImage, setActiveImage] = useState(0);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -155,7 +155,6 @@ export default function ProductDetailClient({ product, productId }: { product: P
                 name: product.name,
                 price: product.price,
                 image: product.images?.[0] || '',
-                category: product.category,
                 slug: product.slug
             });
 
