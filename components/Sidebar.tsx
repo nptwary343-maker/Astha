@@ -147,13 +147,6 @@ interface SidebarProps {
                         )}
                     </div>
 
-                    {/* Categories - Now first */}
-                    <div className="mb-8 border-b border-gray-100 pb-6">
-                        <h2 className="text-lg font-bold mb-4 px-2 text-gray-800">Categories</h2>
-                        <nav className="space-y-1.5">
-                            {MENU_ITEMS.map((item) => <SidebarItem key={item.name} item={item} pathname={pathname ?? '/'} closeSidebar={() => setIsOpen(false)} />)}
-                        </nav>
-                    </div>
 
                     {/* Main Nav Items - Now second */}
                     <h2 className="text-lg font-bold mb-4 px-2 text-gray-800">Explore</h2>

@@ -126,43 +126,11 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                     </div>
                 </div>
 
-                {/* Advanced Search Architecture */}
+                {/* Advanced Search Architecture - Simplified */}
                 <div className="flex-1 hidden md:block">
                     <div className="flex items-center bg-ui-bg rounded-2xl group focus-within:ring-2 focus-within:ring-brand-primary/10 focus-within:bg-white transition-all border border-border-light hover:border-slate-300">
-                        <div className="relative shrink-0 border-r border-border-light" ref={searchCategoryRef}>
-                            <button
-                                onClick={() => setIsSearchCategoryOpen(!isSearchCategoryOpen)}
-                                className="px-5 h-12 flex items-center gap-3 text-[10px] font-black text-text-main hover:bg-slate-50 transition-colors justify-between uppercase tracking-widest min-w-[110px]"
-                            >
-                                {selectedCategory} <ChevronDown size={14} className={`transition-transform text-slate-400 ${isSearchCategoryOpen ? 'rotate-180' : ''}`} />
-                            </button>
-
-                            {isSearchCategoryOpen && (
-                                <div className="absolute top-full left-0 mt-3 w-56 bg-white shadow-2xl rounded-2xl border border-border-light py-3 z-[60] animate-in fade-in slide-in-from-top-4 duration-300 ring-4 ring-black/5">
-                                    <button
-                                        onClick={() => { setSelectedCategory('All'); setIsSearchCategoryOpen(false); }}
-                                        className="w-full text-left px-5 py-2.5 text-xs font-bold text-text-main hover:bg-brand-primary hover:text-white transition-all flex items-center justify-between group"
-                                    >
-                                        All Categories
-                                        <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-                                    </button>
-                                    <div className="h-[1px] bg-border-light my-2" />
-                                    <div className="max-h-[350px] overflow-y-auto no-scrollbar px-1">
-                                        {CATEGORIES.map((cat) => (
-                                            <button
-                                                key={cat.id}
-                                                onClick={() => { setSelectedCategory(cat.name); setIsSearchCategoryOpen(false); }}
-                                                className="w-full text-left px-4 py-2.5 text-xs font-medium text-text-muted hover:bg-slate-50 hover:text-brand-primary rounded-xl transition-all"
-                                            >
-                                                {cat.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
                         <div className="flex-1 px-4">
-                            <SmartSearch selectedCategory={selectedCategory} />
+                            <SmartSearch selectedCategory="All" />
                         </div>
                     </div>
                 </div>
@@ -237,34 +205,6 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
                 </div>
             </div>
 
-            {/* Premium Category Ribbon */}
-            <div className="bg-white border-t border-border-light h-12 flex items-center overflow-x-auto no-scrollbar px-4 scroll-smooth">
-                <div className="max-w-[1600px] mx-auto w-full flex items-center gap-10">
-                    <button className="flex items-center gap-2 text-[11px] font-black text-text-main hover:text-brand-primary transition-all uppercase tracking-widest shrink-0" onClick={onMenuClick}>
-                        <Menu size={16} /> All Browse
-                    </button>
-                    <div className="w-[1px] h-4 bg-border-light shrink-0" />
-
-                    {[
-                        { label: "Today's Deals", href: "/shop?sort=discount" },
-                        { label: "Electronics", href: "/shop?category=electronics" },
-                        { label: "Bazar Daily", href: "/shop?category=grocery" },
-                        { label: "Furniture", href: "/shop?category=furniture" },
-                        { label: "Health & Beauty", href: "/shop?category=beauty" },
-                        { label: "Smart Gadgets", href: "/shop?category=gadgets" }
-                    ].map(link => (
-                        <Link
-                            key={link.label}
-                            href={link.href}
-                            className="text-[11px] font-bold text-text-muted hover:text-brand-primary transition-all uppercase tracking-tight shrink-0 whitespace-nowrap"
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-
-
-                </div>
-            </div>
         </header>
     );
 };

@@ -144,6 +144,7 @@ export default function ProductDetailClient({ product, productId }: { product: P
     const [isAdded, setIsAdded] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [userComment, setUserComment] = useState('');
+    const [rating, setRating] = useState(5);
     const [isSubmittingReview, setIsSubmittingReview] = useState(false);
     const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
     const [dynamicPrice, setDynamicPrice] = useState(product.price);
@@ -193,9 +194,21 @@ export default function ProductDetailClient({ product, productId }: { product: P
         if (!user || isSubmittingReview) return;
         setIsSubmittingReview(true);
         try {
-            await addDoc(collection(db, 'products', productId, 'reviews'), { userName: user.displayName || 'Anonymous', comment: userComment, rating: 5, timestamp: serverTimestamp(), userId: user.uid });
+            await addDoc(collection(db, 'products', productId, 'reviews'), {
+                userName: user.displayName || 'Anonymous',
+                comment: userComment,
+                rating: rating,
+                timestamp: serverTimestamp(),
+                userId: user.uid
+            });
             setUserComment('');
-        } finally { setIsSubmittingReview(false); }
+            setRating(5);
+            // Show a success state or toast here if available
+        } catch (error) {
+            console.error("Error submitting review:", error);
+        } finally {
+            setIsSubmittingReview(false);
+        }
     };
 
     const averageRating = reviews.length > 0 ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length : 0;
@@ -271,11 +284,48 @@ export default function ProductDetailClient({ product, productId }: { product: P
                 <section className="p-4 bg-slate-50 border-t border-slate-200 mt-2">
                     <h2 className="text-[10px] font-bold uppercase text-slate-400 tracking-widest mb-4">Customer Reviews</h2>
                     {!user ? (
-                        <Link href={`/login?redirect=${encodeURIComponent(pathname || '/')}`} className="block text-center py-4 border border-dashed border-slate-300 rounded text-[10px] font-bold text-slate-500 bg-white">LOGIN TO REVIEW</Link>
+                        <Link href={`/login?redirect=${encodeURIComponent(pathname || '/')}`} className="block text-center py-6 border border-dashed border-slate-300 rounded-xl text-[10px] font-bold text-slate-500 bg-white hover:bg-slate-50 transition-colors uppercase tracking-widest">
+                            PLEASE LOGIN TO WRITE A REVIEW
+                        </Link>
                     ) : (
-                        <form onSubmit={submitReview} className="space-y-2 mb-6">
-                            <textarea value={userComment} onChange={e => setUserComment(e.target.value)} className="w-full p-2 text-xs border border-slate-200 rounded focus:ring-1 focus:ring-orange-500 outline-none h-20" placeholder="Describe your experience..." required />
-                            <button type="submit" disabled={isSubmittingReview} className="w-full py-2 bg-slate-900 text-white rounded text-[10px] font-bold uppercase tracking-widest">Share Feedback</button>
+                        <form onSubmit={submitReview} className="space-y-4 mb-8 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Your Rating</label>
+                                <div className="flex gap-2">
+                                    {[1, 2, 3, 4, 5].map((s) => (
+                                        <button
+                                            key={s}
+                                            type="button"
+                                            onClick={() => setRating(s)}
+                                            className="p-1 transition-transform active:scale-90"
+                                        >
+                                            <Star
+                                                size={24}
+                                                fill={s <= rating ? "#f59e0b" : "none"}
+                                                className={s <= rating ? "text-amber-500" : "text-slate-300"}
+                                                strokeWidth={2}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Your Experience</label>
+                                <textarea
+                                    value={userComment}
+                                    onChange={e => setUserComment(e.target.value)}
+                                    className="w-full p-3 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none h-24 transition-all resize-none"
+                                    placeholder="Tell others what you think about this product..."
+                                    required
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isSubmittingReview || !userComment.trim()}
+                                className="w-full py-3 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:translate-y-0.5"
+                            >
+                                {isSubmittingReview ? 'SENDING...' : 'PUBLISH REVIEW'}
+                            </button>
                         </form>
                     )}
                     <div className="space-y-3">
