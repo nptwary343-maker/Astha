@@ -49,7 +49,7 @@ export default function SearchWithSuggestions() {
 
         debounceRef.current = setTimeout(async () => {
             try {
-                const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/search?q=${encodeURIComponent(value)}`);
                 if (res.ok) {
                     const data = await res.json();
                     setResults(data);

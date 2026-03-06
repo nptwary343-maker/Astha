@@ -207,6 +207,11 @@ export default function SettingsPage() {
             }
             const token = lines[0];
             const res = await fetch(`https://graph.facebook.com/v20.0/me?fields=id,name&access_token=${token}`);
+            if (!res.ok) {
+                const text = await res.text();
+                setFbStatus({ success: false, message: `Error: ${res.statusText} - ${text}` });
+                return;
+            }
             const data = await res.json();
 
             if (data.error) {

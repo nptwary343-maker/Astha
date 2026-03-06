@@ -1,7 +1,7 @@
 'use client';
 export const runtime = 'edge';
 
-
+import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Trash2, Plus, Minus, CreditCard, ShoppingBag, ArrowRight, ShieldCheck, Copy, Phone, Loader2, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -59,6 +59,12 @@ export default function CartPage() {
     const [showPermissionModal, setShowPermissionModal] = useState(false);
     const [pendingOrderAction, setPendingOrderAction] = useState(false);
 
+    // Add isMounted ref to prevent unmounted state updates
+    const isMounted = React.useRef(true);
+    useEffect(() => {
+        return () => { isMounted.current = false; };
+    }, []);
+
     useEffect(() => {
         const fetchSettings = async () => {
             try {
@@ -91,11 +97,16 @@ export default function CartPage() {
             }
             setCalculating(true);
             try {
-                const res = await fetch('/api/cart/calculate', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/cart/calculate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ items, userEmail: user?.email, userTags: userData?.tags || [] })
                 });
+                if (!res.ok) {
+                    const text = await res.text();
+                    console.error("Cart Calculation Error:", res.statusText, text);
+                    return;
+                }
                 const data = await res.json();
                 if (data.items && data.summary) {
                     setCalculatedItems(data.items);
@@ -178,9 +189,9 @@ export default function CartPage() {
             }
         } catch (e: any) {
             console.error(e);
-            alert('অর্ডার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+            if (isMounted.current) alert('অর্ডার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
         } finally {
-            setIsPlacingOrder(false);
+            if (isMounted.current) setIsPlacingOrder(false);
         }
     };
 

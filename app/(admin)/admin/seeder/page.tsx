@@ -404,7 +404,7 @@ export default function SeederPage() {
             }
             setDone(true);
             // 🧹 Clear Cache after seeding
-            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error(e));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/revalidate?secret=asthar_secret_123`, { method: 'POST' }).catch(e => console.error(e));
         } catch (error) {
 
             console.error(error);

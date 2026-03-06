@@ -56,7 +56,7 @@ export default function FlashSaleManager() {
             }
 
             // 🧹 Trigger Revalidation to clear Frontend Cache
-            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/revalidate?secret=asthar_secret_123`, { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
 
             alert(activeStatus ? "Flash Sale Started!" : "Flash Sale Progress Saved.");
         } catch (error) {
@@ -80,7 +80,7 @@ export default function FlashSaleManager() {
             await sendSystemPing('FLASH_SALE_STOPPED', { title });
 
             // 🧹 Trigger Revalidation
-            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/revalidate?secret=asthar_secret_123`, { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
 
             alert("Flash Sale Stopped.");
         } catch (error) {

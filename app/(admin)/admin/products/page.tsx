@@ -341,7 +341,7 @@ export default function ProductsPage() {
             setIsModalOpen(false);
 
             // 🧹 Trigger Revalidation to clear Frontend Cache (Optional background call)
-            fetch('/api/revalidate?secret=asthar_secret_123', { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/revalidate?secret=asthar_secret_123`, { method: 'POST' }).catch(e => console.error("Revalidation trigger failed", e));
 
         } catch (error) {
 
@@ -462,7 +462,7 @@ export default function ProductsPage() {
                         onClick={async () => {
                             try {
                                 clearProductCache(); // Clear local module cache in browser
-                                const res = await fetch('/api/revalidate?secret=asthar_secret_123&tag=homepage-products', { method: 'POST' });
+                                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/revalidate?secret=asthar_secret_123&tag=homepage-products`, { method: 'POST' });
                                 if (res.ok) alert("✅ Storefront Cache Purged! Changes should now be visible on Homepage and Shop.");
                                 else alert("❌ Failed to clear cache.");
                             } catch (err) {
@@ -501,7 +501,7 @@ export default function ProductsPage() {
                                     // If unknown, use Cloudflare AI Brain
                                     if (predicted === 'General') {
                                         try {
-                                            const aiRes = await fetch('/api/ai/categorize', {
+                                            const aiRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/ai/categorize`, {
                                                 method: 'POST',
                                                 body: JSON.stringify({
                                                     productName: p.name,
@@ -509,8 +509,12 @@ export default function ProductsPage() {
                                                     availableCategories: categories
                                                 })
                                             });
-                                            const aiData = await aiRes.json();
-                                            if (aiData.category) predicted = aiData.category;
+                                            if (!aiRes.ok) {
+                                                console.error("AI Categorize failed", await aiRes.text());
+                                            } else {
+                                                const aiData = await aiRes.json();
+                                                if (aiData.category) predicted = aiData.category;
+                                            }
                                         } catch (e) {
                                             console.error("AI Categorization Error:", e);
                                         }
@@ -646,7 +650,7 @@ export default function ProductsPage() {
                                                                         setAdLoading(true);
                                                                         setIsAdModalOpen(true);
                                                                         try {
-                                                                            const res = await fetch('/api/ai/marketing', {
+                                                                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/ai/marketing`, {
                                                                                 method: 'POST',
                                                                                 body: JSON.stringify({
                                                                                     productName: product.name,
@@ -654,8 +658,13 @@ export default function ProductsPage() {
                                                                                     weightOptions: product.weightOptions
                                                                                 })
                                                                             });
-                                                                            const data = await res.json();
-                                                                            setGeneratedAd(data.adCopy || "Could not generate ad copy.");
+                                                                            if (!res.ok) {
+                                                                                console.error("AI Marketing fail", await res.text());
+                                                                                setGeneratedAd("Error connecting to AI (Server Error).");
+                                                                            } else {
+                                                                                const data = await res.json();
+                                                                                setGeneratedAd(data.adCopy || "Could not generate ad copy.");
+                                                                            }
                                                                         } catch (err) {
                                                                             console.error(err);
                                                                             setGeneratedAd("Error connecting to AI.");

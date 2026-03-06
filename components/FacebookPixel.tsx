@@ -14,7 +14,7 @@ export default function FacebookPixel() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
-        fetch('/api/settings', { signal: controller.signal })
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/settings`, { signal: controller.signal })
             .then(async res => {
                 clearTimeout(timeoutId);
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);

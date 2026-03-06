@@ -7,12 +7,18 @@ import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import * as React from "react";
 import { User, Mail, Phone, Lock, ArrowRight, AlertCircle } from "lucide-react";
 
 export default function SignupPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const isMounted = React.useRef(true);
+
+    React.useEffect(() => {
+        return () => { isMounted.current = false; };
+    }, []);
 
     // Form States
     const [formData, setFormData] = useState({
@@ -109,7 +115,7 @@ export default function SignupPage() {
                 setError("Safety block: System ghosting during account creation. Please try again.");
             }
         } finally {
-            setIsLoading(false);
+            if (isMounted.current) setIsLoading(false);
         }
     };
 
@@ -143,9 +149,9 @@ export default function SignupPage() {
             router.push("/account");
         } catch (error: any) {
             console.error("🚨 GOOGLE_SIGNUP_ERROR:", error);
-            setIsLoading(false);
+            if (isMounted.current) setIsLoading(false);
             if (error.code === "auth/cancelled-popup-request" || error.code === "auth/popup-closed-by-user") return;
-            setError("Google login failed. Please refresh and try again.");
+            if (isMounted.current) setError("Google login failed. Please refresh and try again.");
         }
     };
 

@@ -3,6 +3,7 @@ export const runtime = 'edge';
 
 
 import { useState } from "react";
+import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, Mail, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
@@ -31,6 +32,11 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showSignupPrompt, setShowSignupPrompt] = useState(false);
+    const isMounted = React.useRef(true);
+
+    React.useEffect(() => {
+        return () => { isMounted.current = false; };
+    }, []);
 
     const checkAdminAndRedirect = async (
         firebaseUser: any
@@ -116,8 +122,8 @@ export default function LoginPage() {
                 errorMessage = "Network disruption. Check your internet.";
             }
 
-            setError(errorMessage);
-            setIsLoading(false);
+            if (isMounted.current) setError(errorMessage);
+            if (isMounted.current) setIsLoading(false);
         }
     };
 
@@ -138,7 +144,7 @@ export default function LoginPage() {
             }
         } catch (error: any) {
             console.error("🚨 Google Auth Error:", error);
-            setIsLoading(false);
+            if (isMounted.current) setIsLoading(false);
 
             // DETAILED DEBUG ALERT (Temporary for troubleshooting)
             if (error.code) {

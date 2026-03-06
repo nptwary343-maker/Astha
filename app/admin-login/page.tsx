@@ -2,6 +2,7 @@
 export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, ShieldCheck, ArrowRight, AlertTriangle, KeyRound } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
@@ -21,6 +22,11 @@ export default function AdminLoginPage() {
     const [newPassword, setNewPassword] = useState('');
     const [securityKey, setSecurityKey] = useState('');
     const [forgotSuccess, setForgotSuccess] = useState<string | null>(null);
+    const isMounted = React.useRef(true);
+
+    React.useEffect(() => {
+        return () => { isMounted.current = false; };
+    }, []);
 
     const { user, isAdmin, loading: authLoading } = useAuth();
 
@@ -164,7 +170,7 @@ export default function AdminLoginPage() {
             }
             setError(errorMessage);
         } finally {
-            setIsLoading(false);
+            if (isMounted.current) setIsLoading(false);
         }
     };
 
@@ -254,7 +260,7 @@ export default function AdminLoginPage() {
             }
             setError(errorMessage);
         } finally {
-            setIsLoading(false);
+            if (isMounted.current) setIsLoading(false);
         }
     };
 
@@ -293,7 +299,7 @@ export default function AdminLoginPage() {
             console.error("Forgot Password Error:", err);
             setError(err.message || "Failed to reset password.");
         } finally {
-            setIsLoading(false);
+            if (isMounted.current) setIsLoading(false);
         }
     };
 

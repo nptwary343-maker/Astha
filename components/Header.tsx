@@ -84,7 +84,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-white border-b border-border-light shadow-sm transition-all duration-300">
+        <header className="hidden md:block sticky top-0 z-50 w-full bg-white border-b border-border-light shadow-sm transition-all duration-300">
             {/* Top Minimal Bar (Optional/Subtle) */}
             <div className="bg-ui-bg border-b border-border-light hidden sm:block">
                 <div className="max-w-[1600px] mx-auto flex justify-end gap-6 px-4 py-1.5 font-medium text-[10px] text-text-muted uppercase tracking-wider">

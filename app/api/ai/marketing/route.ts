@@ -44,6 +44,12 @@ export async function POST(req: NextRequest) {
             }
         );
 
+        if (!response.ok) {
+            const errText = await response.text();
+            console.error('AI API failed:', errText);
+            return NextResponse.json({ error: 'AI processing failed' }, { status: 500 });
+        }
+
         const data = await response.json();
 
         if (data.success) {

@@ -13,6 +13,8 @@ import MotionGraphics from './motion/MotionGraphics';
 
 import MarqueeBar from '@/components/MarqueeBar';
 
+import MobileMinimalistHeader from './MobileMinimalistView';
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isStandalone = pathname?.startsWith('/admin') || pathname === '/login';
@@ -28,6 +30,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <MarqueeBar />
 
             <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+            <MobileMinimalistHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <BottomNav />
             <main className="pb-20 md:pb-0 min-h-screen transition-all duration-300 bg-[#f4f4f4] dark:bg-slate-950">

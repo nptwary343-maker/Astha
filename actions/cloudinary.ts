@@ -68,8 +68,10 @@ export async function deleteImageFromCloudinary(imageUrl: string) {
         });
 
         if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.error?.message || 'Delete failed');
+            const text = await response.text();
+            let errMsg = 'Delete failed';
+            try { errMsg = JSON.parse(text).error?.message || errMsg; } catch { }
+            throw new Error(errMsg);
         }
 
         const result = await response.json();

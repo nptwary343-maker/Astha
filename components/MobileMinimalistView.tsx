@@ -7,7 +7,7 @@ import { useCart } from '@/context/CartContext';
 import { useLocation } from '@/context/LocationContext';
 import { useAuth } from '@/context/AuthContext';
 
-export default function MobileMinimalistHeader() {
+export default function MobileMinimalistHeader({ onMenuClick }: { onMenuClick?: () => void }) {
     const { cartCount } = useCart();
     const { selectedLocationId } = useLocation();
     const { user } = useAuth();
@@ -17,7 +17,7 @@ export default function MobileMinimalistHeader() {
             {/* Bar 1: Logo, Location, Account, Cart */}
             <div className="flex items-center justify-between px-4 py-3 gap-3 border-b border-white/5">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <button className="p-1.5 hover:bg-white/10 rounded-xl transition-colors shrink-0">
+                    <button onClick={onMenuClick} className="p-1.5 hover:bg-white/10 rounded-xl transition-colors shrink-0">
                         <Menu size={20} strokeWidth={2.5} className="text-brand-primary" />
                     </button>
                     <Link href="/" className="shrink-0">

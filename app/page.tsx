@@ -77,8 +77,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-text-main selection:bg-brand-primary/10">
 
-      {/* 📱 MOBILE MINIMALIST HEADER - Only visible on small screens */}
-      <MobileMinimalistHeader />
+      {/* 📱 MOBILE MINIMALIST HEADER - Handled in AppShell now */}
 
       {/* NEW: Separate Particle Feature – Zero DB hits */}
       <div className="block">

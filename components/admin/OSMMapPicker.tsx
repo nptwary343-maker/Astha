@@ -44,6 +44,12 @@ export default function OSMMapPicker({ onLocationSelect, radius = 1000 }: OSMMap
         setSearching(true);
         try {
             const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+            if (!res.ok) {
+                const text = await res.text();
+                alert(`Search failed: ${res.statusText}`);
+                console.error("Nominatim Error:", text);
+                return;
+            }
             const data = await res.json();
 
             if (data && data.length > 0) {

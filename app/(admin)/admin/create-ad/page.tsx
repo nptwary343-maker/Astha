@@ -63,26 +63,29 @@ export default function CreateAdPage() {
                 goal: goal // New field for backend optimization
             };
 
-            const res = await fetch('/api/create-radius-ad', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/create-radius-ad`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
-            const data = await res.json();
-
             if (!res.ok) {
+                const text = await res.text();
+                let errData: any = {};
+                try { errData = JSON.parse(text); } catch { }
                 // Handle Specific Quota Error
-                if (data.error === "AI_QUOTA_EXCEEDED" || res.status === 429) {
+                if (errData.error === "AI_QUOTA_EXCEEDED" || res.status === 429) {
                     setStatus({
                         type: 'error',
-                        text: data.message || "AI Usage Limit Reached.",
+                        text: errData.message || "AI Usage Limit Reached.",
                         action: 'settings'
                     } as any);
                     return;
                 }
-                throw new Error(data.error || 'Failed to create ad');
+                throw new Error(errData.error || 'Failed to create ad');
             }
+
+            const data = await res.json();
 
             setStatus({ type: 'success', text: `Campaign Launched! ID: ${data.campaignId}` });
             if (data.aiOptimization) {

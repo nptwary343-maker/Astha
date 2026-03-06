@@ -31,8 +31,10 @@ export async function verifyPaymentAction(payload: {
         });
 
         if (!response.ok) {
-            const err = await response.json();
-            return { success: false, error: err.error || 'Payment verification failed' };
+            const text = await response.text();
+            let errInfo = 'Payment verification failed';
+            try { errInfo = JSON.parse(text).error || errInfo; } catch { }
+            return { success: false, error: errInfo };
         }
 
         const data = await response.json();

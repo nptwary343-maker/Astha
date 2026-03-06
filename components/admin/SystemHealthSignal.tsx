@@ -13,9 +13,14 @@ export default function SystemHealthSignal() {
         setRefreshing(true);
         try {
             const secret = localStorage.getItem('INTERNAL_API_SECRET') || 'dev_secret_bypass';
-            const res = await fetch('/api/availability-ping', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/availability-ping`, {
                 headers: { 'Authorization': `Bearer ${secret}` }
             });
+            if (!res.ok) {
+                const text = await res.text();
+                console.error("Health check error:", text);
+                return;
+            }
             const data = await res.json();
             setStatus(data);
         } catch (e) {
