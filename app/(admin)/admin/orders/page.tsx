@@ -234,12 +234,14 @@ export default function OrdersPage() {
 
     const handleUpdateStatus = async (orderId: string, newStatus: string) => {
         try {
-            // Update via Server Action (Handles both 'status' and 'orderStatus' fields)
-            const result = await updateOrderStatusAction(orderId, newStatus);
-
-            if (!result.success) {
-                throw new Error("Action failed");
-            }
+            // ✅ FIX: Direct client-side updateDoc (carries admin's auth token)
+            // Server Actions run on Edge where auth=null, causing Firestore rules to block writes.
+            const orderRef = doc(db, 'orders', orderId);
+            await updateDoc(orderRef, {
+                orderStatus: newStatus,
+                status: newStatus,
+                updatedAt: new Date().toISOString()
+            });
 
             setOrders(orders.map(o =>
                 o.id === orderId ? { ...o, orderStatus: newStatus, status: newStatus } : o

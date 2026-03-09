@@ -13,7 +13,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/components/ToastProvider";
 import { I18nProvider } from "@/context/I18nContext";
 import { LocationProvider } from "@/context/LocationContext";
-import { LazyMotion, domAnimation } from "framer-motion"
+// import { LazyMotion, domAnimation } from "framer-motion"
 
 
 
@@ -107,13 +107,11 @@ export default function RootLayout({
                 <CartProvider>
                   <LocationProvider>
                     <SoundProvider>
-                      <LazyMotion features={domAnimation} strict>
-                        <AppShell>
-                          <Suspense fallback={null}>
-                            {children}
-                          </Suspense>
-                        </AppShell>
-                      </LazyMotion>
+                      <AppShell>
+                        <Suspense fallback={null}>
+                          {children}
+                        </Suspense>
+                      </AppShell>
                       <DynamicFooter />
                     </SoundProvider>
 

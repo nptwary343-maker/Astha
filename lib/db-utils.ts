@@ -11,7 +11,7 @@ let _productCache: any[] | null = null;
 let _cacheTime = 0;
 // ⚡ INSTANT ADMIN SYNC: `clearProductCache()` forces an instant update when Admin edits/adds products.
 // 🕒 BACKGROUND SYNC: Every 5 minutes, it naturally auto-refreshes to save Firebase reads!
-const CACHE_TTL = 5 * 60 * 1000;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes — Admin edits call clearProductCache() for instant sync
 
 /**
  * 🧹 CLEAR CACHE (Call this after Admin updates)
@@ -29,7 +29,7 @@ export const getCachedProducts = async () => {
         return _productCache;
     }
 
-    console.log("🔥 [FIREBASE_HIT] Fetching products (Limit 200)...");
+    console.log("🔥 [FIREBASE_HIT] Fetching products (Limit 500)...");
     try {
         const q = query(collection(db, 'products'), limit(500));
         const snap = await getDocs(q);

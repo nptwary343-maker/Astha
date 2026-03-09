@@ -49,8 +49,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col font-sans selection:bg-orange-100">
 
-      {/* 1. Sticky Top Search: Fixed white header with full-width search bar */}
-      <header className="sticky top-0 z-[60] bg-white px-4 py-2 border-b border-gray-200 shadow-sm flex items-center gap-3">
+      {/* 1. Sticky Top Search: Mobile only — Desktop uses AppShell Header */}
+      <header className="sticky top-0 z-[60] bg-white px-4 py-2 border-b border-gray-200 shadow-sm flex items-center gap-3 md:hidden">
         <div className="flex-1 bg-gray-100 rounded-full flex items-center px-4 py-2 gap-2 border border-gray-200">
           <Search size={18} className="text-gray-400" />
           <input
@@ -69,7 +69,7 @@ export default function Home() {
 
         {/* 2. Hero Banner: reads from settings/hero-banner (admin saves here) */}
         <section className="w-full bg-white">
-          <div className="w-full aspect-[21/9] relative overflow-hidden">
+          <div className="w-full aspect-[21/9] md:aspect-[3/1] lg:aspect-[4/1] relative overflow-hidden">
             {banner?.backgroundImage || banner?.imageUrl ? (
               <>
                 <Image
@@ -103,15 +103,15 @@ export default function Home() {
         </section>
 
         {/* 3. Circle Categories: Horizontally scrollable row of small circular icon categories */}
-        <section className="bg-white py-4 border-b border-gray-100">
-          <div className="flex overflow-x-auto no-scrollbar gap-6 px-4">
+        <section className="bg-white py-4 md:py-6 border-b border-gray-100">
+          <div className="flex overflow-x-auto no-scrollbar gap-6 md:gap-8 px-4 md:justify-center max-w-7xl mx-auto">
             {categories.length > 0 ? categories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/shop?category=${cat.name.toLowerCase()}`}
                 className="flex flex-col items-center gap-2 flex-shrink-0 active:scale-95 transition-transform"
               >
-                <div className="w-14 h-14 rounded-full bg-slate-50 border border-gray-100 flex items-center justify-center p-2 shadow-sm overflow-hidden">
+                <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-slate-50 border border-gray-100 flex items-center justify-center p-2 shadow-sm overflow-hidden">
                   {cat.image ? (
                     <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
                   ) : (
@@ -138,8 +138,8 @@ export default function Home() {
         </div>
 
         {/* 4. Product Grid: 2-column grid */}
-        <section className="bg-gray-100 p-2">
-          <div className="grid grid-cols-2 gap-2">
+        <section className="bg-gray-100 p-2 md:p-6 lg:p-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 max-w-7xl mx-auto">
             {loading ? (
               [...Array(4)].map((_, i) => (
                 <div key={i} className="bg-white rounded p-2 animate-pulse space-y-2">

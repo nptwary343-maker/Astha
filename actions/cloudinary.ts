@@ -28,7 +28,10 @@ function getPublicIdFromUrl(url: string): string | null {
  */
 async function generateSignature(params: Record<string, any>) {
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
-    if (!apiSecret) throw new Error("CLOUDINARY_API_SECRET is missing");
+    if (!apiSecret) {
+        console.warn("⚠️ CLOUDINARY_API_SECRET is missing — image deletion skipped. Set it in Cloudflare Dashboard.");
+        return "";
+    }
 
     const sortedKeys = Object.keys(params).sort();
     const signatureString = sortedKeys

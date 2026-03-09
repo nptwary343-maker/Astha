@@ -159,14 +159,19 @@ export default function ProductsPage() {
 
         if (confirm('Are you sure you want to delete this product?')) {
             try {
-                // 1. Delete Images from Cloudinary (Added Logic)
+                // 1. Try to delete images from Cloudinary (non-blocking)
                 const productToDelete = products.find(p => p.id === id);
                 if (productToDelete && productToDelete.images && productToDelete.images.length > 0) {
-                    await deleteImagesFromCloudinary(productToDelete.images);
+                    try {
+                        await deleteImagesFromCloudinary(productToDelete.images.filter(img => img)); // Filter out empty strings
+                    } catch (imgError) {
+                        console.warn("⚠️ Cloudinary image cleanup failed (product will still be deleted):", imgError);
+                    }
                 }
 
+                // 2. Always delete product from Firestore
                 await deleteDoc(doc(db, "products", id));
-                clearProductCache(); // Clear local module cache
+                clearProductCache();
                 setProducts(products.filter(p => p.id !== id));
             } catch (error) {
                 console.error("Error deleting product: ", error);

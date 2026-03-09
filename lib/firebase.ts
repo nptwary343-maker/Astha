@@ -1,3 +1,8 @@
+// Provide a fallback for Edge Runtime where navigator is undefined
+if (typeof navigator === 'undefined') {
+    (globalThis as any).navigator = { userAgent: 'node.js' };
+}
+
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";

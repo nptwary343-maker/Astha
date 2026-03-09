@@ -21,7 +21,7 @@ export async function verifyPaymentAction(payload: {
     // access our internal API routes with the secret key.
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/verify-payment`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://astharhat.com'}/api/verify-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -47,4 +47,3 @@ export async function verifyPaymentAction(payload: {
         return { success: false, error: error.message };
     }
 }
-

@@ -8,8 +8,8 @@ interface CloudinaryResponse {
 
 // 100% FREE NO-CREDIT-CARD CONFIG
 // User should replace these with their own unsigned preset from Cloudinary Dashboard
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || '';
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || '';
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'duhanweed';
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'asthar_hat_preset';
 
 export const compressImage = async (file: File): Promise<File> => {
     // 💡 Performance Tip: 0.2MB is a better balance than 0.1MB for the free plan
