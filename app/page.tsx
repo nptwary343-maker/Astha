@@ -91,7 +91,22 @@ export default function Home() {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-full bg-slate-100 animate-pulse flex items-center justify-center text-slate-300 font-bold">AstharHat Premium Banner</div>
+                <div className="w-full h-full relative bg-slate-900 overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-slate-900 to-purple-900">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-brand-primary/20 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl -translate-x-1/3 translate-y-1/3"></div>
+                  </div>
+                  <div className="absolute inset-0 flex flex-col justify-center px-12 z-10">
+                    <div className="bg-white/10 w-max px-3 py-1 rounded-full border border-white/20 mb-4 backdrop-blur-sm">
+                      <span className="text-[10px] font-black tracking-widest uppercase text-brand-primary">Setup Needed</span>
+                    </div>
+                    <h2 className="text-white font-black text-5xl leading-tight drop-shadow-2xl">Asthar Hat<br/>Premium Shop</h2>
+                    <p className="text-white/80 text-sm font-medium mt-4 max-w-md">No banner has been uploaded yet. Please log into the Admin panel and set up your Hero Banners to replace this view.</p>
+                    <Link href="/shop" className="mt-8 bg-white text-slate-900 font-black px-8 py-3.5 rounded-full w-max flex items-center gap-2 shadow-xl transition-all hover:scale-105">
+                      Explore Shop
+                    </Link>
+                  </div>
+                </div>
               )}
             </div>
 
