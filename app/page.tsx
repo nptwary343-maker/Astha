@@ -97,18 +97,22 @@ export default function Home() {
 
             {/* Promo Sidebars (Right 2 columns) - E-commerce Standard */}
             <div className="hidden lg:flex flex-col gap-6 col-span-3 h-full">
-              <div className="flex-1 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-700 p-6 relative overflow-hidden group shadow-lg shadow-indigo-500/20">
+              {/* Top Side Banner */}
+              <div className={`flex-1 rounded-2xl bg-gradient-to-br from-${banner?.sideBanner1?.gradientFrom || 'purple-600'} to-${banner?.sideBanner1?.gradientTo || 'indigo-700'} p-6 relative overflow-hidden group shadow-lg shadow-indigo-500/20`}>
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="flex items-center gap-2 text-white/80 font-black text-[10px] uppercase tracking-widest mb-2"><Zap size={14} className="text-yellow-400" /> Member Deal</div>
-                <h3 className="text-white font-black text-2xl leading-none">Join the<br/>Astha Club</h3>
-                <p className="text-white/60 text-xs mt-2 font-medium">Extra 5% off on all electronics.</p>
-                <Link href="/login" className="mt-4 text-xs font-bold text-white bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-full inline-block transition-colors border border-white/20">Sign Up Free</Link>
+                <div className="flex items-center gap-2 text-white/80 font-black text-[10px] uppercase tracking-widest mb-2"><Zap size={14} className="text-yellow-400" /> {banner?.sideBanner1?.tag || 'Member Deal'}</div>
+                <h3 className="text-white font-black text-2xl leading-none whitespace-pre-line">{banner?.sideBanner1?.title || 'Join the\nAstha Club'}</h3>
+                {banner?.sideBanner1?.subtitle && <p className="text-white/60 text-xs mt-2 font-medium">{banner?.sideBanner1?.subtitle}</p>}
+                <Link href={banner?.sideBanner1?.link || '/login'} className="mt-4 text-xs font-bold text-white bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-full inline-block transition-colors border border-white/20">{banner?.sideBanner1?.buttonText || 'Sign Up Free'}</Link>
               </div>
-              <div className="flex-1 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 p-6 relative overflow-hidden group shadow-lg shadow-rose-500/20">
+              
+              {/* Bottom Side Banner */}
+              <div className={`flex-1 rounded-2xl bg-gradient-to-br from-${banner?.sideBanner2?.gradientFrom || 'rose-500'} to-${banner?.sideBanner2?.gradientTo || 'orange-500'} p-6 relative overflow-hidden group shadow-lg shadow-rose-500/20`}>
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-black/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="flex items-center gap-2 text-white/90 font-black text-[10px] uppercase tracking-widest mb-2"><Flame size={14} /> Trending</div>
-                <h3 className="text-white font-black text-2xl leading-none">Flash<br/>Sale</h3>
-                <Link href="/shop" className="mt-4 text-xs font-bold text-orange-600 bg-white hover:bg-gray-50 px-4 py-2 rounded-full inline-block transition-colors shadow-sm">View Deals</Link>
+                <div className="flex items-center gap-2 text-white/90 font-black text-[10px] uppercase tracking-widest mb-2"><Flame size={14} /> {banner?.sideBanner2?.tag || 'Trending'}</div>
+                <h3 className="text-white font-black text-2xl leading-none whitespace-pre-line">{banner?.sideBanner2?.title || 'Flash\nSale'}</h3>
+                {banner?.sideBanner2?.subtitle && <p className="text-white/80 text-xs mt-2 font-medium">{banner?.sideBanner2?.subtitle}</p>}
+                <Link href={banner?.sideBanner2?.link || '/shop'} className="mt-4 text-xs font-bold text-[#f57224] bg-white hover:bg-gray-50 px-4 py-2 rounded-full inline-block transition-colors shadow-sm">{banner?.sideBanner2?.buttonText || 'View Deals'}</Link>
               </div>
             </div>
           </div>

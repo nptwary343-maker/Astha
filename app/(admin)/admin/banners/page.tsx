@@ -24,6 +24,14 @@ export default function BannersPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
+    // Sidebar Banners (Desktop Promotion)
+    const [sideBanner1, setSideBanner1] = useState({
+        tag: 'Member Deal', title: 'Join the\nAstha Club', subtitle: 'Extra 5% off on all electronics.', buttonText: 'Sign Up Free', link: '/login', gradientFrom: 'purple-600', gradientTo: 'indigo-700',
+    });
+    const [sideBanner2, setSideBanner2] = useState({
+        tag: 'Trending', title: 'Flash\nSale', subtitle: '', buttonText: 'View Deals', link: '/shop', gradientFrom: 'rose-500', gradientTo: 'orange-500',
+    });
+
     useEffect(() => {
         const fetchSettings = async () => {
             try {
@@ -43,6 +51,8 @@ export default function BannersPage() {
 
                     setShape(data.shape || 'rounded');
                     if (data.bgOpacity) setBgOpacity(data.bgOpacity);
+                    if (data.sideBanner1) setSideBanner1(data.sideBanner1);
+                    if (data.sideBanner2) setSideBanner2(data.sideBanner2);
                 }
             } catch (error) {
                 console.error("Error fetching banner settings:", error);
@@ -72,6 +82,8 @@ export default function BannersPage() {
                 buttonLink: '/shop',
                 active: true,
                 order: 0,
+                sideBanner1,
+                sideBanner2,
             };
 
             // ✅ Save to settings/hero-banner (for HeroBanner component)
@@ -395,6 +407,67 @@ export default function BannersPage() {
                                 <button onClick={() => { setGradientFrom('orange-600'); setGradientTo('purple-900'); }} className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-600 to-purple-900 border-2 border-white shadow-sm ring-1 ring-gray-200"></button>
                                 <button onClick={() => { setGradientFrom('blue-600'); setGradientTo('purple-900'); }} className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-900 border-2 border-white shadow-sm ring-1 ring-gray-200"></button>
                                 <button onClick={() => { setGradientFrom('red-600'); setGradientTo('orange-500'); }} className="w-8 h-8 rounded-full bg-gradient-to-r from-red-600 to-orange-500 border-2 border-white shadow-sm ring-1 ring-gray-200"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Side Banners Configuration */}
+                <div className="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 space-y-6 mt-4">
+                    <h3 className="font-bold text-gray-900 text-lg border-b border-gray-100 pb-4">Desktop Side Banners (Promotions)</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Side Banner 1 */}
+                        <div className="space-y-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
+                            <h4 className="font-bold text-gray-700">Top Side Banner</h4>
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 mb-1">Tag (e.g. Member Deal)</label>
+                                <input type="text" value={sideBanner1.tag} onChange={e => setSideBanner1({...sideBanner1, tag: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 mb-1">Title (Use \n for new line)</label>
+                                <textarea value={sideBanner1.title} onChange={e => setSideBanner1({...sideBanner1, title: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none h-16" />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 mb-1">Subtitle</label>
+                                <input type="text" value={sideBanner1.subtitle} onChange={e => setSideBanner1({...sideBanner1, subtitle: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                            </div>
+                            <div className="flex gap-2">
+                                <div className="flex-1">
+                                    <label className="block text-xs font-semibold text-gray-500 mb-1">Button Text</label>
+                                    <input type="text" value={sideBanner1.buttonText} onChange={e => setSideBanner1({...sideBanner1, buttonText: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                                </div>
+                                <div className="flex-1">
+                                    <label className="block text-xs font-semibold text-gray-500 mb-1">Link</label>
+                                    <input type="text" value={sideBanner1.link} onChange={e => setSideBanner1({...sideBanner1, link: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Side Banner 2 */}
+                        <div className="space-y-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
+                            <h4 className="font-bold text-gray-700">Bottom Side Banner</h4>
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 mb-1">Tag (e.g. Trending)</label>
+                                <input type="text" value={sideBanner2.tag} onChange={e => setSideBanner2({...sideBanner2, tag: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 mb-1">Title (Use \n for new line)</label>
+                                <textarea value={sideBanner2.title} onChange={e => setSideBanner2({...sideBanner2, title: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none h-16" />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-500 mb-1">Subtitle</label>
+                                <input type="text" value={sideBanner2.subtitle} onChange={e => setSideBanner2({...sideBanner2, subtitle: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                            </div>
+                            <div className="flex gap-2">
+                                <div className="flex-1">
+                                    <label className="block text-xs font-semibold text-gray-500 mb-1">Button Text</label>
+                                    <input type="text" value={sideBanner2.buttonText} onChange={e => setSideBanner2({...sideBanner2, buttonText: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                                </div>
+                                <div className="flex-1">
+                                    <label className="block text-xs font-semibold text-gray-500 mb-1">Link</label>
+                                    <input type="text" value={sideBanner2.link} onChange={e => setSideBanner2({...sideBanner2, link: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none" />
+                                </div>
                             </div>
                         </div>
                     </div>
