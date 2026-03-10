@@ -139,6 +139,7 @@ export default function ProductDetailClient({ product, productId }: { product: P
     const { addProduct: addToRecentlyViewed } = useRecentlyViewed();
 
     const [activeImage, setActiveImage] = useState(0);
+    const [activeTab, setActiveTab] = useState('description');
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
@@ -252,15 +253,68 @@ export default function ProductDetailClient({ product, productId }: { product: P
                     </div>
                 </section>
 
-                {/* Description */}
-                <section className="p-4 bg-white border-b border-slate-100 space-y-2">
-                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Specifications</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">{product.description || 'Verified product from Asthar Hat boutique.'}</p>
-                    <div className="bg-slate-50 p-3 rounded-sm flex items-center gap-3 border border-slate-100 mt-2">
-                        <ShieldCheck className="text-green-600" size={18} />
-                        <p className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">100% Guaranteed Transaction Quality</p>
+
+                {/* Interactive TABS for Description & Details */}
+                <section className="bg-white mt-2 border-y border-slate-100">
+                    <div className="flex border-b border-slate-100">
+                        <button 
+                             onClick={() => setActiveTab('description')} 
+                             className={`flex-1 py-3 text-[11px] font-black uppercase tracking-widest text-center transition-all ${activeTab === 'description' ? 'text-brand-primary border-b-2 border-brand-primary bg-slate-50/50' : 'text-slate-400 hover:bg-slate-50'}`}
+                        >
+                            Description
+                        </button>
+                        <button 
+                             onClick={() => setActiveTab('details')} 
+                             className={`flex-1 py-3 text-[11px] font-black uppercase tracking-widest text-center transition-all ${activeTab === 'details' ? 'text-brand-primary border-b-2 border-brand-primary bg-slate-50/50' : 'text-slate-400 hover:bg-slate-50'}`}
+                        >
+                            More Details
+                        </button>
+                    </div>
+
+                    <div className="p-4 min-h-[150px]">
+                        {activeTab === 'description' && (
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-3">
+                                <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Product Overview</h3>
+                                <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+                                    {product.description || 'This is a premium, verified product directly sourced by Asthar Hat. Get the best quality guaranteed with fast delivery to your door.'}
+                                </p>
+                                <div className="bg-green-50/50 p-3 rounded-xl flex items-center gap-3 border border-green-100/50 mt-4">
+                                    <ShieldCheck className="text-green-600 shrink-0" size={20} />
+                                    <div className="flex flex-col">
+                                        <p className="text-[10px] font-black text-green-700 uppercase tracking-tighter">Asthar Hat Authenticity</p>
+                                        <p className="text-[9px] font-medium text-green-600 mt-0.5">100% Guaranteed Transaction Quality</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'details' && (
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Specifications</h3>
+                                <div className="border border-slate-100 rounded-xl overflow-hidden text-xs">
+                                    <div className="flex border-b border-slate-100 bg-slate-50/50">
+                                        <div className="w-1/3 p-3 font-bold text-slate-500 border-r border-slate-100">Category</div>
+                                        <div className="w-2/3 p-3 text-slate-700 font-medium capitalize">{product.category || 'N/A'}</div>
+                                    </div>
+                                    <div className="flex border-b border-slate-100">
+                                        <div className="w-1/3 p-3 font-bold text-slate-500 border-r border-slate-100">Brand</div>
+                                        <div className="w-2/3 p-3 text-slate-700 font-medium">{product.brand || 'Asthar Hat Selection'}</div>
+                                    </div>
+                                    <div className="flex border-b border-slate-100 bg-slate-50/50">
+                                        <div className="w-1/3 p-3 font-bold text-slate-500 border-r border-slate-100">Stock Status</div>
+                                        <div className="w-2/3 p-3 text-slate-700 font-medium">{product.stock > 0 ? `${product.stock} Available` : 'Out of Stock'}</div>
+                                    </div>
+                                    <div className="flex">
+                                        <div className="w-1/3 p-3 font-bold text-slate-500 border-r border-slate-100">SKU</div>
+                                        <div className="w-2/3 p-3 text-slate-700 font-mono text-[10px] uppercase">AST-{product.id.slice(0, 8)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </section>
+                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Specifications</h3>
+
 
                 {/* Similar Products */}
                 {similarProducts.length > 0 && (

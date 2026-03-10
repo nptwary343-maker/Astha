@@ -58,21 +58,42 @@ export default function Home() {
                 <Grid size={16} /> Categories
               </div>
               <div className="flex-1 overflow-y-auto no-scrollbar py-2">
-                {categories.length > 0 ? categories.map((cat, i) => (
-                  <Link href={`/shop?category=${cat.name.toLowerCase()}`} key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-orange-50 hover:text-orange-600 transition-colors group">
-                     {cat.image ? (
-                        <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 group-hover:border-orange-200">
-                          <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
-                        </div>
-                      ) : (
-                        <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 group-hover:bg-orange-100 group-hover:text-orange-600 shrink-0">
-                          {cat.name.charAt(0)}
-                        </div>
-                      )}
-                    <span className="text-xs font-bold text-gray-700 group-hover:text-orange-600 truncate">{cat.name}</span>
-                  </Link>
-                )) : (
+                {loading ? (
                   [...Array(8)].map((_, i) => <div key={i} className="h-8 bg-gray-50 mx-4 my-2 rounded-lg animate-pulse" />)
+                ) : categories.length > 0 ? (
+                  categories.map((cat, i) => (
+                    <Link href={`/shop?category=${cat.name.toLowerCase()}`} key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-orange-50 hover:text-orange-600 transition-colors group">
+                       {cat.image ? (
+                          <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 group-hover:border-orange-200">
+                            <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
+                          </div>
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 group-hover:bg-orange-100 group-hover:text-orange-600 shrink-0">
+                            {cat.name.charAt(0)}
+                          </div>
+                        )}
+                      <span className="text-xs font-bold text-gray-700 group-hover:text-orange-600 truncate">{cat.name}</span>
+                    </Link>
+                  ))
+                ) : (
+                  // Default Fallback Categories
+                  [
+                    { name: 'Electronics', icon: '💻', color: 'text-blue-500', bg: 'bg-blue-50' },
+                    { name: 'Fashion', icon: '👗', color: 'text-pink-500', bg: 'bg-pink-50' },
+                    { name: 'Home & Living', icon: '🏠', color: 'text-orange-500', bg: 'bg-orange-50' },
+                    { name: 'Beauty', icon: '💄', color: 'text-rose-500', bg: 'bg-rose-50' },
+                    { name: 'Sports', icon: '⚽', color: 'text-green-500', bg: 'bg-green-50' },
+                    { name: 'Toys', icon: '🧸', color: 'text-yellow-500', bg: 'bg-yellow-50' },
+                    { name: 'Groceries', icon: '🍎', color: 'text-red-500', bg: 'bg-red-50' },
+                    { name: 'Automotive', icon: '🚗', color: 'text-slate-500', bg: 'bg-slate-50' }
+                  ].map((cat, i) => (
+                    <Link href={`/shop?category=${cat.name.toLowerCase()}`} key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors group">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${cat.bg} ${cat.color} text-[10px] border border-transparent group-hover:border-current`}>
+                        {cat.icon}
+                      </div>
+                      <span className="text-xs font-bold text-slate-700 group-hover:text-slate-900 truncate">{cat.name}</span>
+                    </Link>
+                  ))
                 )}
               </div>
             </div>
@@ -113,7 +134,7 @@ export default function Home() {
             {/* Promo Sidebars (Right 2 columns) - E-commerce Standard */}
             <div className="hidden lg:flex flex-col gap-6 col-span-3 h-full">
               {/* Top Side Banner */}
-              <div className={`flex-1 rounded-2xl bg-gradient-to-br from-${banner?.sideBanner1?.gradientFrom || 'purple-600'} to-${banner?.sideBanner1?.gradientTo || 'indigo-700'} p-6 relative overflow-hidden group shadow-lg shadow-indigo-500/20`}>
+              <div className={`flex-1 rounded-2xl bg-gradient-to-br ${banner?.sideBanner1 ? `from-[${banner.sideBanner1.gradientFrom}] to-[${banner.sideBanner1.gradientTo}]` : 'from-purple-600 to-indigo-700'} p-6 relative overflow-hidden group shadow-lg shadow-indigo-500/20`} style={banner?.sideBanner1 ? { backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))` } : undefined}>
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
                 <div className="flex items-center gap-2 text-white/80 font-black text-[10px] uppercase tracking-widest mb-2"><Zap size={14} className="text-yellow-400" /> {banner?.sideBanner1?.tag || 'Member Deal'}</div>
                 <h3 className="text-white font-black text-2xl leading-none whitespace-pre-line">{banner?.sideBanner1?.title || 'Join the\nAstha Club'}</h3>
@@ -122,7 +143,7 @@ export default function Home() {
               </div>
               
               {/* Bottom Side Banner */}
-              <div className={`flex-1 rounded-2xl bg-gradient-to-br from-${banner?.sideBanner2?.gradientFrom || 'rose-500'} to-${banner?.sideBanner2?.gradientTo || 'orange-500'} p-6 relative overflow-hidden group shadow-lg shadow-rose-500/20`}>
+              <div className={`flex-1 rounded-2xl bg-gradient-to-br ${banner?.sideBanner2 ? `from-[${banner.sideBanner2.gradientFrom}] to-[${banner.sideBanner2.gradientTo}]` : 'from-rose-500 to-orange-500'} p-6 relative overflow-hidden group shadow-lg shadow-rose-500/20`} style={banner?.sideBanner2 ? { backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))` } : undefined}>
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-black/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
                 <div className="flex items-center gap-2 text-white/90 font-black text-[10px] uppercase tracking-widest mb-2"><Flame size={14} /> {banner?.sideBanner2?.tag || 'Trending'}</div>
                 <h3 className="text-white font-black text-2xl leading-none whitespace-pre-line">{banner?.sideBanner2?.title || 'Flash\nSale'}</h3>
@@ -211,23 +232,42 @@ export default function Home() {
         {/* Mobile Horizontal Categories (AliExpress Style) */}
         <section className="bg-[#f4f7f6] pt-1 pb-4">
           <div className="flex overflow-x-auto no-scrollbar gap-4 px-4 pb-2">
-            {categories.length > 0 ? categories.map((cat, i) => (
-              <Link href={`/shop?category=${cat.name.toLowerCase()}`} key={i} className="flex flex-col items-center gap-1.5 flex-shrink-0 w-[4.5rem] active:scale-95 transition-transform">
-                <div className="w-16 h-16 rounded-3xl bg-white border border-gray-100 flex items-center justify-center p-[6px] shadow-sm overflow-hidden">
-                  {cat.image ? (
-                    <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="text-xl font-black text-slate-300">{cat.name.charAt(0)}</span>
-                  )}
-                </div>
-                <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter text-center leading-tight truncate w-full">{cat.name}</span>
-              </Link>
-            )) : (
-              [...Array(6)].map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-2 animate-pulse w-[4.5rem]">
-                  <div className="w-16 h-16 rounded-3xl bg-gray-200" />
-                  <div className="w-10 h-2 bg-gray-200 rounded" />
-                </div>
+            {loading ? (
+                [...Array(6)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2 animate-pulse w-[4.5rem]">
+                    <div className="w-16 h-16 rounded-3xl bg-gray-200" />
+                    <div className="w-10 h-2 bg-gray-200 rounded" />
+                  </div>
+                ))
+            ) : categories.length > 0 ? (
+              categories.map((cat, i) => (
+                <Link href={`/shop?category=${cat.name.toLowerCase()}`} key={i} className="flex flex-col items-center gap-1.5 flex-shrink-0 w-[4.5rem] active:scale-95 transition-transform">
+                  <div className="w-16 h-16 rounded-3xl bg-white border border-gray-100 flex items-center justify-center p-[6px] shadow-sm overflow-hidden">
+                    {cat.image ? (
+                      <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
+                    ) : (
+                      <span className="text-xl font-black text-slate-300">{cat.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter text-center leading-tight truncate w-full">{cat.name}</span>
+                </Link>
+              ))
+            ) : (
+              // Default Fallback Categories for Mobile
+              [
+                { name: 'Electronics', icon: '💻' },
+                { name: 'Fashion', icon: '👗' },
+                { name: 'Home', icon: '🏠' },
+                { name: 'Beauty', icon: '💄' },
+                { name: 'Sports', icon: '⚽' },
+                { name: 'Toys', icon: '🧸' }
+              ].map((cat, i) => (
+                <Link href={`/shop?category=${cat.name.toLowerCase()}`} key={i} className="flex flex-col items-center gap-1.5 flex-shrink-0 w-[4.5rem] active:scale-95 transition-transform">
+                  <div className="w-16 h-16 rounded-3xl bg-white border border-gray-100 flex items-center justify-center shadow-sm overflow-hidden text-2xl">
+                    {cat.icon}
+                  </div>
+                  <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter text-center leading-tight truncate w-full">{cat.name}</span>
+                </Link>
               ))
             )}
           </div>
