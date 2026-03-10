@@ -29,20 +29,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <MotionGraphics />
             <MarqueeBar />
 
-            {/* Desktop Header — show on all pages */}
+            {/* Desktop Header */}
             <div className="hidden md:block">
                 <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
             </div>
 
-            {/* Mobile Header — hide on homepage (page.tsx has its own mobile search bar) */}
-            {pathname !== '/' && (
-                <>
-                    <div className="md:hidden">
-                        <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
-                    </div>
-                    <MobileMinimalistHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
-                </>
-            )}
+            {/* Mobile Header (Unified across all pages) */}
+            <div className="md:hidden">
+                <MobileMinimalistHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+            </div>
             <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
             <BottomNav />
             <main className="pb-20 md:pb-0 min-h-screen transition-all duration-300 bg-[#f4f4f4] dark:bg-slate-950">
