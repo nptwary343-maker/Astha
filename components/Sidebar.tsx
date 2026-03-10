@@ -151,11 +151,7 @@ interface SidebarProps {
                     {/* Main Nav Items - Now second */}
                     <h2 className="text-lg font-bold mb-4 px-2 text-gray-800">Explore</h2>
                     <div className="space-y-1.5">
-                        {['Home', 'About', 'Billing', 'Tracking'].filter(name => {
-
-                            if (!user && (name === 'Billing' || name === 'Tracking')) return false;
-                            return true;
-                        }).map((name) => (
+                        {['Home', 'Shop', 'About'].map((name) => (
                             <Link
                                 key={name}
                                 href={name === 'Home' ? '/' : `/${name.toLowerCase().replace(' ', '-')}`}

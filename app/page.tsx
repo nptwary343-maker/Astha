@@ -9,8 +9,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingCart, ChevronRight, Star, Zap, Flame, Grid, ArrowRight } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Home() {
+  const { user } = useAuth();
   const [products, setProducts] = useState<any[]>([]);
   const [banner, setBanner] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
@@ -137,9 +139,13 @@ export default function Home() {
               <div className={`flex-1 rounded-2xl bg-gradient-to-br ${banner?.sideBanner1 ? `from-[${banner.sideBanner1.gradientFrom}] to-[${banner.sideBanner1.gradientTo}]` : 'from-purple-600 to-indigo-700'} p-6 relative overflow-hidden group shadow-lg shadow-indigo-500/20`} style={banner?.sideBanner1 ? { backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))` } : undefined}>
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
                 <div className="flex items-center gap-2 text-white/80 font-black text-[10px] uppercase tracking-widest mb-2"><Zap size={14} className="text-yellow-400" /> {banner?.sideBanner1?.tag || 'Member Deal'}</div>
-                <h3 className="text-white font-black text-2xl leading-none whitespace-pre-line">{banner?.sideBanner1?.title || 'Join the\nAstha Club'}</h3>
+                <h3 className="text-white font-black text-2xl leading-none whitespace-pre-line">
+                  {user ? 'Welcome to\nAstha Club' : (banner?.sideBanner1?.title || 'Join the\nAstha Club')}
+                </h3>
                 {banner?.sideBanner1?.subtitle && <p className="text-white/60 text-xs mt-2 font-medium">{banner?.sideBanner1?.subtitle}</p>}
-                <Link href={banner?.sideBanner1?.link || '/login'} className="mt-4 text-xs font-bold text-white bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-full inline-block transition-colors border border-white/20">{banner?.sideBanner1?.buttonText || 'Sign Up Free'}</Link>
+                <Link href={user ? '/account' : (banner?.sideBanner1?.link || '/login')} className="mt-4 text-xs font-bold text-white bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-full inline-block transition-colors border border-white/20">
+                  {user ? 'My Dashboard' : (banner?.sideBanner1?.buttonText || 'Sign Up Free')}
+                </Link>
               </div>
               
               {/* Bottom Side Banner */}
